@@ -1,0 +1,18 @@
+version: '3'
+services:
+  ink_backend_scheduler:
+    networks:
+      - ink_default
+    image: docker.io/$DOCKER_USERNAME/$IMAGE:$VERSION
+    container_name: ink_backend_scheduler
+    restart: always
+    environment:
+      - SPRING_PROFILES_ACTIVE=dev
+      - CLOUD_AWS_CREDENTIALS_ACCESS_KEY=$CLOUD_AWS_CREDENTIALS_ACCESS_KEY
+      - CLOUD_AWS_CREDENTIALS_SECRET_KEY=$CLOUD_AWS_CREDENTIALS_SECRET_KEY
+      - AWS_ACCESS_KEY=$CLOUD_AWS_CREDENTIALS_ACCESS_KEY
+      - AWS_SECRET_KEY=$CLOUD_AWS_CREDENTIALS_SECRET_KEY
+
+networks:
+  ink_default:
+    external: true
