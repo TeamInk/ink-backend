@@ -39,6 +39,7 @@
                         <th>해석</th>
                         <th>저자</th>
                         <th>응답 달린 수</th>
+                        <th>생성 날짜</th>
                     </tr>
                     </thead>
                     <tfoot>
@@ -48,6 +49,7 @@
                         <th>해석</th>
                         <th>저자</th>
                         <th>응답 달린 수</th>
+                        <th>생성 날짜</th>
                     </tr>
                     </tfoot>
                     <tbody>
@@ -57,6 +59,7 @@
                         <td th:text="${question.koContent}"></td>
                         <td th:text="${question.authorName}"></td>
                         <td th:text="${question.repliesCount}"></td>
+                        <td th:text="${question.regDate}"></td>
                     </tr>
                     </tbody>
                 </table>
