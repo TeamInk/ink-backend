@@ -8,7 +8,7 @@ WORKDIR /home/gradle/project
 # Only download dependencies
 # Eat the expected build failure since no source code has been copied yet
 # RUN gradle clean build --no-daemon > /dev/null 2>&1 || true
-COPY build/libs/ink-batch-0.0.1-SNAPSHOT.jar /home/gradle/project
+COPY build/libs/ink-scheduler-0.0.1-SNAPSHOT.jar /home/gradle/project
 RUN mkdir /home/gradle/mount
 
 #RUN gradle clean bootJar
