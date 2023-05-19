@@ -10,6 +10,7 @@ import lombok.experimental.SuperBuilder;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
+import java.time.LocalDateTime;
 import java.util.Set;
 
 @SuperBuilder
@@ -29,4 +30,5 @@ public class QuestionDto {
     private String authorName;
     private int repliesCount;
     private Set<WordHintDto> wordHints;
+    private LocalDateTime regDate;
 }
