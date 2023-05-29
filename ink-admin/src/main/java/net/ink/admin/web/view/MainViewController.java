@@ -36,4 +36,11 @@ public class MainViewController {
         model.addAttribute("adminMember", adminMember);
         return "base";
     }
+
+    @GetMapping("/setting")
+    public String getSettingPage(Model model, @CurrentUser AdminMember adminMember) {
+        model.addAttribute("inner", "setting");
+        model.addAttribute("adminMember", adminMember);
+        return "base";
+    }
 }
