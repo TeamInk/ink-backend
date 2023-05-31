@@ -1,0 +1,32 @@
+<div class="container-fluid" th:fragment="content">
+    <!-- Page Heading -->
+    <h1 class="h3 mb-4 text-gray-800">세팅</h1>
+
+    <div class="row">
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">Setting Information</h5>
+                    <table class="table table-bordered">
+                        <tbody>
+                        <tr>
+                            <th>ID</th>
+                            <td th:text="${adminMember.adminId}"></td>
+                        </tr>
+                        <tr>
+                            <th>Email</th>
+                            <td th:text="${adminMember.email}"></td>
+                        </tr>
+                        <tr>
+                            <th>Password</th>
+                            <td>********</td>
+                        </tr>
+                        </tbody>
+                    </table>
+                    <a href="#" class="btn btn-primary" onclick="openChangePasswordWindow()">변경</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
