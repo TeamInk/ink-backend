@@ -26,7 +26,6 @@
     </div>
     <!-- End of input form and submit button -->
 
-    <!-- Modal for multiple question registration -->
     <div class="modal fade" id="multiQuestionModal" tabindex="-1" role="dialog" aria-labelledby="multiQuestionModalLabel" aria-hidden="true">
         <div class="modal-dialog" role="document">
             <div class="modal-content">
@@ -103,13 +102,7 @@
 
     <script>
         $(document).ready(function () {
-            // Initialize the modal
-            $('#multiQuestionModal').modal({
-                backdrop: 'static', // Prevents closing the modal when clicking outside
-                keyboard: false // Prevents closing the modal when pressing Escape key
-            });
-
-            // Handle the "+" button click event to add new question input fields
+            // + 버튼 작동
             $('#addQuestionInput').on('click', function () {
                 const questionInputGroup = $('<div class="form-group question-input-group"></div>');
                 questionInputGroup.append('<label for="questionsTextarea">질문들</label>');
@@ -119,10 +112,26 @@
 
                 $('#questionInputsContainer').append(questionInputGroup);
             });
+            // 눌렀을때만 보여주게
+            $('#multiQuestionModalBtn').on('click', function () {
+                $('#multiQuestionModal').modal('show');
+            });
 
-            // Add your code for handling the multiple question registration here
             $('#registerMultipleQuestions').on('click', function () {
-                // Your code here...
+                // 등록 할수 있게 작동 버튼
+
+            });
+
+            $('#multiQuestionModal').on('show.bs.modal', function () {
+                $('#questionInputsContainer').empty();
+
+                const questionInputGroup = $('<div class="form-group question-input-group"></div>');
+                questionInputGroup.append('<label for="questionsTextarea">질문들</label>');
+                questionInputGroup.append('<textarea class="form-control" name="questions" rows="3" placeholder="질문을 입력하세요"></textarea>');
+                questionInputGroup.append('<label for="interpretationsTextarea">해석들</label>');
+                questionInputGroup.append('<textarea class="form-control" name="interpretations" rows="3" placeholder="해석을 입력하세요"></textarea>');
+
+                $('#questionInputsContainer').append(questionInputGroup);
             });
         });
     </script>
@@ -191,6 +200,7 @@
                 "order": [0, "desc"]
             });
         });
+
     </script>
 
 </div>
