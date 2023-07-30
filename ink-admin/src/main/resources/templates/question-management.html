@@ -117,7 +117,7 @@
                 $('#multiQuestionModal').modal('show');
             });
 
-            $('#registerMultipleQuestions').on('click', function () {
+            $('#registerMultipleQuestions').on('click', async function () {
                 const questions = $('textarea[name="questions"]');
                 const interpretations = $('textarea[name="interpretations"]');
 
@@ -151,21 +151,21 @@
                 }
                 // 각각의 질문을 Ajax로 서버에 전송하여 등록
                 for (let i = 0; i < questionArray.length; i++) {
-                    $.ajax({
-                        url: '/api/question',
-                        type: 'POST',
-                        contentType: 'application/json',
-                        data: JSON.stringify(questionArray[i]),
-                        success: function () {
-                            if (i === questionArray.length - 1) {
-                                alert('질문들이 등록되었습니다.');
-                                location.reload();
-                            }
-                        },
-                        error: function (error) {
-                            alert('질문 등록에 실패했습니다: ' + error.responseText);
+                    try {
+                        await $.ajax({
+                            url: '/api/question',
+                            type: 'POST',
+                            contentType: 'application/json',
+                            data: JSON.stringify(questionArray[i]),
+                        });
+
+                        if (i === questionArray.length - 1) {
+                            alert('질문들이 등록되었습니다.');
+                            location.reload();
                         }
-                    });
+                    } catch (error) {
+                        alert('질문 등록에 실패했습니다: ' + error.responseText);
+                    }
                 }
             });
 
