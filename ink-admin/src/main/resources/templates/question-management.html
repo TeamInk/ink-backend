@@ -38,11 +38,11 @@
                 <div class="modal-body">
                     <div id="questionInputsContainer">
                         <div class="form-group question-input-group">
-                            <label for="questionsTextarea">질문들</label>
+                            <label for="questionsTextarea">질문</label>
                             <textarea class="form-control" name="questions" rows="3" placeholder="질문을 입력하세요"></textarea>
                         </div>
                         <div class="form-group question-input-group">
-                            <label for="interpretationsTextarea">해석들</label>
+                            <label for="interpretationsTextarea">해석</label>
                             <textarea class="form-control" name="interpretations" rows="3" placeholder="해석을 입력하세요"></textarea>
                         </div>
                     </div>
@@ -105,9 +105,9 @@
             // + 버튼 작동
             $('#addQuestionInput').on('click', function () {
                 const questionInputGroup = $('<div class="form-group question-input-group"></div>');
-                questionInputGroup.append('<label for="questionsTextarea">질문들</label>');
+                questionInputGroup.append('<label for="questionsTextarea">질문</label>');
                 questionInputGroup.append('<textarea class="form-control" name="questions" rows="3" placeholder="질문을 입력하세요"></textarea>');
-                questionInputGroup.append('<label for="interpretationsTextarea">해석들</label>');
+                questionInputGroup.append('<label for="interpretationsTextarea">해석</label>');
                 questionInputGroup.append('<textarea class="form-control" name="interpretations" rows="3" placeholder="해석을 입력하세요"></textarea>');
 
                 $('#questionInputsContainer').append(questionInputGroup);
@@ -118,7 +118,36 @@
             });
 
             $('#registerMultipleQuestions').on('click', function () {
-                // 등록 할수 있게 작동 버튼
+                const questions = $('textarea[name="questions"]');
+                const interpretations = $('textarea[name="interpretations"]');
+
+                const questionArray = [];
+
+                for (let i = 0; i < questions.length; i++) {
+                    const questionContent = $(questions[i]).val().trim();
+                    const interpretationContent = $(interpretations[i]).val().trim();
+
+                    if (questionContent.length < 1) {
+                        alert("질문 내용을 입력하세요.");
+                        return;
+                    }
+                    if (interpretationContent.length < 1) {
+                        alert("해석 내용을 입력하세요.");
+                        return;
+                    }
+
+                    if (!/^[A-Za-z0-9\s\\!@#$%^&*(),.?":{}|<>]+$/.test(questionContent)) {
+                        alert("질문에는 영문 또는 영문과 숫자의 조합만 입력하세요.");
+                        return;
+                    }
+
+                    const questionObject = {
+                        content: questionContent,
+                        koContent: interpretationContent
+                    };
+
+                    questionArray.push(questionObject);
+                }
 
             });
 
@@ -126,12 +155,13 @@
                 $('#questionInputsContainer').empty();
 
                 const questionInputGroup = $('<div class="form-group question-input-group"></div>');
-                questionInputGroup.append('<label for="questionsTextarea">질문들</label>');
+                questionInputGroup.append('<label for="questionsTextarea">질문</label>');
                 questionInputGroup.append('<textarea class="form-control" name="questions" rows="3" placeholder="질문을 입력하세요"></textarea>');
-                questionInputGroup.append('<label for="interpretationsTextarea">해석들</label>');
+                questionInputGroup.append('<label for="interpretationsTextarea">해석</label>');
                 questionInputGroup.append('<textarea class="form-control" name="interpretations" rows="3" placeholder="해석을 입력하세요"></textarea>');
 
                 $('#questionInputsContainer').append(questionInputGroup);
+
             });
         });
     </script>
