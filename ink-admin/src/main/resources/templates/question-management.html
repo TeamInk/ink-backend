@@ -126,7 +126,7 @@
                 for (let i = 0; i < questions.length; i++) {
                     const questionContent = $(questions[i]).val().trim();
                     const interpretationContent = $(interpretations[i]).val().trim();
-
+                    // 유효성 검사
                     if (questionContent.length < 1) {
                         alert("질문 내용을 입력하세요.");
                         return;
@@ -141,6 +141,7 @@
                         return;
                     }
 
+                    // 질문과 해석을 객체로 만들어 배열에 추가
                     const questionObject = {
                         content: questionContent,
                         koContent: interpretationContent
@@ -148,9 +149,27 @@
 
                     questionArray.push(questionObject);
                 }
-
+                // 각각의 질문을 Ajax로 서버에 전송하여 등록
+                for (let i = 0; i < questionArray.length; i++) {
+                    $.ajax({
+                        url: '/api/question',
+                        type: 'POST',
+                        contentType: 'application/json',
+                        data: JSON.stringify(questionArray[i]),
+                        success: function () {
+                            if (i === questionArray.length - 1) {
+                                alert('질문들이 등록되었습니다.');
+                                location.reload();
+                            }
+                        },
+                        error: function (error) {
+                            alert('질문 등록에 실패했습니다: ' + error.responseText);
+                        }
+                    });
+                }
             });
 
+            // 모달 창이 표시될 때마다 질문과 해석 입력 폼을 동적으로 추가
             $('#multiQuestionModal').on('show.bs.modal', function () {
                 $('#questionInputsContainer').empty();
 
