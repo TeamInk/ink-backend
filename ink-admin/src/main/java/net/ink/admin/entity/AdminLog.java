@@ -25,7 +25,7 @@ public class AdminLog {
     private AdminMember actionedAdminMember;
 
     @NotNull
-    @Column(nullable = false, unique = true)
+    @Column(nullable = false)
     private String action;
 
     @NotNull

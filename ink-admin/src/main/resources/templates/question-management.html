@@ -20,10 +20,41 @@
                     <input type="text" class="form-control" id="koContent" placeholder="해석을 입력하세요">
                 </div>
                 <button type="submit" class="btn btn-primary">질문 등록</button>
+                <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#multiQuestionModal">질문 다수 등록</button>
             </form>
         </div>
     </div>
     <!-- End of input form and submit button -->
+
+    <div class="modal fade" id="multiQuestionModal" tabindex="-1" role="dialog" aria-labelledby="multiQuestionModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="multiQuestionModalLabel">질문 다수 등록</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div id="questionInputsContainer">
+                        <div class="form-group question-input-group">
+                            <label for="questionsTextarea">질문</label>
+                            <textarea class="form-control" id="questionsTextarea" name="questions" rows="3" placeholder="질문을 입력하세요"></textarea>
+                        </div>
+                        <div class="form-group question-input-group">
+                            <label for="interpretationsTextarea">해석</label>
+                            <textarea class="form-control" id="interpretationsTextarea" name="interpretations" rows="3" placeholder="해석을 입력하세요"></textarea>
+                        </div>
+                    </div>
+                    <button type="button" class="btn btn-primary" id="addQuestionInput">+</button>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">닫기</button>
+                    <button type="button" class="btn btn-primary" id="registerMultipleQuestions">등록</button>
+                </div>
+            </div>
+        </div>
+    </div>
 
     <div class="card shadow mb-4">
         <div class="card-header py-3">
@@ -68,9 +99,91 @@
     </div>
     <!-- Add this at the end of your tables.html file -->
     <script th:src="@{/vendor/jquery/jquery.min.js}"></script>
+
     <script>
         $(document).ready(function () {
-            // Add these event handlers
+            // + 버튼 작동
+            $('#addQuestionInput').on('click', function () {
+                const questionInputGroup = $('<div class="form-group question-input-group"></div>');
+                questionInputGroup.append('<label for="questionsTextarea">질문</label>');
+                questionInputGroup.append('<textarea class="form-control" name="questions" rows="3" placeholder="질문을 입력하세요"></textarea>');
+                questionInputGroup.append('<label for="interpretationsTextarea">해석</label>');
+                questionInputGroup.append('<textarea class="form-control" name="interpretations" rows="3" placeholder="해석을 입력하세요"></textarea>');
+
+                $('#questionInputsContainer').append(questionInputGroup);
+            });
+
+            // 눌렀을때만 보여주게
+            $('#multiQuestionModalBtn').on('click', function () {
+                $('#multiQuestionModal').modal('show');
+            });
+
+            $('#registerMultipleQuestions').on('click', async function () {
+                const questions = $('textarea[name="questions"]');
+                const interpretations = $('textarea[name="interpretations"]');
+
+                const questionArray = [];
+
+                for (let i = 0; i < questions.length; i++) {
+                    const questionContent = $(questions[i]).val().trim();
+                    const interpretationContent = $(interpretations[i]).val().trim();
+                    // 유효성 검사
+                    if (questionContent.length < 1) {
+                        alert("질문 내용을 입력하세요.");
+                        return;
+                    }
+                    if (interpretationContent.length < 1) {
+                        alert("해석 내용을 입력하세요.");
+                        return;
+                    }
+
+                    if (!/^[A-Za-z0-9\s\\!@#$%^&*(),.?":{}|<>]+$/.test(questionContent)) {
+                        alert("질문에는 영문 또는 영문과 숫자의 조합만 입력하세요.");
+                        return;
+                    }
+
+                    // 질문과 해석을 객체로 만들어 배열에 추가
+                    const questionObject = {
+                        content: questionContent,
+                        koContent: interpretationContent
+                    };
+
+                    questionArray.push(questionObject);
+                }
+                // 각각의 질문을 Ajax로 서버에 전송하여 등록
+                for (let i = 0; i < questionArray.length; i++) {
+                    try {
+                        await $.ajax({
+                            url: '/api/question',
+                            type: 'POST',
+                            contentType: 'application/json',
+                            data: JSON.stringify(questionArray[i]),
+                        });
+
+                        if (i === questionArray.length - 1) {
+                            alert('질문들이 등록되었습니다.');
+                            location.reload();
+                        }
+                    } catch (error) {
+                        alert('질문 등록에 실패했습니다: ' + error.responseText);
+                    }
+                }
+            });
+
+            // 모달 창이 표시될 때마다 질문과 해석 입력 폼을 동적으로 추가
+            $('#multiQuestionModal').on('show.bs.modal', function () {
+                $('#questionInputsContainer').empty();
+
+                const questionInputGroup = $('<div class="form-group question-input-group"></div>');
+                questionInputGroup.append('<label for="questionsTextarea">질문</label>');
+                questionInputGroup.append('<textarea class="form-control" name="questions" rows="3" placeholder="질문을 입력하세요"></textarea>');
+                questionInputGroup.append('<label for="interpretationsTextarea">해석</label>');
+                questionInputGroup.append('<textarea class="form-control" name="interpretations" rows="3" placeholder="해석을 입력하세요"></textarea>');
+
+                $('#questionInputsContainer').append(questionInputGroup);
+
+            });
+
             $('tbody tr').hover(
                 function () {
                     $(this).addClass('hover-bg');
@@ -134,5 +247,6 @@
             });
         });
     </script>
+
 
 </div>
