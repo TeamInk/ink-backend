@@ -112,6 +112,7 @@
 
                 $('#questionInputsContainer').append(questionInputGroup);
             });
+
             // 눌렀을때만 보여주게
             $('#multiQuestionModalBtn').on('click', function () {
                 $('#multiQuestionModal').modal('show');
@@ -182,11 +183,7 @@
                 $('#questionInputsContainer').append(questionInputGroup);
 
             });
-        });
-    </script>
-    <script>
-        $(document).ready(function () {
-            // Add these event handlers
+
             $('tbody tr').hover(
                 function () {
                     $(this).addClass('hover-bg');
@@ -249,7 +246,7 @@
                 "order": [0, "desc"]
             });
         });
-
     </script>
+
 
 </div>
