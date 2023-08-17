@@ -26,7 +26,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     public static final String[] EXCLUDED_URLS = {
             "/api/member/signup",
             "/api/member/nickname-exists/**",
-            "/api/member/user-exists/**",
+            "/api/member/user-exists",
             "/api/test",
             "/api/test-failure",
             "/api/jwt",
