@@ -18,4 +18,5 @@
     <include file="config/liquibase/changelog/20210708_today_expression.xml"/>
     <include file="config/liquibase/changelog/20230413_admin.xml"/>
     <include file="config/liquibase/changelog/20230420_admin_log.xml"/>
+    <include file="config/liquibase/changelog/20230909_reply_expand.xml"/>
 </databaseChangeLog>
