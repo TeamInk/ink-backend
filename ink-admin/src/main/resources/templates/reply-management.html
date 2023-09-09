@@ -20,6 +20,7 @@
                         <th>이미지</th>
                         <th>좋아요 수</th>
                         <th>삭제</th>
+                        <th>등록날짜</th>
                     </tr>
                     </thead>
                     <tfoot>
@@ -31,6 +32,7 @@
                         <th>이미지</th>
                         <th>좋아요 수</th>
                         <th>삭제</th>
+                        <th>등록날짜</th>
                     </tr>
                     </tfoot>
                     <tbody>
@@ -44,6 +46,7 @@
                         <td> <!-- Add the delete button to each row -->
                             <button class="btn btn-danger delete-btn" th:data-reply-id="${reply.replyId}">삭제</button>
                         </td>
+                        <td th:text="${reply.regDate}"></td>
                     </tr>
                     </tbody>
                 </table>
