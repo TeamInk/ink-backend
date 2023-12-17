@@ -140,16 +140,6 @@
                 if (confirm('*주의: 관련 답변과 단어 힌트들이 모두 삭제됩니다. 이 질문을 삭제할까요?')) {
 
                     try {
-                        // 힌트를 확인 후 삭제
-                        const wordHints = $('.delete-hint').map((_, el) => $(el).data('hint-id')).get();
-                        for (let hintId of wordHints) {
-                            await $.ajax({
-                                url: '/api/word-hint/' + hintId,
-                                type: 'DELETE'
-                            });
-                        }
-
-                        // 힌트 삭제 후 질문 삭제
                         await $.ajax({
                             url: '/api/question/' + questionId,
                             type: 'DELETE'
