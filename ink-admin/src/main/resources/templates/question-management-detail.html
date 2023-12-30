@@ -134,27 +134,21 @@
                 }
             });
 
-            $('#deleteButton').on('click', async function() {
+            $('#deleteButton').on('click', function () {
                 const questionId = $('#questionIdHolder').data('question-id');
-
                 if (confirm('*주의: 관련 답변과 단어 힌트들이 모두 삭제됩니다. 이 질문을 삭제할까요?')) {
-
-                    try {
-                        await $.ajax({
-                            url: '/api/question/' + questionId,
-                            type: 'DELETE'
-                        });
-
-                        alert("삭제되었습니다.");
-                        location.href = '/question-management';
-
-                    } catch (error) {
-                        alert("삭제에 실패했습니다.");
-                        console.error('Error:', error);
-                    }
-
-                }
-            });
+                    $.ajax({
+                        url: '/api/question/' + questionId,
+                        type: 'DELETE',
+                        success: function () {
+                            alert("삭제되었습니다.");
+                            location.href = '/question-management';
+                        },
+                        error: function (error) {
+                            alert("삭제에 실패했습니다.");
+                            console.error('Error deleting question:', error);
+                        }
+                    });
 
 
             $('.edit-hint').on('click', function () {
