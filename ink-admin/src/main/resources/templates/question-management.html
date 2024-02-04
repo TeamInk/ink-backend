@@ -37,16 +37,19 @@
                 </div>
                 <div class="modal-body">
                     <div id="questionInputsContainer">
-                        <div class="form-group question-input-group">
-                            <label for="questionsTextarea">질문</label>
-                            <textarea class="form-control" id="questionsTextarea" name="questions" rows="3" placeholder="질문을 입력하세요"></textarea>
-                        </div>
-                        <div class="form-group question-input-group">
-                            <label for="interpretationsTextarea">해석</label>
-                            <textarea class="form-control" id="interpretationsTextarea" name="interpretations" rows="3" placeholder="해석을 입력하세요"></textarea>
+                        <!-- Initial set of input fields -->
+                        <div class="question-input-group mb-3">
+                            <div class="form-group">
+                                <label>질문</label>
+                                <textarea class="form-control" name="questions" rows="2" placeholder="질문을 입력하세요"></textarea>
+                            </div>
+                            <div class="form-group">
+                                <label>해석</label>
+                                <textarea class="form-control" name="interpretations" rows="2" placeholder="해석을 입력하세요"></textarea>
+                            </div>
+                            <button type="button" class="btn btn-primary" id="addQuestionInput">질문 추가</button>
                         </div>
                     </div>
-                    <button type="button" class="btn btn-primary" id="addQuestionInput">+</button>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">닫기</button>
@@ -104,12 +107,10 @@
         $(document).ready(function () {
             // + 버튼 작동
             $('#addQuestionInput').on('click', function () {
-                const questionInputGroup = $('<div class="form-group question-input-group"></div>');
-                questionInputGroup.append('<label for="questionsTextarea">질문</label>');
-                questionInputGroup.append('<textarea class="form-control" name="questions" rows="3" placeholder="질문을 입력하세요"></textarea>');
-                questionInputGroup.append('<label for="interpretationsTextarea">해석</label>');
-                questionInputGroup.append('<textarea class="form-control" name="interpretations" rows="3" placeholder="해석을 입력하세요"></textarea>');
-
+                const questionInputGroup = $('<div class="question-input-group mb-3"></div>');
+                questionInputGroup.append('<div class="form-group"><label>질문</label><textarea class="form-control" name="questions" rows="2" placeholder="질문을 입력하세요"></textarea></div>');
+                questionInputGroup.append('<div class="form-group"><label>해석</label><textarea class="form-control" name="interpretations" rows="2" placeholder="해석을 입력하세요"></textarea></div>');
+                questionInputGroup.append('<button type="button" class="btn btn-danger remove-question-input">제거</button>');
                 $('#questionInputsContainer').append(questionInputGroup);
             });
 
@@ -171,17 +172,8 @@
             });
 
             // 모달 창이 표시될 때마다 질문과 해석 입력 폼을 동적으로 추가
-            $('#multiQuestionModal').on('show.bs.modal', function () {
-                $('#questionInputsContainer').empty();
-
-                const questionInputGroup = $('<div class="form-group question-input-group"></div>');
-                questionInputGroup.append('<label for="questionsTextarea">질문</label>');
-                questionInputGroup.append('<textarea class="form-control" name="questions" rows="3" placeholder="질문을 입력하세요"></textarea>');
-                questionInputGroup.append('<label for="interpretationsTextarea">해석</label>');
-                questionInputGroup.append('<textarea class="form-control" name="interpretations" rows="3" placeholder="해석을 입력하세요"></textarea>');
-
-                $('#questionInputsContainer').append(questionInputGroup);
-
+            $('#questionInputsContainer').on('click', '.remove-question-input', function () {
+                $(this).closest('.question-input-group').remove();
             });
 
             $('tbody tr').hover(
