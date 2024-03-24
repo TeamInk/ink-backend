@@ -1,0 +1,9 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<dataset>
+    <member_report report_id="1" reporter_id="1" target_id="2" reason="Reason 1" hide_to_reporter="true" />
+    <member_report report_id="2" reporter_id="2" target_id="1" reason="Reason 2" hide_to_reporter="true" />
+    <member_report report_id="3" reporter_id="1" target_id="3" reason="Reason 3" hide_to_reporter="true" />
+    <member_report report_id="4" reporter_id="3" target_id="1" reason="Reason 4" hide_to_reporter="true" />
+    <member_report report_id="5" reporter_id="2" target_id="3" reason="Reason 5" hide_to_reporter="true" />
+    <member_report report_id="6" reporter_id="1" target_id="2" reason="New Reason" hide_to_reporter="true" />
+</dataset>
