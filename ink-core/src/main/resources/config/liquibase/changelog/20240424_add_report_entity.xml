@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd
+        http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd">
+
+    <!-- 테이블 생성 -->
+    <changeSet id="20240324-1" author="hkpark">
+        <createTable tableName="member_report">
+            <column name="report_id" type="int" remarks="PK">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="reporter_id" type="int" remarks="신고자 ID">
+                <constraints nullable="false"/>
+            </column>
+            <column name="target_id" type="int" remarks="피신고자 ID">
+                <constraints nullable="false"/>
+            </column>
+            <column name="reason" type="varchar(255)" remarks="신고사유"/>
+            <column name="visible_to_reporter" type="boolean" remarks="신고자에게 해당 사용자의 게시물이 보이는가" defaultValueBoolean="true">
+                <constraints nullable="false"/>
+            </column>
+            <column name="reg_date" type="datetime" remarks="작성날짜">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+
+    <!-- 외래 키 제약 조건 추가 -->
+    <changeSet id="20240324-2" author="hkpark">
+        <addForeignKeyConstraint constraintName="FK_member_TO_member_report"
+                                 baseTableName="member_report"
+                                 baseColumnNames="reporter_id"
+                                 referencedTableName="member"
+                                 referencedColumnNames="member_id"/>
+    </changeSet>
+
+    <changeSet id="20240324-3" author="hkpark">
+        <addForeignKeyConstraint constraintName="FK_member_TO_member_report_2"
+                                 baseTableName="member_report"
+                                 baseColumnNames="target_id"
+                                 referencedTableName="member"
+                                 referencedColumnNames="member_id"/>
+    </changeSet>
+
+    <!-- 댓글 신고 테이블 생성 -->
+    <changeSet id="20240324-4" author="hkpark">
+        <createTable tableName="reply_report">
+            <column name="report_id" type="int" remarks="PK">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="reply_id" type="int" remarks="신고 게시물 pk">
+                <constraints nullable="false"/>
+            </column>
+            <column name="reporter_id" type="int" remarks="신고자 pk">
+                <constraints nullable="false"/>
+            </column>
+            <column name="reason" type="varchar(255)" remarks="신고 사유"/>
+            <column name="visible_to_reporter" type="boolean" remarks="사용자에게 해당 게시물이 보이는가" defaultValueBoolean="true">
+                <constraints nullable="false"/>
+            </column>
+            <column name="reg_date" type="datetime" remarks="작성시간">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+
+    <!-- 댓글 신고 테이블에 대한 외래 키 제약 조건 추가 -->
+    <changeSet id="20240324-5" author="hkpark">
+        <addForeignKeyConstraint constraintName="FK_reply_TO_reply_report_1"
+                                 baseTableName="reply_report"
+                                 baseColumnNames="reply_id"
+                                 referencedTableName="reply"
+                                 referencedColumnNames="reply_id"/>
+    </changeSet>
+
+    <changeSet id="20240324-6" author="hkpark">
+        <addForeignKeyConstraint constraintName="FK_member_TO_reply_report_1"
+                                 baseTableName="reply_report"
+                                 baseColumnNames="reporter_id"
+                                 referencedTableName="member"
+                                 referencedColumnNames="member_id"/>
+    </changeSet>
+
+</databaseChangeLog>
