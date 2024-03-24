@@ -10,17 +10,17 @@
     <!-- 테이블 생성 -->
     <changeSet id="20240324-1" author="hkpark">
         <createTable tableName="member_report">
-            <column name="report_id" type="int" remarks="PK">
+            <column name="report_id" type="bigint" remarks="PK" autoIncrement="true">
                 <constraints primaryKey="true" nullable="false"/>
             </column>
-            <column name="reporter_id" type="int" remarks="신고자 ID">
+            <column name="reporter_id" type="bigint" remarks="신고자 ID">
                 <constraints nullable="false"/>
             </column>
-            <column name="target_id" type="int" remarks="피신고자 ID">
+            <column name="target_id" type="bigint" remarks="피신고자 ID">
                 <constraints nullable="false"/>
             </column>
             <column name="reason" type="varchar(255)" remarks="신고사유"/>
-            <column name="visible_to_reporter" type="boolean" remarks="신고자에게 해당 사용자의 게시물이 보이는가" defaultValueBoolean="true">
+            <column name="hide_to_reporter" type="boolean" remarks="신고자에게 해당 사용자의 게시물이 보이는가" defaultValueBoolean="true">
                 <constraints nullable="false"/>
             </column>
             <column name="reg_date" type="datetime" remarks="작성날짜">
@@ -49,17 +49,17 @@
     <!-- 댓글 신고 테이블 생성 -->
     <changeSet id="20240324-4" author="hkpark">
         <createTable tableName="reply_report">
-            <column name="report_id" type="int" remarks="PK">
+            <column name="report_id" type="bigint" remarks="PK" autoIncrement="true">
                 <constraints primaryKey="true" nullable="false"/>
             </column>
-            <column name="reply_id" type="int" remarks="신고 게시물 pk">
+            <column name="reply_id" type="bigint" remarks="신고 게시물 pk">
                 <constraints nullable="false"/>
             </column>
-            <column name="reporter_id" type="int" remarks="신고자 pk">
+            <column name="reporter_id" type="bigint" remarks="신고자 pk">
                 <constraints nullable="false"/>
             </column>
             <column name="reason" type="varchar(255)" remarks="신고 사유"/>
-            <column name="visible_to_reporter" type="boolean" remarks="사용자에게 해당 게시물이 보이는가" defaultValueBoolean="true">
+            <column name="hide_to_reporter" type="boolean" remarks="사용자에게 해당 게시물이 보이는가" defaultValueBoolean="true">
                 <constraints nullable="false"/>
             </column>
             <column name="reg_date" type="datetime" remarks="작성시간">
