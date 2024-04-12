@@ -27,14 +27,14 @@ public class S3FileUploader implements FileUploader {
 
     @Override
     public String uploadMultiPartFile(MultipartFile mFile, String filePath) {
-        String fullFilePath = PathUtil.replaceWindowPathToLinuxPath(filePath);
+        String fullFilePath = PathUtil.replaceWindowPathToLinuxPath(filePath) + "/" + generateFileName(mFile);
         S3ObjectUploadDto s3ObjectUploadDto = buildObjectUploadDto(mFile);
 
         s3Client.putObject(new PutObjectRequest(
                 bucket, fullFilePath, s3ObjectUploadDto.getByteArrayInputStream(), s3ObjectUploadDto.getObjectMetadata()
         ).withCannedAcl(CannedAccessControlList.PublicRead));
 
-        return filePath;
+        return fullFilePath;
     }
 
     private S3ObjectUploadDto buildObjectUploadDto(MultipartFile file) {
@@ -50,6 +50,21 @@ public class S3FileUploader implements FileUploader {
         } catch (IOException e) {
             throw new InkException(e);
         }
+    }
+
+    private String generateFileName(MultipartFile mFile) {
+        String currentTimeStamp = String.valueOf(System.currentTimeMillis());
+        String originalFileName = mFile.getOriginalFilename() == null ? "" : mFile.getOriginalFilename();
+        String extension = getExtension(originalFileName);
+        return currentTimeStamp + extension;
+    }
+
+    private String getExtension(String originalFileName) {
+        int lastIndex = originalFileName.lastIndexOf(".");
+        if (lastIndex == -1) {
+            return "";
+        }
+        return originalFileName.substring(lastIndex);
     }
 
     @Getter
