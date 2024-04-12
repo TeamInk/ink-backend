@@ -105,8 +105,8 @@ jobs:
           VERSION: ${{ steps.get-tag.outputs.tag }}
           IMAGE: ink-admin
           DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
-          CLOUD_AWS_CREDENTIALS_ACCESS_KEY: ${{ secrets.CLOUD_AWS_CREDENTIALS_ACCESS_KEY }}
-          CLOUD_AWS_CREDENTIALS_SECRET_KEY: ${{ secrets.CLOUD_AWS_CREDENTIALS_SECRET_KEY }}
+ #         CLOUD_AWS_CREDENTIALS_ACCESS_KEY: ${{ secrets.CLOUD_AWS_CREDENTIALS_ACCESS_KEY }}
+ #         CLOUD_AWS_CREDENTIALS_SECRET_KEY: ${{ secrets.CLOUD_AWS_CREDENTIALS_SECRET_KEY }}
         with:
           input: deployment/docker-compose-admin-dev.yml
           output: docker-compose-admin-dev.yml
