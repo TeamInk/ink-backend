@@ -26,5 +26,5 @@ public interface ReplyRepository extends JpaRepository<Reply, Long> {
     boolean existsByRegDateBetweenAndAuthorMemberId(LocalDateTime startDateTime, LocalDateTime endDateTime, Long memberId);
     boolean existsByQuestionQuestionIdAndAuthorMemberId(Long questionId, Long memberId);
     Optional<Reply> findByAuthorMemberIdAndQuestionQuestionId(Long memberId, Long questionId);
-
+    Optional<Reply> findByAuthorMemberIdAndQuestionQuestionIdAndVisible(Long memberId, Long questionId, Boolean visible);
 }
