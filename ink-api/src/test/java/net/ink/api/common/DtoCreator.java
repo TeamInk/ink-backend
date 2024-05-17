@@ -106,7 +106,7 @@ public class DtoCreator {
     public static MemberReportDto.ReadOnly createMemberReportDto() {
         return MemberReportDto.ReadOnly.builder()
                 .reportId(1L)
-                .targetId(1L)
+                .targetId(2L)
                 .reporterId(1L)
                 .reason("Test Reason")
                 .hideToReporter(true)

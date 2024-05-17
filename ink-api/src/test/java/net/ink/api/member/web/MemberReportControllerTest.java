@@ -37,6 +37,22 @@ class MemberReportControllerTest extends AbstractControllerTest {
 
     @Test
     @WithMockInkUser
+    @DisplayName("Should return BAD REQUEST when reporting self")
+    public void shouldReturnBadRequestWhenReportingSelf() throws Exception {
+        MemberReportDto memberReportDto = DtoCreator.createMemberReportDto();
+        memberReportDto.setTargetId(1L);
+        ObjectMapper objectMapper = new ObjectMapper();
+        String json = objectMapper.writeValueAsString(memberReportDto);
+
+        mockMvc.perform(post("/api/member/report")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(json))
+                .andExpect(status().isBadRequest())
+                .andDo(print());
+    }
+
+    @Test
+    @WithMockInkUser
     @DisplayName("Should return BAD REQUEST when reporting a member fails")
     public void shouldReturnBadRequestWhenReportingReplyFails() throws Exception {
         mockMvc.perform(post("/api/member/report")

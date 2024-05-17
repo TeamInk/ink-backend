@@ -12,6 +12,7 @@ import net.ink.core.reply.entity.ReplyLikes;
 import net.ink.core.reply.entity.ReplyLikesPK;
 import net.ink.core.todayexpression.entity.UsefulExpression;
 
+import java.lang.annotation.Target;
 import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.HashSet;
@@ -146,10 +147,12 @@ public class EntityCreator {
     }
 
     public static MemberReport createMemberReportEntity() {
+        Member target = EntityCreator.createMemberEntity();
+        target.setMemberId(2L);
         return MemberReport.builder()
                 .reportId(1L)
                 .reporter(EntityCreator.createMemberEntity())
-                .target(EntityCreator.createMemberEntity())
+                .target(target)
                 .reason("Test Reason")
                 .hideToReporter(true)
                 .regDate(LocalDateTime.of(2020, 10, 14, 17, 11, 9))
