@@ -6,6 +6,7 @@ import net.ink.api.question.dto.QuestionDto;
 import net.ink.api.question.dto.WordHintDto;
 import net.ink.api.reply.dto.ReplyDto;
 import net.ink.api.reply.dto.ReplyLikesDto;
+import net.ink.api.reply.dto.ReplyReportDto;
 import net.ink.api.todayexpression.dto.UsefulExpressionDto;
 import net.ink.core.member.entity.MemberSetting;
 
@@ -88,6 +89,16 @@ public class DtoCreator {
         return BadgeDto.builder()
                 .name("Badge Test")
                 .content("Badge Test Content")
+                .build();
+    }
+
+    public static ReplyReportDto.ReadOnly createReplyReportDto() {
+        return ReplyReportDto.ReadOnly.builder()
+                .reportId(1L)
+                .replyId(1L)
+                .reporterId(1L)
+                .reason("Test Reason")
+                .hideToReporter(true)
                 .build();
     }
 

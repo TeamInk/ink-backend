@@ -17,9 +17,8 @@ public class ReplyReportService {
     private final ReplyReportRepository replyReportRepository;
 
     @Transactional
-    public void reportReply(ReplyReport replyReport) {
-        replyReportRepository.save(replyReport);
-
+    public ReplyReport reportReply(ReplyReport replyReport) {
         eventPublisher.publishEvent(new ReplyReportEvent(replyReport));
+        return replyReportRepository.save(replyReport);
     }
 }

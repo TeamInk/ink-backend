@@ -6,6 +6,7 @@ import net.ink.core.badge.entity.BadgeAccomplishedPK;
 import net.ink.core.member.entity.Member;
 import net.ink.core.member.entity.MemberScrap;
 import net.ink.core.member.entity.MemberScrapPK;
+import net.ink.core.member.entity.ReplyReport;
 import net.ink.core.question.entity.Question;
 import net.ink.core.question.entity.WordHint;
 import net.ink.core.reply.entity.Reply;
@@ -132,6 +133,17 @@ public class EntityCreator {
                 .id(new BadgeAccomplishedPK(1L, 1L))
                 .member(EntityCreator.createMemberEntity())
                 .badge(EntityCreator.createBadgeEntity())
+                .build();
+    }
+
+    public static ReplyReport createReplyReportEntity() {
+        return ReplyReport.builder()
+                .reportId(1L)
+                .reply(EntityCreator.createReplyEntity())
+                .reporter(EntityCreator.createMemberEntity())
+                .reason("Test Reason")
+                .hideToReporter(true)
+                .regDate(LocalDateTime.of(2020, 10, 14, 17, 11, 9))
                 .build();
     }
 }
