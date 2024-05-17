@@ -17,13 +17,19 @@ import net.ink.core.question.entity.Question;
 import net.ink.api.reply.component.ReplyMapper;
 import net.ink.api.reply.dto.ReplyDto;
 import net.ink.core.reply.entity.Reply;
+import net.ink.core.reply.service.ReplyReportFilterService;
 import net.ink.core.reply.service.ReplyService;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import springfox.documentation.annotations.ApiIgnore;
 
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
+import java.util.List;
+import java.util.Objects;
+import java.util.stream.Collectors;
 
 @Api(value = "답변 엔드포인트", tags = "답변 엔드포인트")
 @RestController
@@ -35,15 +41,19 @@ public class ReplyController {
     private final ReplyService replyService;
     private final ReplyPaginationService replyPaginationService;
     private final BadgeAccomplishedService badgeAccomplishedService;
+    private final ReplyReportFilterService replyReportFilterService;
 
     @ApiOperation(value = "답변 목록 가져오기", notes = "전체 답변 목록을 페이징으로 가져옵니다.")
     @GetMapping
     public ResponseEntity<ApiPageResult<ReplyDto.ReadOnly>> get(ApiPageRequest pageRequest,
                                                                 @CurrentUser Member member){
-        return ResponseEntity.ok(ApiPageResult.ok(
-                replyPaginationService.findReplies(pageRequest)
-                .map(x -> replyMapper.toDto(x, member))
-        ));
+        List<ReplyDto.ReadOnly> filteredReplies = replyPaginationService.findReplies(pageRequest).stream()
+                .filter(reply -> !replyReportFilterService.isReplyHideByReporter(reply, member))
+                .map(reply -> replyMapper.toDto(reply, member))
+                .collect(Collectors.toList());
+
+        return ResponseEntity.ok(
+                ApiPageResult.ok(new PageImpl<>(filteredReplies, pageRequest.convert(), filteredReplies.size())));
     }
 
     @ApiOperation(value = "답변 상세 조회하기", notes = "답변에 대한 상세 정보를 가져옵니다.")
