@@ -36,7 +36,7 @@ public class ReplyRepositoryTest {
 
     @Test
     public void 멤버_답변_목록_조회_내림차순(){
-        List<Reply> replyList = replyRepository.findAllByAuthorMemberIdOrderByReplyIdDesc(MEMBER_ID);
+        List<Reply> replyList = replyRepository.findAllByAuthorMemberIdAndVisibleOrderByReplyIdDesc(MEMBER_ID, true);
 
         assertEquals(2, replyList.size());
 
@@ -51,7 +51,7 @@ public class ReplyRepositoryTest {
 
     @Test
     public void 질문_답변_목록_조회(){
-        List<Reply> replyList = replyRepository.findAllByQuestionQuestionId(QUESTION_ID);
+        List<Reply> replyList = replyRepository.findAllByQuestionQuestionIdAndVisible(QUESTION_ID, true);
 
         assertEquals(3, replyList.size());
 
@@ -66,8 +66,8 @@ public class ReplyRepositoryTest {
 
     @Test
     public void 질문_답변_목록_조회_페이징(){
-        List<Reply> replyList = replyRepository.findAllByQuestionQuestionId(
-                QUESTION_ID, PageRequest.of(0, 1)).getContent();
+        List<Reply> replyList = replyRepository.findAllByQuestionQuestionIdAndVisible(
+                QUESTION_ID, true, PageRequest.of(0, 1)).getContent();
 
         assertEquals(1, replyList.size());
 
@@ -86,8 +86,8 @@ public class ReplyRepositoryTest {
         LocalDateTime startDateTime2 = LocalDateTime.of(date2, LocalTime.of(0,0,0));
         LocalDateTime endDateTime2 = LocalDateTime.of(date2, LocalTime.of(23,59,59));
 
-        boolean isExist = replyRepository.existsByRegDateBetweenAndAuthorMemberId(startDateTime, endDateTime, MEMBER_ID);
-        boolean isExist2 = replyRepository.existsByRegDateBetweenAndAuthorMemberId(startDateTime2, endDateTime2, MEMBER_ID);
+        boolean isExist = replyRepository.existsByRegDateBetweenAndAuthorMemberIdAndVisible(startDateTime, endDateTime, MEMBER_ID, true);
+        boolean isExist2 = replyRepository.existsByRegDateBetweenAndAuthorMemberIdAndVisible(startDateTime2, endDateTime2, MEMBER_ID, true);
 
         assertTrue(isExist);
         assertFalse(isExist2);
@@ -95,7 +95,7 @@ public class ReplyRepositoryTest {
 
     @Test
     public void 멤버와_질문으로_답변_찾기_테스트() {
-        Reply oldReply = replyRepository.findByAuthorMemberIdAndQuestionQuestionId(MEMBER_ID, QUESTION_ID).orElseThrow();
+        Reply oldReply = replyRepository.findByAuthorMemberIdAndQuestionQuestionIdAndVisible(MEMBER_ID, QUESTION_ID, true).orElseThrow();
 
         assertEquals(REPLY_ID, oldReply.getReplyId());
         assertEquals(MEMBER_ID, oldReply.getAuthor().getMemberId());
@@ -113,7 +113,7 @@ public class ReplyRepositoryTest {
 
     @Test
     public void 질문_연관_답변_조회_최신순_테스트() {
-        List<Reply> replies = replyRepository.findAllByQuestionQuestionId(QUESTION_ID, PageRequest.of(0,
+        List<Reply> replies = replyRepository.findAllByQuestionQuestionIdAndVisible(QUESTION_ID, true, PageRequest.of(0,
                 2, Sort.by(Sort.Direction.DESC, "regDate"))).getContent();
 
         assertEquals(2, replies.size());
@@ -141,5 +141,17 @@ public class ReplyRepositoryTest {
         reply.setReplyId(null);
 
         assertThrows(DataIntegrityViolationException.class, () -> replyRepository.saveAndFlush(reply));
+    }
+
+    @Test
+    public void 질문_인기순_조회_테스트() {
+        Page<Reply> replies = replyRepository.findAllByOrderByReplyLikesSize(PageRequest.of(0, 2));
+
+        assertEquals(2, replies.getNumberOfElements());
+        assertEquals(5, replies.getTotalElements());
+        assertEquals(3, replies.getTotalPages());
+        assertEquals(2, replies.getContent().size());
+        assertEquals(2, replies.getContent().get(0).getReplyLikes().size());
+        assertEquals(0, replies.getContent().get(1).getReplyLikes().size());
     }
 }
