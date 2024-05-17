@@ -13,7 +13,7 @@ public class MemberReportService {
     private final MemberReportRepository memberReportRepository;
 
     @Transactional
-    public void reportMember(MemberReport memberReport) {
-        memberReportRepository.save(memberReport);
+    public MemberReport reportMember(MemberReport memberReport) {
+        return memberReportRepository.save(memberReport);
     }
 }

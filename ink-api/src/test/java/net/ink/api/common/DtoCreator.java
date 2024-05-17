@@ -2,6 +2,7 @@ package net.ink.api.common;
 
 import net.ink.api.badge.dto.BadgeDto;
 import net.ink.api.member.dto.MemberDto;
+import net.ink.api.member.dto.MemberReportDto;
 import net.ink.api.question.dto.QuestionDto;
 import net.ink.api.question.dto.WordHintDto;
 import net.ink.api.reply.dto.ReplyDto;
@@ -102,4 +103,13 @@ public class DtoCreator {
                 .build();
     }
 
+    public static MemberReportDto.ReadOnly createMemberReportDto() {
+        return MemberReportDto.ReadOnly.builder()
+                .reportId(1L)
+                .targetId(1L)
+                .reporterId(1L)
+                .reason("Test Reason")
+                .hideToReporter(true)
+                .build();
+    }
 }
