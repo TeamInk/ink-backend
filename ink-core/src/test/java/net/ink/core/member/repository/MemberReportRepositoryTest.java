@@ -10,6 +10,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -53,5 +54,16 @@ public class MemberReportRepositoryTest {
     public void 멤버_리포트_삭제_테스트() {
         memberReportRepository.deleteById(1L);
         memberReportRepository.flush();
+    }
+    @Test
+    public void 멤버_리포트_신고자_조회_테스트() {
+        assertTrue(memberReportRepository.existsByTargetAndReporterAndHideToReporter(
+                Member.builder().memberId(1L).build(), Member.builder().memberId(2L).build(), true));
+
+        assertFalse(memberReportRepository.existsByTargetAndReporterAndHideToReporter(
+                Member.builder().memberId(1L).build(), Member.builder().memberId(2L).build(), false));
+
+        assertFalse(memberReportRepository.existsByTargetAndReporterAndHideToReporter(
+                Member.builder().memberId(1L).build(), Member.builder().memberId(5L).build(), true));
     }
 }
