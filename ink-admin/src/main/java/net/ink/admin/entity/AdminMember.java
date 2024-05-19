@@ -30,7 +30,7 @@ public class AdminMember {
 
     @NotNull
     @Column(nullable = false, unique = true)
-    private String email;
+    private String email;;
 
     @NotNull
     @Column(nullable = false)

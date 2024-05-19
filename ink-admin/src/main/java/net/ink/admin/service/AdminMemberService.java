@@ -9,6 +9,7 @@ import net.ink.core.core.exception.EntityNotFoundException;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import net.ink.admin.service.AdminEmailService;
 
 import javax.validation.Valid;
 
@@ -19,6 +20,7 @@ import static net.ink.core.core.message.ErrorMessage.NOT_EXIST_MEMBER;
 @RequiredArgsConstructor
 public class AdminMemberService {
     private final AdminMemberRepository adminMemberRepository;
+    private final AdminEmailService adminEmailService;
 
     @Transactional
     public AdminMember saveAdminMember(@Valid AdminMember newMember) {
@@ -55,16 +57,35 @@ public class AdminMemberService {
 
     @Transactional
     public void promoteAdminMemberById(Long adminId) {
-        AdminMember adminMember = adminMemberRepository.findById(adminId).orElseThrow(() -> new EntityNotFoundException(NOT_EXIST_MEMBER));
+        AdminMember adminMember = adminMemberRepository.findById(adminId)
+                .orElseThrow(() -> new EntityNotFoundException(NOT_EXIST_MEMBER));
+
+        boolean sendEmail = false;
+        String emailSubject = "";
+        String emailContent = "";
+
         if (adminMember.getRank() == AdminMember.RANK.PENDING) {
             adminMember.setRank(AdminMember.RANK.MANAGER);
+            sendEmail = true;
+            emailSubject = "승급 안내";
+            emailContent = "축하합니다! 매니저로 승급되셨습니다.";
         } else if (adminMember.getRank() == AdminMember.RANK.MANAGER) {
             adminMember.setRank(AdminMember.RANK.SUPERVISOR);
+            sendEmail = true;
+            emailSubject = "승급 안내";
+            emailContent = "축하합니다! 슈퍼바이저로 승급되셨습니다.";
+
             AdminMember currentMember = ((AdminUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getAdminMember();
-            currentMember = adminMemberRepository.findById(currentMember.getAdminId()).orElseThrow(() -> new EntityNotFoundException(NOT_EXIST_MEMBER));
+            currentMember = adminMemberRepository.findById(currentMember.getAdminId())
+                    .orElseThrow(() -> new EntityNotFoundException(NOT_EXIST_MEMBER));
             currentMember.setRank(AdminMember.RANK.MANAGER);
 
             SecurityContextHolder.clearContext();
+        }
+
+        if (sendEmail) {
+            String toEmail = adminMember.getEmail();
+            adminEmailService.sendPromotionEmail(toEmail, emailSubject, emailContent);
         }
     }
 }

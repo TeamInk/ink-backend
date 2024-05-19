@@ -20,6 +20,8 @@ dependencies {
     implementation 'org.springframework.security:spring-security-test'
     implementation 'javax.validation:validation-api:2.0.1.Final'
     implementation 'org.hibernate.validator:hibernate-validator:6.1.0.Final'
+    implementation 'org.springframework.boot:spring-boot-starter-mail'
+
 
 
     developmentOnly 'org.springframework.boot:spring-boot-devtools'
