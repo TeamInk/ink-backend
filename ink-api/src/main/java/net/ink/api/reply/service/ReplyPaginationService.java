@@ -18,7 +18,7 @@ public class ReplyPaginationService {
         if (pageRequest.getSort() == ApiPageRequest.PageSort.POPULAR)
             return replyRepository.findAllByQuestionQuestionIdOrderByReplyLikesSize(questionId, pageRequest.convert());
 
-        return replyRepository.findAllByQuestionQuestionId(questionId, pageRequest.convertWithNewestSort());
+        return replyRepository.findAllByQuestionQuestionIdAndVisible(questionId, true, pageRequest.convertWithNewestSort());
     }
 
     @Transactional(readOnly = true)
@@ -26,6 +26,6 @@ public class ReplyPaginationService {
         if (pageRequest.getSort() == ApiPageRequest.PageSort.POPULAR)
             return replyRepository.findAllByOrderByReplyLikesSize(pageRequest.convert());
 
-        return replyRepository.findAll(pageRequest.convertWithNewestSort());
+        return replyRepository.findAllByVisible(true, pageRequest.convertWithNewestSort());
     }
 }
