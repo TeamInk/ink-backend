@@ -4,6 +4,8 @@ import net.ink.admin.annotation.WithMockInkAdminUser;
 import net.ink.admin.web.AbstractControllerTest;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.mail.javamail.JavaMailSender;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
@@ -11,6 +13,8 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 class AdminApiControllerTest extends AbstractControllerTest {
+    @MockBean
+    private JavaMailSender javaMailSender;
 
     @Test
     @WithMockInkAdminUser
