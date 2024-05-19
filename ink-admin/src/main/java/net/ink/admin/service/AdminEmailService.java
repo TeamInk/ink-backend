@@ -6,15 +6,13 @@ import org.springframework.stereotype.Service;
 import lombok.RequiredArgsConstructor;
 
 @Service
+@RequiredArgsConstructor
 public class AdminEmailService {
 
     private final JavaMailSender emailSender;
-    private final String fromEmail;
 
-    public AdminEmailService(JavaMailSender emailSender, @Value("${EMAIL_FROM:noreply@example.com}") String fromEmail) {
-        this.emailSender = emailSender;
-        this.fromEmail = fromEmail;
-    }
+    @Value("${email.from}")
+    private String fromEmail;
 
     public void sendPromotionEmail(String toEmail, String subject, String text) {
         SimpleMailMessage message = new SimpleMailMessage();
