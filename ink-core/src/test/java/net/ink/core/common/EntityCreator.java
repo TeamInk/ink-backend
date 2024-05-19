@@ -3,6 +3,7 @@ package net.ink.core.common;
 import net.ink.core.badge.entity.Badge;
 import net.ink.core.badge.entity.BadgeAccomplished;
 import net.ink.core.badge.entity.BadgeAccomplishedPK;
+import net.ink.core.cookie.entity.CookieAcquirement;
 import net.ink.core.member.entity.*;
 import net.ink.core.member.entity.ReplyReport;
 import net.ink.core.question.entity.Question;
@@ -13,6 +14,7 @@ import net.ink.core.reply.entity.ReplyLikesPK;
 import net.ink.core.todayexpression.entity.UsefulExpression;
 
 import java.lang.annotation.Target;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.HashSet;
@@ -156,6 +158,14 @@ public class EntityCreator {
                 .reason("Test Reason")
                 .hideToReporter(true)
                 .regDate(LocalDateTime.of(2020, 10, 14, 17, 11, 9))
+                .build();
+    }
+
+    public static CookieAcquirement createCookieAcquirementEntity() {
+        return CookieAcquirement.builder()
+                .id(1L)
+                .member(EntityCreator.createMemberEntity())
+                .regDate(LocalDate.of(2020, 10, 14))
                 .build();
     }
 }
