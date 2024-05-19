@@ -30,7 +30,7 @@ public class ReplyReportDto {
     @JsonProperty(index = PropertyDisplayOrder.REASON)
     private String reason;
 
-    @ApiModelProperty(value = "신고자가 본인의 신고를 숨길지 여부", required = false, position = PropertyDisplayOrder.HIDE_TO_REPORTER)
+    @ApiModelProperty(value = "신고자에게 이 답변 숨김 여부 (기본: false)", required = false, position = PropertyDisplayOrder.HIDE_TO_REPORTER)
     @JsonProperty(index = PropertyDisplayOrder.HIDE_TO_REPORTER)
     private Boolean hideToReporter = false;
 
