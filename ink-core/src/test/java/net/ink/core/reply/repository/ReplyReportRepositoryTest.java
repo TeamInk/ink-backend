@@ -57,4 +57,23 @@ public class ReplyReportRepositoryTest {
         replyReportRepository.deleteById(1L);
         replyReportRepository.flush();
     }
+
+    @Test
+    public void 댓글로_연관_리포트_조회_테스트() {
+        Reply reply = Reply.builder().replyId(1L).build();
+        ReplyReport replyReport = replyReportRepository.findByReply(reply).get(0);
+
+        assertEquals(1L, replyReport.getReportId());
+        assertEquals(1L, replyReport.getReporter().getMemberId());
+        assertEquals("Reason 1", replyReport.getReason());
+        assertTrue(replyReport.getHideToReporter());
+    }
+
+    @Test
+    public void 댓글로_연관_리포트_count_조회_테스트() {
+        Reply reply = Reply.builder().replyId(1L).build();
+        int count = replyReportRepository.countByReply(reply);
+
+        assertEquals(1, count);
+    }
 }

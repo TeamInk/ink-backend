@@ -59,7 +59,7 @@ public class ReplyService {
         newReply.setQuestion(questionService.getQuestionById(questionId));
 
         Reply savedReply = replyRepository.saveAndFlush(newReply);
-        replyPostProcessService.postProcess(savedReply);
+        replyPostProcessService.postProcess(savedReply); // TODO 이벤트 기반으로 변경
 
         return savedReply;
     }
@@ -70,7 +70,7 @@ public class ReplyService {
 
     @Transactional(readOnly = true)
     public boolean isQuestionAlreadyReplied(Long questionId, Long authorId) {
-        return replyRepository.existsByQuestionQuestionIdAndAuthorMemberId(questionId, authorId);
+        return replyRepository.existsByQuestionQuestionIdAndAuthorMemberId(questionId, authorId); // visible 여부는 여기서는 확인하지 않는다.
     }
 
     @Transactional(readOnly = true)
@@ -78,7 +78,7 @@ public class ReplyService {
         LocalDateTime startDateTime = LocalDateTime.of(LocalDate.now(), LocalTime.of(0, 0, 0)); // 오늘 00:00:00
         LocalDateTime endDatetime = LocalDateTime.of(LocalDate.now(), LocalTime.of(23, 59, 59)); //오늘 23:59:59
 
-        return replyRepository.existsByRegDateBetweenAndAuthorMemberId(startDateTime, endDatetime, memberId);
+        return replyRepository.existsByRegDateBetweenAndAuthorMemberIdAndVisible(startDateTime, endDatetime, memberId, true);
     }
 
     @Transactional
@@ -109,14 +109,14 @@ public class ReplyService {
 
     @Transactional(readOnly = true)
     public Reply findReplyByQuestionIdAndMember(Long memberId, Long questionId) {
-        return replyRepository.findByAuthorMemberIdAndQuestionQuestionId(memberId, questionId)
+        return replyRepository.findByAuthorMemberIdAndQuestionQuestionIdAndVisible(memberId, questionId, true)
                 .orElseThrow(() -> new EntityNotFoundException(NOT_EXIST_REPLY));
     }
 
     @Transactional(readOnly = true)
     public List<Reply> findRepliesByMemberId(Long memberId){
 
-        return replyRepository.findAllByAuthorMemberIdOrderByReplyIdDesc(memberId);
+        return replyRepository.findAllByAuthorMemberIdAndVisibleOrderByReplyIdDesc(memberId, true);
     }
 
     @Transactional(readOnly = true)
