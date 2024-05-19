@@ -8,12 +8,15 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.test.context.jdbc.Sql;
+import org.springframework.mail.javamail.JavaMailSender;
+
+import javax.mail.internet.MimeMessage;
+import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 @SpringBootTest
 class AdminMemberServiceTest {
@@ -22,6 +25,9 @@ class AdminMemberServiceTest {
 
     @MockBean
     AdminMemberRepository adminMemberRepository;
+
+    @MockBean
+    private JavaMailSender javaMailSender;
 
     @Test
     @DisplayName("관리자 회원을 저장한다.")
@@ -81,4 +87,19 @@ class AdminMemberServiceTest {
 
         assertThrows(BadRequestException.class, () -> adminMemberService.deleteAdminMemberById(1L));
     }
+
+    @Test
+    @DisplayName("승급시 이메일을 보낸다.")
+    void promoteAdminMemberByIdInputEmailSend() {
+        AdminMember adminMember = new AdminMember();
+        adminMember.getAdminId();
+        adminMember.setRank(AdminMember.RANK.PENDING);
+        adminMember.setEmail("test3@email.com");
+        when(adminMemberRepository.findById(1L)).thenReturn(Optional.of(adminMember));
+
+        adminMemberService.promoteAdminMemberById(1L);
+
+        verify(javaMailSender, times(1)).send(any(MimeMessage.class));
+    }
+
 }

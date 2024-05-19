@@ -85,3 +85,8 @@ cloud:
       bucket: CLOUD_AWS_S3_BUCKET
     region:
       static: ap-northeast-2
+
+email:
+  username: EMAIL_USERNAME
+  password: EMAIL_PASSWORD
+  from: EMAIL_FROM
