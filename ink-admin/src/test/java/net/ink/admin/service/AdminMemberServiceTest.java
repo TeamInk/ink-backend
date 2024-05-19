@@ -8,6 +8,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 
 import javax.mail.internet.MimeMessage;
@@ -99,7 +100,7 @@ class AdminMemberServiceTest {
 
         adminMemberService.promoteAdminMemberById(1L);
 
-        verify(javaMailSender, times(1)).send(any(MimeMessage.class));
+        verify(javaMailSender, times(1)).send(any(SimpleMailMessage.class));
     }
 
 }
