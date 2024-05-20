@@ -1,12 +1,14 @@
 package net.ink.core.reply.service;
 
 import net.ink.core.common.EntityCreator;
+import net.ink.core.core.exception.AccessNotAllowedException;
 import net.ink.core.core.exception.BadRequestException;
 import net.ink.core.core.exception.EntityNotFoundException;
 import net.ink.core.member.entity.Member;
 import net.ink.core.question.service.QuestionService;
 import net.ink.core.reply.entity.Reply;
 import net.ink.core.reply.repository.ReplyRepository;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -16,14 +18,18 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.time.LocalDateTime;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Optional;
 
 import static net.ink.core.core.message.ErrorMessage.*;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.ArgumentMatchers.*;
+import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.BDDMockito.given;
-import static org.mockito.Mockito.doNothing;
+import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 public class ReplyServiceTest {
@@ -43,6 +49,9 @@ public class ReplyServiceTest {
     private static final Long MEMBER_ID = 1L;
     private static final Long QUESTION_ID = 1L;
     private static final Long REPLY_ID = 1L;
+
+    private final Member member = EntityCreator.createMemberEntity();
+    private final Reply reply = EntityCreator.createReplyEntity();
 
     @Nested
     @DisplayName("답변 등록 테스트")
@@ -183,6 +192,72 @@ public class ReplyServiceTest {
         }
     }
 
+    @Test
+    @DisplayName("Should delete reply when author is the same")
+    void shouldDeleteReplyWhenAuthorIsTheSame() {
+        when(replyRepository.findById(anyLong())).thenReturn(Optional.of(reply));
+
+        replyService.delete(member, reply.getReplyId());
+
+        verify(replyRepository, times(1)).deleteById(reply.getReplyId());
+    }
+
+    @Test
+    @DisplayName("Should throw exception when deleting reply of another author")
+    void shouldThrowExceptionWhenDeletingReplyOfAnotherAuthor() {
+        Member anotherMember = EntityCreator.createMemberEntity();
+        anotherMember.setMemberId(2L);
+        when(replyRepository.findById(anyLong())).thenReturn(Optional.of(reply));
+
+        assertThrows(AccessNotAllowedException.class, () -> replyService.delete(anotherMember, reply.getReplyId()));
+    }
+
+    @Test
+    @DisplayName("Should find reply by question id and member")
+    void shouldFindReplyByQuestionIdAndMember() {
+        when(replyRepository.findByAuthorMemberIdAndQuestionQuestionIdAndVisible(anyLong(), anyLong(), anyBoolean())).thenReturn(Optional.of(reply));
+
+        Reply foundReply = replyService.findReplyByQuestionIdAndMember(member.getMemberId(), reply.getQuestion().getQuestionId());
+
+        assertEquals(reply, foundReply);
+    }
+
+    @Test
+    @DisplayName("Should throw exception when reply not found by question id and member")
+    void shouldThrowExceptionWhenReplyNotFoundByQuestionIdAndMember() {
+        when(replyRepository.findByAuthorMemberIdAndQuestionQuestionIdAndVisible(anyLong(), anyLong(), anyBoolean())).thenReturn(Optional.empty());
+
+        assertThrows(EntityNotFoundException.class, () -> replyService.findReplyByQuestionIdAndMember(member.getMemberId(), reply.getQuestion().getQuestionId()));
+    }
+
+    @Test
+    @DisplayName("Should find replies by member id")
+    void shouldFindRepliesByMemberId() {
+        List<Reply> replies = Arrays.asList(reply, reply, reply);
+        when(replyRepository.findAllByAuthorMemberIdAndVisibleOrderByReplyIdDesc(anyLong(), anyBoolean())).thenReturn(replies);
+
+        List<Reply> foundReplies = replyService.findRepliesByMemberId(member.getMemberId());
+
+        assertEquals(replies, foundReplies);
+    }
+
+    @Test
+    @DisplayName("Should find reply by id")
+    void shouldFindReplyById() {
+        when(replyRepository.findById(anyLong())).thenReturn(Optional.of(reply));
+
+        Reply foundReply = replyService.findById(reply.getReplyId());
+
+        assertEquals(reply, foundReply);
+    }
+
+    @Test
+    @DisplayName("Should throw exception when reply not found by id")
+    void shouldThrowExceptionWhenReplyNotFoundById() {
+        when(replyRepository.findById(anyLong())).thenReturn(Optional.empty());
+
+        assertThrows(EntityNotFoundException.class, () -> replyService.findById(reply.getReplyId()));
+    }
 
 }
 
