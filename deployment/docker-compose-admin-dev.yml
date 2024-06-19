@@ -2,7 +2,6 @@ services:
   ink_backend_admin:
     networks:
       - ink_default
-
     image: docker.io/$DOCKER_USERNAME/$IMAGE:$VERSION
     labels:
       - "traefik.enable=true"
