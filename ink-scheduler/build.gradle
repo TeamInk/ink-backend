@@ -18,7 +18,3 @@ dependencies {
     implementation 'com.mchange:c3p0'
     testImplementation 'org.springframework.batch:spring-batch-test'
 }
-
-test {
-    useJUnitPlatform()
-}

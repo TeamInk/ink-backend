@@ -30,7 +30,7 @@ public class BadgeAccomplishedServiceImpl implements BadgeAccomplishedService {
 
     @Transactional
     public boolean createInk3Days(Long memberId) {
-        if ( memberRepository.findById(memberId).get().getInkCookies().size() == Ink3Days.conditionOfCount &&
+        if ( memberRepository.findById(memberId).get().getInkCookies().size() >= Ink3Days.conditionOfCount &&
                 !badgeAccomplishedRepository.existsBadgeAccomplishedByMemberMemberIdAndBadgeBadgeId(memberId, Ink3Days.id) ){
 
             badgeAccomplishedRepository.saveAndFlush(makeBadgeAccomplished(memberId, Ink3Days.id));
@@ -45,7 +45,7 @@ public class BadgeAccomplishedServiceImpl implements BadgeAccomplishedService {
         Reply reply = replyRepository.findById(replyId).orElseThrow(() -> new BadRequestException(NOT_EXIST_REPLY));
         Long memberId = reply.getAuthor().getMemberId();
 
-        if(reply.getReplyLikes().size() == CelebrityInk.conditionOfCount &&
+        if(reply.getReplyLikes().size() >= CelebrityInk.conditionOfCount &&
                 !badgeAccomplishedRepository.existsBadgeAccomplishedByMemberMemberIdAndBadgeBadgeId(memberId, CelebrityInk.id)) {
 
             badgeAccomplishedRepository.saveAndFlush(makeBadgeAccomplished(memberId, CelebrityInk.id));
@@ -57,7 +57,7 @@ public class BadgeAccomplishedServiceImpl implements BadgeAccomplishedService {
 
     @Transactional
     public boolean createAcademicInk(Long memberId) {
-        if( memberScrapRepository.countByMemberMemberId(memberId) == AcademicInk.conditionOfCount &&
+        if( memberScrapRepository.countByMemberMemberId(memberId) >= AcademicInk.conditionOfCount &&
                 !badgeAccomplishedRepository.existsBadgeAccomplishedByMemberMemberIdAndBadgeBadgeId(memberId, AcademicInk.id ) ){
 
             badgeAccomplishedRepository.saveAndFlush(makeBadgeAccomplished(memberId, AcademicInk.id));

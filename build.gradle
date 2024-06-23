@@ -58,6 +58,11 @@ subprojects {
 		implementation 'ca.pjer:logback-awslogs-appender:1.4.0'
 	}
 
+	test {
+		useJUnitPlatform()
+		finalizedBy 'jacocoTestReport'
+	}
+
 	jacocoTestReport {
 		reports {
 			html.destination file("${buildDir}/jacocoHtml")

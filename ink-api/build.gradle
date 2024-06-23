@@ -21,7 +21,3 @@ dependencies {
     implementation 'io.jsonwebtoken:jjwt:0.9.1'
     implementation 'org.springframework.security:spring-security-test'
 }
-
-test {
-    useJUnitPlatform()
-}
