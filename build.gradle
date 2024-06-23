@@ -155,3 +155,45 @@ compileJava.options.encoding = 'UTF-8'
 tasks.withType(JavaCompile) {
 	options.encoding = 'UTF-8'
 }
+
+task generateTestFiles {
+	doLast {
+		rootProject.subprojects.each { subproject ->
+			def srcDir = subproject.file('src/main/java')
+			def testDir = subproject.file('src/test/java')
+
+			if (srcDir.exists()) {
+				fileTree(dir: srcDir, includes: ['**/*.java']).each { file ->
+					def fileName = file.name
+					if (fileName.endsWith('Controller.java') || fileName.endsWith('Service.java') || fileName.endsWith('ServiceImpl.java') || fileName.endsWith('Repository.java')) {
+						def relativePath = srcDir.toURI().relativize(file.toURI()).getPath()
+						def packageDir = relativePath.substring(0, relativePath.lastIndexOf('/')).replace('/', '.').replace('\\', '.')
+						def testFile = new File(testDir, relativePath.replace('.java', 'Test.java'))
+
+						if (!testFile.exists()) {
+							testFile.parentFile.mkdirs()
+							testFile.text = """\
+                                package ${packageDir};
+
+                                import org.junit.jupiter.api.Test;
+
+                                class ${file.name.replace('.java', 'Test')} {
+
+                                    @Test
+                                    void test() {
+                                        // TODO: Implement tests
+                                    }
+                                }
+                            """.stripIndent()
+							println "Generated test file: ${testFile.path}"
+						} else {
+							println "Test file already exists: ${testFile.path}"
+						}
+					} else {
+						println "Skipped generating test file for: ${file.path}"
+					}
+				}
+			}
+		}
+	}
+}
