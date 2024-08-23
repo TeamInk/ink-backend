@@ -28,9 +28,17 @@ public class MemberDto {
     private String identifier;
 
     @Email
-    @ApiModelProperty(value = "이메일 주소", required = true, position = PropertyDisplayOrder.EMAIL)
+    @ApiModelProperty(value = "이메일 주소", position = PropertyDisplayOrder.EMAIL)
     @JsonProperty(index = PropertyDisplayOrder.EMAIL)
     private String email;
+
+    @ApiModelProperty(value = "성별", position = PropertyDisplayOrder.GENDER)
+    @JsonProperty(index = PropertyDisplayOrder.GENDER)
+    private String gender;
+
+    @ApiModelProperty(value = "나이대", position = PropertyDisplayOrder.AGE_GROUP)
+    @JsonProperty(index = PropertyDisplayOrder.AGE_GROUP)
+    private String ageGroup;
 
     @KorEngOnly
     @NotBlank
@@ -83,10 +91,12 @@ public class MemberDto {
         private static final int IDENTIFIER             = 1;
         private static final int EMAIL                  = 2;
         private static final int NICKNAME               = 3;
-        private static final int IMAGE                  = 4;
-        private static final int INK_COUNT           = 5;
-        private static final int ATTENDANCE_COUNT       = 6;
-        private static final int LAST_ATTENDANCE_DATE   = 7;
-        private static final int MEMBER_SETTING         = 8;
+        private static final int GENDER               = 4;
+        private static final int AGE_GROUP               = 5;
+        private static final int IMAGE                  = 6;
+        private static final int INK_COUNT           = 7;
+        private static final int ATTENDANCE_COUNT       = 8;
+        private static final int LAST_ATTENDANCE_DATE   = 9;
+        private static final int MEMBER_SETTING         = 10;
     }
 }

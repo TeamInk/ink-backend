@@ -14,8 +14,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.Locale;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.ArgumentMatchers.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -42,6 +41,33 @@ class MemberControllerTest extends AbstractControllerTest {
                 .andExpect(MockMvcResultMatchers.jsonPath("$.message").value("ok"))
 //                .andExpect(MockMvcResultMatchers.jsonPath("$.data.memberId").value(4L))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.data.email").value("example@email.com"))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.data.identifier").value("user-identifier"))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.data.image").value("image-path"))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.data.lastAttendanceDate").value(todayDateString))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.data.attendanceCount").value(0))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.data.inkCount").value(0))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.data.nickname").value("최대여섯글자"))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.data.memberSetting.likePushActive").value(true))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.data.memberSetting.dailyPushActive").value(true));
+    }
+
+    @Test
+    public void 사용자_회원가입_테스트_이메일_없음() throws Exception {
+        String newMemberJsonString = "{" +
+                "  \"identifier\": \"user-identifier\",\n" +
+                "  \"image\": \"image-path\",\n" +
+                "  \"nickname\": \"최대여섯글자\",\n" +
+                "  \"pushActive\": true\n" +
+                "}";
+
+        mockMvc.perform(
+                        post("/api/member/signup")
+                                .content(newMemberJsonString)
+                                .contentType(MediaType.APPLICATION_JSON)
+                ).andExpect(status().isOk())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.message").value("ok"))
+//                .andExpect(MockMvcResultMatchers.jsonPath("$.data.memberId").value(4L))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.data.email").doesNotExist())
                 .andExpect(MockMvcResultMatchers.jsonPath("$.data.identifier").value("user-identifier"))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.data.image").value("image-path"))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.data.lastAttendanceDate").value(todayDateString))
