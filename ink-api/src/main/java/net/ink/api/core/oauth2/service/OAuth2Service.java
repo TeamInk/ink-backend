@@ -4,6 +4,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
+import net.ink.api.core.jwt.component.JwtResolver;
 import net.ink.api.core.jwt.dto.TokenDto;
 import net.ink.api.core.jwt.dto.TokenProvider;
 import net.ink.api.core.oauth2.dto.OAuth2Profile;
@@ -26,8 +27,12 @@ public class OAuth2Service {
     private final RestTemplate restTemplate;
     private final Environment env;
     private final ObjectMapper objectMapper;
+    private final JwtResolver jwtResolver;
 
     public OAuth2Profile getProfile(TokenDto.Provider token) {
+        if(TokenProvider.APPLE == token.getProviderName())
+            return setAppleProfile(token);
+
         JsonNode json = getJsonResponse(token);
 
         if(TokenProvider.KAKAO == token.getProviderName())
@@ -71,5 +76,12 @@ public class OAuth2Service {
         long identifier = jsonNode.get("localId").asLong();
 
         return new OAuth2Profile("google_" + identifier);
+    }
+
+    public OAuth2Profile setAppleProfile(TokenDto.Provider token){
+        // Apple의 경우 JWT의 sub가 identifier
+        String identifier = jwtResolver.getUserIdentifier(token.getProviderAccessToken());
+
+        return new OAuth2Profile("apple_" + identifier);
     }
 }
