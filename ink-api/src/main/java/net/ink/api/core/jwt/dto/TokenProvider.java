@@ -9,7 +9,8 @@ import java.util.stream.Stream;
 @Getter
 public enum TokenProvider {
     KAKAO,
-    GOOGLE;
+    GOOGLE,
+    APPLE;
 
     @JsonCreator
     public static TokenProvider create(String requestValue) {

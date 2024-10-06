@@ -13,7 +13,7 @@ public class TokenDto {
     @EqualsAndHashCode
     @ApiModel(value="Provider Token Dto", description="Provider 토큰 모델")
     public static class Provider {
-        @ApiModelProperty(value = "Provider 이름 (Kakao / Google)")
+        @ApiModelProperty(value = "Provider 이름 (Kakao / Google / Apple)")
         private TokenProvider providerName;
 
         @ApiModelProperty(value = "Provider 제공 Access Token")
