@@ -1,10 +1,8 @@
 package net.ink.admin.repository;
 
-import net.ink.admin.entity.AdminLog;
-import net.ink.admin.entity.AdminMember;
 import org.springframework.data.jpa.repository.JpaRepository;
 
-import java.util.Optional;
+import net.ink.admin.entity.AdminLog;
 
 public interface AdminLogRepository extends JpaRepository<AdminLog, Long> {
 }

@@ -1,20 +1,19 @@
 package net.ink.admin.service;
 
+import static net.ink.core.core.message.ErrorMessage.*;
+
+import javax.validation.Valid;
+
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
 import lombok.RequiredArgsConstructor;
 import net.ink.admin.dto.AdminUser;
 import net.ink.admin.entity.AdminMember;
 import net.ink.admin.repository.AdminMemberRepository;
 import net.ink.core.core.exception.BadRequestException;
 import net.ink.core.core.exception.EntityNotFoundException;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-import net.ink.admin.service.AdminEmailService;
-
-import javax.validation.Valid;
-
-import static net.ink.core.core.message.ErrorMessage.DUPLICATED_NICKNAME;
-import static net.ink.core.core.message.ErrorMessage.NOT_EXIST_MEMBER;
 
 @Service
 @RequiredArgsConstructor

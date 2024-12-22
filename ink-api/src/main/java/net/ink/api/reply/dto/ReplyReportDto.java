@@ -1,18 +1,19 @@
 package net.ink.api.reply.dto;
 
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
+
 import com.fasterxml.jackson.annotation.JsonProperty;
+
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.experimental.SuperBuilder;
-import net.ink.core.reply.entity.Reply;
-
-import javax.validation.constraints.NotEmpty;
-import javax.validation.constraints.NotNull;
-import java.time.LocalDateTime;
+import net.ink.core.reply.entity.ReplyReport;
 
 @SuperBuilder
 @Getter @Setter
@@ -30,9 +31,15 @@ public class ReplyReportDto {
     @JsonProperty(index = PropertyDisplayOrder.REASON)
     private String reason;
 
+    @Builder.Default
     @ApiModelProperty(value = "신고자에게 이 답변 숨김 여부 (기본: false)", required = false, position = PropertyDisplayOrder.HIDE_TO_REPORTER)
     @JsonProperty(index = PropertyDisplayOrder.HIDE_TO_REPORTER)
     private Boolean hideToReporter = false;
+
+    @Builder.Default
+    @ApiModelProperty(value = "처리 상태", required = false, position = PropertyDisplayOrder.STATUS)
+    @JsonProperty(index = PropertyDisplayOrder.STATUS)
+    private ReplyReport.ProcessStatus status = ReplyReport.ProcessStatus.PENDING;
 
     @SuperBuilder
     @Getter @Setter
@@ -56,5 +63,6 @@ public class ReplyReportDto {
         private static final int REPORTER_ID         = 2;
         private static final int REASON              = 3;
         private static final int HIDE_TO_REPORTER    = 4;
+        private static final int STATUS              = 5;
     }
 }

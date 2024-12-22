@@ -1,14 +1,15 @@
 package net.ink.api.reply.component;
 
-import net.ink.api.common.DtoCreator;
-import net.ink.api.reply.dto.ReplyReportDto;
-import net.ink.core.common.EntityCreator;
-import net.ink.core.member.entity.ReplyReport;
+import static org.junit.jupiter.api.Assertions.*;
+
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
-import static org.junit.jupiter.api.Assertions.*;
+import net.ink.api.common.DtoCreator;
+import net.ink.api.reply.dto.ReplyReportDto;
+import net.ink.core.common.EntityCreator;
+import net.ink.core.reply.entity.ReplyReport;
 
 @SpringBootTest
 class ReplyReportMapperTest {

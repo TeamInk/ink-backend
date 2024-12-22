@@ -1,14 +1,13 @@
 package net.ink.api.reply.component;
 
-import net.ink.api.member.component.MemberMapper;
-import net.ink.api.question.component.QuestionMapper;
-import net.ink.api.reply.dto.ReplyReportDto;
-import net.ink.core.member.entity.Member;
-import net.ink.core.member.entity.ReplyReport;
-import net.ink.core.reply.entity.Reply;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.ReportingPolicy;
+
+import net.ink.api.reply.dto.ReplyReportDto;
+import net.ink.core.member.entity.Member;
+import net.ink.core.reply.entity.Reply;
+import net.ink.core.reply.entity.ReplyReport;
 
 @Mapper(componentModel = "spring",
         unmappedTargetPolicy = ReportingPolicy.IGNORE,

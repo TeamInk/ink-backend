@@ -15,30 +15,44 @@
                     <thead>
                     <tr>
                         <th>idx</th>
+                        <th>작성자</th>
+                        <th>질문</th>
                         <th>답변 내용</th>
-                        <th>신고자 이름</th>
                         <th>신고 사유</th>
-                        <th>신고자 숨기기 여부</th>
+                        <th>신고 일시</th>
+                        <th>신고 횟수</th>
+                        <th>처리상태</th>
                         <th>삭제</th>
                     </tr>
                     </thead>
                     <tfoot>
                     <tr>
                         <th>idx</th>
+                        <th>작성자</th>
+                        <th>질문</th>
                         <th>답변 내용</th>
-                        <th>신고자 이름</th>
                         <th>신고 사유</th>
-                        <th>신고자 숨기기 여부</th>
+                        <th>신고 일시</th>
+                        <th>신고 횟수</th>
+                        <th>처리상태</th>
                         <th>삭제</th>
                     </tr>
                     </tfoot>
                     <tbody>
-                    <tr th:each="report : ${replyReports}">
-                        <td th:text="${report.reportId}"></td>
-                        <td th:text="${report.reply.content}"></td>
-                        <td th:text="${report.reporter.nickname}"></td>
+                    <tr th:each="reply : ${replies}">
+                        <td th:text="${reply.replyId}"></td>
+                        <td th:text="${reply.author.nickname}"></td>
+                        <td th:text="${reply.question.content}"></td>
+                        <td th:text="${reply.content}"></td>
+                        <!-- reply report 이유 join에서 보여주기 -->
                         <td th:text="${report.reason}"></td>
-                        <td th:text="${report.hideToReporter}"></td>
+
+                        <!-- 최신날짜 보여준다. -->
+                        <td th:text="${#dates.format(report.regDate, 'yyyy-MM-dd HH:mm:ss')}"></td>
+                        <!--  -->
+                        <td th:text="${report.reply.reportCount}"></td>
+                        <!-- 하나만 보여줘도 됨 (Report간의 처리상태는 모두 동일해야함) -->
+                        <td th:text="${report.status}"></td>
                         <td>
                             <button class="btn btn-danger delete-btn" th:data-report-id="${report.reportId}">삭제</button>
                         </td>

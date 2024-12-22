@@ -11,18 +11,17 @@ import java.util.List;
 import java.util.Optional;
 
 public interface ReplyRepository extends JpaRepository<Reply, Long> {
-    List<Reply> findAllByAuthorMemberIdAndVisibleOrderByReplyIdDesc(Long memberId, Boolean visible);
-    List<Reply> findAllByQuestionQuestionIdAndVisible(Long questionId, Boolean visible);
-    Page<Reply> findAllByQuestionQuestionIdAndVisible(Long questionId, Boolean visible, Pageable pageable);
+    List<Reply> findAllByAuthorMemberIdAndVisibleAndDeletedOrderByReplyIdDesc(Long memberId, Boolean visible, Boolean deleted);
+    List<Reply> findAllByQuestionQuestionIdAndVisibleAndDeleted(Long questionId, Boolean visible, Boolean deleted);
+    Page<Reply> findAllByQuestionQuestionIdAndVisibleAndDeleted(Long questionId, Boolean visible, Boolean deleted, Pageable pageable);
 
-    @Query("Select r from Reply r where r.visible = true and r.question.questionId = :questionId order by r.replyLikes.size desc")
+    @Query("Select r from Reply r where r.visible = true and r.deleted = false and r.question.questionId = :questionId order by r.replyLikes.size desc")
     Page<Reply> findAllByQuestionQuestionIdOrderByReplyLikesSize(Long questionId, Pageable pageable);
 
-    @Query("Select r from Reply r where r.visible = true order by r.replyLikes.size desc")
+    @Query("Select r from Reply r where r.visible = true and r.deleted = false order by r.replyLikes.size desc")
     Page<Reply> findAllByOrderByReplyLikesSize(Pageable pageable);
-
-    boolean existsByRegDateBetweenAndAuthorMemberIdAndVisible(LocalDateTime startDateTime, LocalDateTime endDateTime, Long memberId, Boolean visible);
+    boolean existsByRegDateBetweenAndAuthorMemberIdAndVisibleAndDeleted(LocalDateTime startDateTime, LocalDateTime endDateTime, Long memberId, Boolean visible, Boolean deleted);
     boolean existsByQuestionQuestionIdAndAuthorMemberId(Long questionId, Long memberId);
-    Optional<Reply> findByAuthorMemberIdAndQuestionQuestionIdAndVisible(Long memberId, Long questionId, Boolean visible);
-    Page<Reply> findAllByVisible(Boolean visible, Pageable pageable);
+    Optional<Reply> findByAuthorMemberIdAndQuestionQuestionIdAndVisibleAndDeleted(Long memberId, Long questionId, Boolean visible, Boolean deleted);
+    Page<Reply> findAllByVisibleAndDeleted(Boolean visible, Boolean deleted, Pageable pageable);
 }

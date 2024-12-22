@@ -1,33 +1,23 @@
 package net.ink.api.reply.web;
 
+import javax.validation.Valid;
+
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
-import io.swagger.annotations.ApiParam;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import net.ink.api.core.annotation.CurrentUser;
-import net.ink.api.core.dto.ApiPageRequest;
-import net.ink.api.core.dto.ApiPageResult;
 import net.ink.api.core.dto.ApiResult;
-import net.ink.api.reply.component.ReplyMapper;
 import net.ink.api.reply.component.ReplyReportMapper;
-import net.ink.api.reply.dto.ReplyDto;
 import net.ink.api.reply.dto.ReplyReportDto;
-import net.ink.api.reply.service.ReplyPaginationService;
-import net.ink.core.badge.service.BadgeAccomplishedService;
 import net.ink.core.member.entity.Member;
-import net.ink.core.member.entity.ReplyReport;
-import net.ink.core.question.entity.Question;
-import net.ink.core.reply.entity.Reply;
+import net.ink.core.reply.entity.ReplyReport;
 import net.ink.core.reply.service.ReplyReportService;
-import net.ink.core.reply.service.ReplyService;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
-import springfox.documentation.annotations.ApiIgnore;
-
-import javax.validation.Valid;
-import javax.validation.constraints.NotNull;
 
 @Api(value = "답변 신고 엔드포인트", tags = "답변 신고 엔드포인트")
 @RestController

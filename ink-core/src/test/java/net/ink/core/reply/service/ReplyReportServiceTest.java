@@ -1,22 +1,20 @@
 package net.ink.core.reply.service;
 
-import net.ink.core.member.entity.ReplyReport;
-import net.ink.core.reply.entity.Reply;
-import net.ink.core.reply.repository.ReplyReportRepository;
-import net.ink.core.reply.repository.ReplyRepository;
-import net.ink.core.reply.service.event.ReplyReportEvent;
-import net.ink.core.reply.service.event.ReplyReportEventListener;
-import net.ink.push.service.FcmLikePushServiceImpl;
-import net.ink.push.service.FcmService;
+import static org.mockito.ArgumentMatchers.*;
+import static org.mockito.Mockito.*;
+
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.Import;
 
-import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.*;
+import net.ink.core.reply.entity.Reply;
+import net.ink.core.reply.entity.ReplyReport;
+import net.ink.core.reply.repository.ReplyReportRepository;
+import net.ink.core.reply.repository.ReplyRepository;
+import net.ink.push.service.FcmLikePushServiceImpl;
+import net.ink.push.service.FcmService;
 
 @SpringBootTest
 @Import({FcmLikePushServiceImpl.class, FcmService.class})

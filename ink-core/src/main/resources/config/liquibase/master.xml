@@ -21,4 +21,5 @@
     <include file="config/liquibase/changelog/20230909_reply_expand.xml"/>
     <include file="config/liquibase/changelog/20240424_add_report_entity.xml"/>
     <include file="config/liquibase/changelog/20240823_remove_member_email_null_constraint.xml"/>
+    <include file="config/liquibase/changelog/20241124_add_reply_report_status.xml"/>
 </databaseChangeLog>
