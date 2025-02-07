@@ -43,4 +43,10 @@ public class MainViewController {
         model.addAttribute("adminMember", adminMember);
         return "base";
     }
+    @GetMapping("/log")
+    public String getLogPage(Model model, @CurrentUser AdminMember adminMember) {
+        model.addAttribute("inner", "log");
+        model.addAttribute("adminMember", adminMember);
+        return "base";
+    }
 }
