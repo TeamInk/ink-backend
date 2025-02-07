@@ -68,3 +68,8 @@ INSERT INTO admin_member
 (admin_id, email, password, nickname, rank, is_active, reg_date, mod_date)
 VALUES
     (3, 'test3@email.com', '$2a$10$/PnmsvW7V2bSb9gyPgJPwukDBz4E4nnVQwzgoZUzRdXFx10ZLvGXy', '테스트3', 'PENDING', true, '2023-04-13 10:30:00', '2023-04-13 10:30:00');
+
+INSERT INTO admin_log (admin_id, action, action_query, reg_date, mod_date)
+VALUES
+    (1, 'LOGIN', 'User logged in successfully', '2023-04-14 10:00:00', '2023-04-14 10:00:00'),
+    (2, 'UPDATE_PROFILE', 'Updated profile information', '2023-04-14 10:10:00', '2023-04-14 10:10:00');
