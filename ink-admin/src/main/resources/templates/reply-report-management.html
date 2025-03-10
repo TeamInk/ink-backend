@@ -39,19 +39,14 @@
                     </tr>
                     </tfoot>
                     <tbody>
-                    <tr th:each="reply : ${replies}">
-                        <td th:text="${reply.replyId}"></td>
-                        <td th:text="${reply.author.nickname}"></td>
-                        <td th:text="${reply.question.content}"></td>
-                        <td th:text="${reply.content}"></td>
-                        <!-- reply report 이유 join에서 보여주기 -->
+                    <tr th:each="report : ${replyReports}">
+                        <td th:text="${report.reportId}"></td>
+                        <td th:text="${report.reply.author.nickname}"></td>
+                        <td th:text="${report.reply.question.content}"></td>
+                        <td th:text="${report.reply.content}"></td>
                         <td th:text="${report.reason}"></td>
-
-                        <!-- 최신날짜 보여준다. -->
-                        <td th:text="${#dates.format(report.regDate, 'yyyy-MM-dd HH:mm:ss')}"></td>
-                        <!--  -->
-                        <td th:text="${report.reply.reportCount}"></td>
-                        <!-- 하나만 보여줘도 됨 (Report간의 처리상태는 모두 동일해야함) -->
+                        <td th:text="${#temporals.format(report.regDate, 'yyyy-MM-dd HH:mm:ss')}"></td>
+                        <td th:text="${report.reply.replyReports.size()}"></td>
                         <td th:text="${report.status}"></td>
                         <td>
                             <button class="btn btn-danger delete-btn" th:data-report-id="${report.reportId}">삭제</button>
