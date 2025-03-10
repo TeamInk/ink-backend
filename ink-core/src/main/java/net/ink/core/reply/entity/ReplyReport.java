@@ -22,7 +22,8 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import net.ink.core.member.entity.Member;
 
-@Getter @Setter
+@Getter
+@Setter
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
@@ -30,7 +31,8 @@ import net.ink.core.member.entity.Member;
 @Table(name = "reply_report")
 public class ReplyReport {
 
-    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "report_id", nullable = false)
     private Long reportId;
 
@@ -58,6 +60,12 @@ public class ReplyReport {
     @CreationTimestamp
     @Column(name = "reg_date", nullable = false)
     private LocalDateTime regDate = LocalDateTime.now();
+
+    @Column(name = "process_date")
+    private LocalDateTime processDate;
+
+    @Column(name = "process_by")
+    private String processBy;
 
     public enum ProcessStatus {
         PENDING,

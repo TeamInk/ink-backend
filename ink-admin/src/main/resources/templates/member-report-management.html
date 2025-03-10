@@ -15,32 +15,40 @@
                     <thead>
                     <tr>
                         <th>idx</th>
-                        <th>신고자 이름</th>
-                        <th>피신고자 이름</th>
+                        <th>닉네임</th>
                         <th>신고 사유</th>
-                        <th>신고자 숨기기 여부</th>
-                        <th>삭제</th>
+                        <th>신고 일시</th>
+                        <th>신고 횟수</th>
+                        <th>계정 상태</th>
+                        <th>작성한 게시물</th>
                     </tr>
                     </thead>
                     <tfoot>
                     <tr>
                         <th>idx</th>
-                        <th>신고자 이름</th>
-                        <th>피신고자 이름</th>
+                        <th>닉네임</th>
                         <th>신고 사유</th>
-                        <th>신고자 숨기기 여부</th>
-                        <th>삭제</th>
+                        <th>신고 일시</th>
+                        <th>신고 횟수</th>
+                        <th>계정 상태</th>
+                        <th>작성한 게시물</th>
                     </tr>
                     </tfoot>
                     <tbody>
                     <tr th:each="report : ${memberReports}">
                         <td th:text="${report.reportId}"></td>
-                        <td th:text="${report.reporter.nickname}"></td>
                         <td th:text="${report.target.nickname}"></td>
                         <td th:text="${report.reason}"></td>
-                        <td th:text="${report.hideToReporter}"></td>
+                        <td th:text="${#temporals.format(report.regDate, 'yyyy-MM-dd HH:mm:ss')}"></td>
+                        <td th:text="${report.target.memberReports != null ? report.target.memberReports.size() : 1}"></td>
                         <td>
-                            <button class="btn btn-danger delete-btn" th:data-report-id="${report.reportId}">삭제</button>
+                            <span th:if="${report.status.name() == 'PENDING'}" class="badge badge-warning">신고 접수</span>
+                            <span th:if="${report.status.name() == 'HIDED'}" class="badge badge-info">계정 정지</span>
+                            <span th:if="${report.status.name() == 'DELETED'}" class="badge badge-success">처리 완료</span>
+                            <span th:if="${report.status.name() == 'CANCELED'}" class="badge badge-secondary">취소됨</span>
+                        </td>
+                        <td>
+                            <a th:href="@{/filtered-reply-management(memberId=${report.target.memberId})}" class="btn btn-primary">바로가기</a>
                         </td>
                     </tr>
                     </tbody>
@@ -52,24 +60,6 @@
     <script th:src="@{/vendor/jquery/jquery.min.js}"></script>
     <script>
         $(document).ready(function () {
-            $('.delete-btn').on('click', function () {
-                const reportId = $(this).data('report-id');
-                if (confirm('이 신고내역을 삭제할까요?')) {
-                    $.ajax({
-                        url: '/api/member-report/' + reportId,
-                        type: 'DELETE',
-                        success: function () {
-                            alert("삭제되었습니다.")
-                            location.reload();
-                        },
-                        error: function (error) {
-                            alert("삭제에 실패했습니다.")
-                            console.error('Error deleting member:', error);
-                        }
-                    });
-                }
-            });
-
             $("#dataTable").DataTable({
                 "order": [ 0, "desc" ]
             });

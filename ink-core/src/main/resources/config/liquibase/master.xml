@@ -1,25 +1,27 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <databaseChangeLog
-        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
-        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-        xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext"
-        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd
-        http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd">
+    xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd
+                        http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd">
 
-    <include file="config/liquibase/changelog/00000000_initial_schema.xml"/>
-    <include file="config/liquibase/changelog/20200527_add_unique_constraint.xml"/>
-    <include file="config/liquibase/changelog/20210618_update.xml"/>
-    <include file="config/liquibase/changelog/20210619_fcm_token.xml"/>
-    <include file="config/liquibase/changelog/20210620_fcm_token_member_unique.xml"/>
-    <include file="config/liquibase/changelog/20210622_add_badge_is_checked_field.xml"/>
-    <include file="config/liquibase/changelog/20210708_add_cookie_entity.xml"/>
-    <include file="config/liquibase/changelog/20210708_drop_member_mureng_count.xml"/>
-    <include file="config/liquibase/changelog/20210708_today_expression.xml"/>
-    <include file="config/liquibase/changelog/20230413_admin.xml"/>
-    <include file="config/liquibase/changelog/20230420_admin_log.xml"/>
-    <include file="config/liquibase/changelog/20230909_reply_expand.xml"/>
-    <include file="config/liquibase/changelog/20240424_add_report_entity.xml"/>
-    <include file="config/liquibase/changelog/20240823_remove_member_email_null_constraint.xml"/>
-    <include file="config/liquibase/changelog/20241124_add_reply_report_status.xml"/>
+    <include file="config/liquibase/changelog/00000000_initial_schema.xml" />
+    <include file="config/liquibase/changelog/20200527_add_unique_constraint.xml" />
+    <include file="config/liquibase/changelog/20210618_update.xml" />
+    <include file="config/liquibase/changelog/20210619_fcm_token.xml" />
+    <include file="config/liquibase/changelog/20210620_fcm_token_member_unique.xml" />
+    <include file="config/liquibase/changelog/20210622_add_badge_is_checked_field.xml" />
+    <include file="config/liquibase/changelog/20210708_add_cookie_entity.xml" />
+    <include file="config/liquibase/changelog/20210708_drop_member_mureng_count.xml" />
+    <include file="config/liquibase/changelog/20210708_today_expression.xml" />
+    <include file="config/liquibase/changelog/20230413_admin.xml" />
+    <include file="config/liquibase/changelog/20230420_admin_log.xml" />
+    <include file="config/liquibase/changelog/20230909_reply_expand.xml" />
+    <include file="config/liquibase/changelog/20240424_add_report_entity.xml" />
+    <include file="config/liquibase/changelog/20240823_remove_member_email_null_constraint.xml" />
+    <include file="config/liquibase/changelog/20241124_add_reply_report_status.xml" />
+    <include file="config/liquibase/changelog/20250310_add_member_report_status.xml" />
+    <include file="config/liquibase/changelog/20250310_add_reply_report_process_fields.xml" />
 </databaseChangeLog>
