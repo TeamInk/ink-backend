@@ -1,13 +1,27 @@
 package net.ink.core.reply.entity;
 
-import lombok.*;
-import net.ink.core.member.entity.Member;
-import net.ink.core.question.entity.Question;
-
-import javax.persistence.*;
 import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.Set;
+
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
+import javax.persistence.Table;
+
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import net.ink.core.member.entity.Member;
+import net.ink.core.question.entity.Question;
 
 @Builder
 @Getter @Setter
@@ -55,6 +69,10 @@ public class Reply {
     @Builder.Default
     @OneToMany(mappedBy = "reply", cascade = CascadeType.ALL)
     private Set<ReplyLikes> replyLikes = new HashSet<>();
+
+    @Builder.Default
+    @OneToMany(mappedBy = "reply", cascade = CascadeType.ALL)
+    private Set<ReplyReport> replyReports = new HashSet<>();
 
     public void modifyReply(Reply newReply) {
         this.content = newReply.getContent();

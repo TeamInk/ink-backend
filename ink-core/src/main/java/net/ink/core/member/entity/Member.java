@@ -1,18 +1,32 @@
 package net.ink.core.member.entity;
 
-import lombok.*;
-import net.ink.core.cookie.entity.CookieAcquirement;
-import org.springframework.util.StringUtils;
-
-import javax.persistence.*;
-import javax.validation.constraints.NotNull;
-import java.time.Instant;
 import java.time.LocalDateTime;
-import java.time.ZoneId;
 import java.util.HashSet;
 import java.util.Set;
 
-@Getter @Setter
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
+import javax.persistence.Embedded;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.OneToMany;
+import javax.persistence.Table;
+import javax.validation.constraints.NotNull;
+
+import org.springframework.util.StringUtils;
+
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import net.ink.core.cookie.entity.CookieAcquirement;
+
+@Getter
+@Setter
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
@@ -20,7 +34,8 @@ import java.util.Set;
 @Table(name = "member")
 public class Member {
 
-    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "member_id", nullable = false)
     private Long memberId;
 
@@ -67,8 +82,12 @@ public class Member {
     @Builder.Default
     private MemberSetting memberSetting = new MemberSetting();
 
-    public boolean isRequesterProfile(Long memberId){
-        return this.memberId == memberId;
+    @Builder.Default
+    @OneToMany(mappedBy = "target", fetch = FetchType.LAZY)
+    private Set<MemberReport> memberReports = new HashSet<>();
+
+    public boolean isRequesterProfile(Long memberId) {
+        return this.memberId.equals(memberId);
     }
 
     public void updateMember(Member member) {
@@ -84,9 +103,6 @@ public class Member {
     }
 
     public void increaseAttendanceCount() {
-        this.memberAttendance = MemberAttendance.builder()
-                .attendanceCount(this.memberAttendance.getAttendanceCount() + 1)
-                .lastAttendanceDate(Instant.now().atZone(ZoneId.of("Asia/Seoul")).toLocalDate())
-                .build();
+        this.memberAttendance.increaseAttendanceCount();
     }
 }

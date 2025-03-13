@@ -1,25 +1,26 @@
 package net.ink.core.reply.service;
 
-import lombok.RequiredArgsConstructor;
-import net.ink.core.core.exception.AccessNotAllowedException;
-import net.ink.core.core.exception.BadRequestException;
-import net.ink.core.core.exception.EntityNotFoundException;
-import net.ink.core.member.entity.Member;
-import net.ink.core.member.repository.MemberRepository;
-import net.ink.core.question.service.QuestionService;
-import net.ink.core.reply.entity.Reply;
-import net.ink.core.reply.repository.ReplyRepository;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
+import static net.ink.core.core.message.ErrorMessage.*;
 
-import javax.annotation.PostConstruct;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.List;
 
-import static net.ink.core.core.message.ErrorMessage.*;
+import javax.annotation.PostConstruct;
+
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import lombok.RequiredArgsConstructor;
+import net.ink.core.core.exception.AccessNotAllowedException;
+import net.ink.core.core.exception.BadRequestException;
+import net.ink.core.core.exception.EntityNotFoundException;
+import net.ink.core.member.entity.Member;
+import net.ink.core.question.service.QuestionService;
+import net.ink.core.reply.entity.Reply;
+import net.ink.core.reply.repository.ReplyRepository;
 
 @Service
 @RequiredArgsConstructor
@@ -27,7 +28,6 @@ public class ReplyService {
     private final ReplyRepository replyRepository;
     private final QuestionService questionService;
     private final ReplyPostProcessService replyPostProcessService;
-    private final MemberRepository memberRepository;
 
     @Value("${media.base.dir.name}")
     private String mediaBaseDirName;
@@ -78,7 +78,7 @@ public class ReplyService {
         LocalDateTime startDateTime = LocalDateTime.of(LocalDate.now(), LocalTime.of(0, 0, 0)); // 오늘 00:00:00
         LocalDateTime endDatetime = LocalDateTime.of(LocalDate.now(), LocalTime.of(23, 59, 59)); //오늘 23:59:59
 
-        return replyRepository.existsByRegDateBetweenAndAuthorMemberIdAndVisible(startDateTime, endDatetime, memberId, true);
+        return replyRepository.existsByRegDateBetweenAndAuthorMemberIdAndVisibleAndDeleted(startDateTime, endDatetime, memberId, true, false);
     }
 
     @Transactional
@@ -109,14 +109,14 @@ public class ReplyService {
 
     @Transactional(readOnly = true)
     public Reply findReplyByQuestionIdAndMember(Long memberId, Long questionId) {
-        return replyRepository.findByAuthorMemberIdAndQuestionQuestionIdAndVisible(memberId, questionId, true)
+        return replyRepository.findByAuthorMemberIdAndQuestionQuestionIdAndVisibleAndDeleted(memberId, questionId, true, false)
                 .orElseThrow(() -> new EntityNotFoundException(NOT_EXIST_REPLY));
     }
 
     @Transactional(readOnly = true)
     public List<Reply> findRepliesByMemberId(Long memberId){
 
-        return replyRepository.findAllByAuthorMemberIdAndVisibleOrderByReplyIdDesc(memberId, true);
+        return replyRepository.findAllByAuthorMemberIdAndVisibleAndDeletedOrderByReplyIdDesc(memberId, true, false);
     }
 
     @Transactional(readOnly = true)

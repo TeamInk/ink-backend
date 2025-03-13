@@ -1,28 +1,22 @@
+
 package net.ink.core.reply.service.event;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.*;
+import static org.mockito.Mockito.*;
 
-import net.ink.core.member.entity.ReplyReport;
-import net.ink.core.reply.entity.Reply;
-import net.ink.core.reply.repository.ReplyReportRepository;
-import net.ink.core.reply.repository.ReplyRepository;
-import net.ink.push.service.FcmLikePushServiceImpl;
-import net.ink.push.service.FcmService;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.annotation.Import;
-import org.springframework.transaction.annotation.Transactional;
 
-import javax.persistence.EntityManager;
-
-import static org.mockito.Mockito.*;
+import net.ink.core.reply.entity.Reply;
+import net.ink.core.reply.entity.ReplyReport;
+import net.ink.core.reply.repository.ReplyReportRepository;
+import net.ink.core.reply.repository.ReplyRepository;
+import net.ink.push.service.FcmLikePushServiceImpl;
+import net.ink.push.service.FcmService;
 
 @SpringBootTest
 @Import({FcmLikePushServiceImpl.class, FcmService.class})
@@ -36,9 +30,6 @@ public class ReplyReportEventListenerTest {
 
     @Autowired
     private ApplicationEventPublisher applicationEventPublisher;
-
-    @Autowired
-    private EntityManager entityManager;
 
     @Test
     public void handleReplyReportEventTest() throws InterruptedException {

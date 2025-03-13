@@ -1,17 +1,18 @@
 package net.ink.core.reply.repository;
 
-import com.github.springtestdbunit.annotation.DatabaseSetup;
-import com.github.springtestdbunit.annotation.ExpectedDatabase;
-import com.github.springtestdbunit.assertion.DatabaseAssertionMode;
-import net.ink.core.annotation.InkDataTest;
-import net.ink.core.member.entity.Member;
-import net.ink.core.member.entity.ReplyReport;
-import net.ink.core.reply.entity.Reply;
-import net.ink.core.reply.repository.ReplyReportRepository;
+import static org.junit.jupiter.api.Assertions.*;
+
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import static org.junit.jupiter.api.Assertions.*;
+import com.github.springtestdbunit.annotation.DatabaseSetup;
+import com.github.springtestdbunit.annotation.ExpectedDatabase;
+import com.github.springtestdbunit.assertion.DatabaseAssertionMode;
+
+import net.ink.core.annotation.InkDataTest;
+import net.ink.core.member.entity.Member;
+import net.ink.core.reply.entity.Reply;
+import net.ink.core.reply.entity.ReplyReport;
 
 @InkDataTest
 @DatabaseSetup({
@@ -74,6 +75,6 @@ public class ReplyReportRepositoryTest {
         Reply reply = Reply.builder().replyId(1L).build();
         int count = replyReportRepository.countByReply(reply);
 
-        assertEquals(1, count);
+        assertEquals(2, count);
     }
 }

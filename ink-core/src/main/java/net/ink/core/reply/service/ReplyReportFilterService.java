@@ -1,16 +1,16 @@
 package net.ink.core.reply.service;
 
-import lombok.RequiredArgsConstructor;
-import net.ink.core.member.entity.Member;
-import net.ink.core.member.entity.MemberReport;
-import net.ink.core.member.entity.ReplyReport;
-import net.ink.core.member.repository.MemberReportRepository;
-import net.ink.core.reply.entity.Reply;
-import net.ink.core.reply.repository.ReplyReportRepository;
+import java.util.List;
+
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
+import lombok.RequiredArgsConstructor;
+import net.ink.core.member.entity.Member;
+import net.ink.core.member.repository.MemberReportRepository;
+import net.ink.core.reply.entity.Reply;
+import net.ink.core.reply.entity.ReplyReport;
+import net.ink.core.reply.repository.ReplyReportRepository;
 
 @Service
 @RequiredArgsConstructor
