@@ -21,7 +21,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-@Getter @Setter
+@Getter
+@Setter
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
@@ -29,7 +30,8 @@ import lombok.Setter;
 @Table(name = "admin_member")
 public class AdminMember {
 
-    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "admin_id", nullable = false)
     private Long adminId;
 
@@ -46,7 +48,7 @@ public class AdminMember {
     private String nickname;
 
     @Builder.Default
-    @Column(nullable = false)
+    @Column(nullable = false, name = "`rank`")
     @Enumerated(EnumType.STRING)
     private RANK rank = RANK.PENDING;
 
