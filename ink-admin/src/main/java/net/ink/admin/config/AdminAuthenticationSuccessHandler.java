@@ -1,17 +1,18 @@
 package net.ink.admin.config;
 
-import net.ink.admin.dto.AdminUser;
-import net.ink.admin.entity.AdminMember;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.User;
-import org.springframework.security.web.authentication.SimpleUrlAuthenticationSuccessHandler;
-import org.springframework.stereotype.Component;
+import java.io.IOException;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
+
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.web.authentication.SimpleUrlAuthenticationSuccessHandler;
+import org.springframework.stereotype.Component;
+
+import net.ink.admin.dto.AdminUser;
+import net.ink.admin.entity.AdminMember;
 
 @Component
 public class AdminAuthenticationSuccessHandler extends SimpleUrlAuthenticationSuccessHandler {

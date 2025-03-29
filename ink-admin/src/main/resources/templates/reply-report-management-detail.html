@@ -1,0 +1,111 @@
+<div class="container-fluid" th:fragment="content">
+
+    <!-- Page Heading -->
+    <h1 class="h3 mb-4 text-gray-800">신고 상세</h1>
+
+    <div id="reportIdHolder" th:data-report-id="${report.reportId}" style="display: none;"></div>
+    <div class="card mb-4">
+        <div class="card-header">
+            <h6 class="m-0 font-weight-bold text-primary">신고 상세</h6>
+        </div>
+        <div class="card-body">
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label for="nickname">닉네임</label>
+                        <input type="text" class="form-control" id="nickname" th:value="${report.reply.author.nickname}" readonly>
+                    </div>
+                    <div class="form-group">
+                        <label for="question">질문</label>
+                        <input type="text" class="form-control" id="question" th:value="${report.reply.question.content}" readonly>
+                    </div>
+                    <div class="form-group">
+                        <label for="replyContent">답변 내용</label>
+                        <textarea class="form-control" id="replyContent" rows="3" readonly th:text="${report.reply.content}"></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label for="reason">신고 사유</label>
+                        <textarea class="form-control" id="reason" rows="3" readonly th:text="${report.reason}"></textarea>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label for="regDate">신고 일시</label>
+                        <input type="text" class="form-control" id="regDate" th:value="${#temporals.format(report.regDate, 'yyyy-MM-dd HH:mm:ss')}" readonly>
+                    </div>
+                    <div class="form-group">
+                        <label for="reportCount">신고 횟수</label>
+                        <input type="text" class="form-control" id="reportCount" th:value="${report.reply.replyReports.size()}" readonly>
+                    </div>
+                    <div class="form-group">
+                        <label for="status">처리 상태</label>
+                        <select class="form-control" id="status">
+                            <option value="신고 접수" th:selected="${report.status.name() == 'PENDING'}">신고 접수</option>
+                            <option value="게시물 숨김" th:selected="${report.status.name() == 'HIDED'}">게시물 숨김</option>
+                            <option value="처리 완료" th:selected="${report.status.name() == 'DELETED'}">처리 완료</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="processDate">처리 일시</label>
+                        <input type="text" class="form-control" id="processDate" th:value="${report.processDate != null ? #temporals.format(report.processDate, 'yyyy-MM-dd HH:mm:ss') : '-'}" readonly>
+                    </div>
+                    <div class="form-group">
+                        <label for="processBy">처리자</label>
+                        <input type="text" class="form-control" id="processBy" th:value="${report.processBy != null ? report.processBy : '-'}" readonly>
+                    </div>
+                </div>
+            </div>
+            <div class="row mt-3">
+                <div class="col-md-12">
+                    <button type="button" class="btn btn-primary" id="saveButton">저장</button>
+                    <button type="button" class="btn btn-danger" id="deleteButton">삭제</button>
+                    <a href="/reply-report-management" class="btn btn-secondary">목록으로</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Add this at the end of your tables.html file -->
+    <script th:src="@{/vendor/jquery/jquery.min.js}"></script>
+    <script>
+        $(document).ready(function () {
+            $('#saveButton').on('click', function () {
+                const reportId = $('#reportIdHolder').data('report-id');
+                const status = $('#status').val();
+
+                $.ajax({
+                    url: '/api/reply-report/' + reportId + '/status',
+                    type: 'PUT',
+                    data: JSON.stringify({status: status}),
+                    contentType: 'application/json; charset=utf-8',
+                    success: function () {
+                        alert("상태가 변경되었습니다.");
+                        location.reload();
+                    },
+                    error: function (error) {
+                        alert("상태 변경에 실패했습니다.");
+                        console.error('Error updating report status:', error);
+                    }
+                });
+            });
+
+            $('#deleteButton').on('click', function () {
+                const reportId = $('#reportIdHolder').data('report-id');
+                if (confirm('이 신고내역을 삭제할까요?')) {
+                    $.ajax({
+                        url: '/api/reply-report/' + reportId,
+                        type: 'DELETE',
+                        success: function () {
+                            alert("삭제되었습니다.");
+                            window.location.href = '/reply-report-management';
+                        },
+                        error: function (error) {
+                            alert("삭제에 실패했습니다.");
+                            console.error('Error deleting report:', error);
+                        }
+                    });
+                }
+            });
+        });
+    </script>
+</div> 

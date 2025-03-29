@@ -1,0 +1,68 @@
+<div class="container-fluid" th:fragment="content">
+
+    <!-- Page Heading -->
+    <h1 class="h3 mb-2 text-gray-800">회원 신고 관리</h1>
+    <p class="mb-4">회원 신고 내용을 관리합니다.</p>
+
+    <!-- DataTales Example -->
+    <div class="card shadow mb-4">
+        <div class="card-header py-3">
+            <h6 class="m-0 font-weight-bold text-primary">회원 신고 테이블</h6>
+        </div>
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+                    <thead>
+                    <tr>
+                        <th>idx</th>
+                        <th>닉네임</th>
+                        <th>신고 사유</th>
+                        <th>신고 일시</th>
+                        <th>신고 횟수</th>
+                        <th>계정 상태</th>
+                        <th>작성한 게시물</th>
+                    </tr>
+                    </thead>
+                    <tfoot>
+                    <tr>
+                        <th>idx</th>
+                        <th>닉네임</th>
+                        <th>신고 사유</th>
+                        <th>신고 일시</th>
+                        <th>신고 횟수</th>
+                        <th>계정 상태</th>
+                        <th>작성한 게시물</th>
+                    </tr>
+                    </tfoot>
+                    <tbody>
+                    <tr th:each="report : ${memberReports}">
+                        <td th:text="${report.reportId}"></td>
+                        <td th:text="${report.target.nickname}"></td>
+                        <td th:text="${report.reason}"></td>
+                        <td th:text="${#temporals.format(report.regDate, 'yyyy-MM-dd HH:mm:ss')}"></td>
+                        <td th:text="${report.target.memberReports != null ? report.target.memberReports.size() : 1}"></td>
+                        <td>
+                            <span th:if="${report.status.name() == 'PENDING'}" class="badge badge-warning">신고 접수</span>
+                            <span th:if="${report.status.name() == 'HIDED'}" class="badge badge-info">계정 정지</span>
+                            <span th:if="${report.status.name() == 'DELETED'}" class="badge badge-success">처리 완료</span>
+                            <span th:if="${report.status.name() == 'CANCELED'}" class="badge badge-secondary">취소됨</span>
+                        </td>
+                        <td>
+                            <a th:href="@{/filtered-reply-management(memberId=${report.target.memberId})}" class="btn btn-primary">바로가기</a>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    <!-- Add this at the end of your tables.html file -->
+    <script th:src="@{/vendor/jquery/jquery.min.js}"></script>
+    <script>
+        $(document).ready(function () {
+            $("#dataTable").DataTable({
+                "order": [ 0, "desc" ]
+            });
+        });
+    </script>
+</div>

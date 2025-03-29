@@ -48,6 +48,12 @@
             <span>회원 관리</span></a>
     </li>
 
+    <li class="nav-item" th:classappend="${inner == 'member-report-management'}? 'active' : ''">
+        <a class="nav-link" th:href="@{/member-report-management}">
+            <i class="fas fa-fw fa-flag"></i>
+            <span>회원 신고 관리</span></a>
+    </li>
+
     <!-- Divider -->
     <hr class="sidebar-divider">
 
@@ -76,6 +82,12 @@
         <a class="nav-link" th:href="@{/reply-management}">
             <i class="fas fa-fw fa-exclamation-circle"></i>
             <span>답변 관리</span></a>
+    </li>
+
+    <li class="nav-item" th:classappend="${inner == 'reply-report-management'}? 'active' : ''">
+        <a class="nav-link" th:href="@{/reply-report-management}">
+            <i class="fas fa-fw fa-flag"></i>
+            <span>답변 신고 관리</span></a>
     </li>
 
     <!-- Divider -->

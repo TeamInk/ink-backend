@@ -1,12 +1,9 @@
 package net.ink.admin.dto;
 
-import lombok.AllArgsConstructor;
+import java.util.List;
+
 import lombok.Builder;
 import lombok.Data;
-import lombok.NoArgsConstructor;
-import net.ink.core.todayexpression.entity.TodayUsefulExpression;
-
-import java.util.List;
 
 @Data
 @Builder

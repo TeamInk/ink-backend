@@ -68,3 +68,33 @@ INSERT INTO admin_member
 (admin_id, email, password, nickname, rank, is_active, reg_date, mod_date)
 VALUES
     (3, 'test3@email.com', '$2a$10$/PnmsvW7V2bSb9gyPgJPwukDBz4E4nnVQwzgoZUzRdXFx10ZLvGXy', '테스트3', 'PENDING', true, '2023-04-13 10:30:00', '2023-04-13 10:30:00');
+
+INSERT INTO admin_log (admin_id, action, action_query, reg_date, mod_date)
+VALUES
+    (1, 'LOGIN', 'User logged in successfully', '2023-04-14 10:00:00', '2023-04-14 10:00:00'),
+    (2, 'UPDATE_PROFILE', 'Updated profile information', '2023-04-14 10:10:00', '2023-04-14 10:10:00');
+-- Add dummy data for member_report table
+INSERT INTO member_report (report_id, reporter_id, target_id, reason, hide_to_reporter, reg_date, status, process_date, process_by) 
+VALUES (1, 1, 2, 'Inappropriate content', true, '2023-10-01 10:00:00', 'PENDING', NULL, NULL);
+
+INSERT INTO member_report (report_id, reporter_id, target_id, reason, hide_to_reporter, reg_date, status, process_date, process_by) 
+VALUES (2, 2, 3, 'Spam', true, '2023-10-02 11:00:00', 'HIDED', '2023-10-02 15:30:00', 'admin@email.com');
+
+INSERT INTO member_report (report_id, reporter_id, target_id, reason, hide_to_reporter, reg_date, status, process_date, process_by) 
+VALUES (3, 3, 1, 'Harassment', true, '2023-10-03 12:00:00', 'DELETED', '2023-10-03 14:45:00', 'admin@email.com');
+
+INSERT INTO member_report (report_id, reporter_id, target_id, reason, hide_to_reporter, reg_date, status, process_date, process_by) 
+VALUES (4, 3, 1, 'Harassment 2', true, '2023-10-03 13:00:00', 'PENDING', NULL, NULL);
+
+-- Add dummy data for reply_report table
+INSERT INTO reply_report (report_id, reply_id, reporter_id, reason, hide_to_reporter, reg_date, status, process_date, process_by) 
+VALUES (1, 1, 1, 'Offensive language', false, '2023-10-01 10:00:00', 'PENDING', NULL, NULL);
+
+INSERT INTO reply_report (report_id, reply_id, reporter_id, reason, hide_to_reporter, reg_date, status, process_date, process_by) 
+VALUES (2, 2, 2, 'Spam', false, '2023-10-02 11:00:00', 'HIDED', '2023-10-02 15:30:00', 'admin@email.com');
+
+INSERT INTO reply_report (report_id, reply_id, reporter_id, reason, hide_to_reporter, reg_date, status, process_date, process_by) 
+VALUES (3, 3, 3, 'Harassment', false, '2023-10-03 12:00:00', 'DELETED', '2023-10-03 14:45:00', 'admin@email.com');
+
+INSERT INTO reply_report (report_id, reply_id, reporter_id, reason, hide_to_reporter, reg_date, status, process_date, process_by) 
+VALUES (4, 1, 2, 'Harassment 2', false, '2023-10-03 13:00:00', 'PENDING', NULL, NULL);

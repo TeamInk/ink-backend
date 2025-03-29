@@ -1,0 +1,121 @@
+<div class="container-fluid" th:fragment="content">
+    <!-- Page Heading -->
+    <h1 class="h3 mb-4 text-gray-800">로그 관리자</h1>
+
+    <!-- Filters Section for Logs -->
+    <div class="row mb-4">
+        <div class="col-md-12">
+            <div class="form-inline">
+                <input type="text" id="emailFilter" class="form-control mr-2" placeholder="로그 이메일">
+                <input type="text" id="actionFilter" class="form-control mr-2" placeholder="로그 액션">
+                <button class="btn btn-primary" onclick="applyLogFilters()">로그 필터 적용</button>
+                <button class="btn btn-secondary ml-2" onclick="resetLogFilters()">로그 필터 초기화</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Log List Section -->
+    <div class="row">
+        <div class="col-md-12">
+            <div class="card shadow mb-4">
+                <div class="card-header py-3">
+                    <h6 class="m-0 font-weight-bold text-primary">로그 테이블</h6>
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table id="logTable" class="table table-bordered">
+                            <thead>
+                            <tr>
+                                <th>번호</th>
+                                <th>이메일</th>
+                                <th>로그</th>
+                                <th>발생 시간</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <!-- AJAX에서 로그 데이터 로드 -->
+                            </tbody>
+                        </table>
+                        <div id="noLogDataMessage" class="text-center mt-3" style="display: none;">
+                            <p class="text-muted">표시할 로그 데이터가 없습니다.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- jQuery -->
+<script th:src="@{/vendor/jquery/jquery.min.js}"></script>
+<script>
+    $(document).ready(function () {
+        // 로그 관련 상태 및 로직
+        function loadLogs(filters = {}) {
+            const queryParams = new URLSearchParams(filters).toString();
+            const noLogDataMessage = document.getElementById('noLogDataMessage');
+            noLogDataMessage.style.display = 'block';
+            noLogDataMessage.innerHTML = `<p class="text-muted">데이터 로드 중...</p>`;
+
+            fetch(`/api/log/admin-logs?${queryParams}`)
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Network response was not ok');
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    const tbody = document.querySelector('#logTable tbody');
+                    tbody.innerHTML = ''; // 기존 데이터 초기화
+
+                    if (!data.content || data.content.length === 0) {
+                        noLogDataMessage.style.display = 'block';
+                        noLogDataMessage.innerHTML = `<p class="text-muted">표시할 로그 데이터가 없습니다.</p>`;
+                    } else {
+                        noLogDataMessage.style.display = 'none';
+                        data.content.forEach((log, index) => {
+                            const row = document.createElement('tr');
+                            row.innerHTML = `
+                                <td>${index + 1}</td>
+                                <td>${log.adminEmail || 'N/A'}</td>
+                                <td>${log.action || 'N/A'}</td>
+                                <td>${log.regDate ? formatDate(log.regDate) : 'N/A'}</td>
+                            `;
+                            tbody.appendChild(row);
+                        });
+                    }
+                })
+                .catch(error => {
+                    console.error('There was a problem with the fetch operation:', error);
+                    noLogDataMessage.style.display = 'block';
+                    noLogDataMessage.innerHTML = `<p class="text-danger">데이터를 로드할 수 없습니다: ${error.message}</p>`;
+                });
+        }
+
+        function applyLogFilters() {
+            const email = document.getElementById('emailFilter').value;
+            const action = document.getElementById('actionFilter').value;
+            loadLogs({ email, action });
+        }
+
+        function resetLogFilters() {
+            document.getElementById('emailFilter').value = '';
+            document.getElementById('actionFilter').value = '';
+            loadLogs();
+        }
+
+        function formatDate(timestamp) {
+            const date = new Date(timestamp);
+            const year = date.getFullYear();
+            const month = String(date.getMonth() + 1).padStart(2, '0');
+            const day = String(date.getDate()).padStart(2, '0');
+            const hours = String(date.getHours()).padStart(2, '0');
+            const minutes = String(date.getMinutes()).padStart(2, '0');
+            const seconds = String(date.getSeconds()).padStart(2, '0');
+            return `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
+        }
+
+        // 페이지 로드 시 로그 데이터 로드
+        loadLogs();
+    });
+</script>

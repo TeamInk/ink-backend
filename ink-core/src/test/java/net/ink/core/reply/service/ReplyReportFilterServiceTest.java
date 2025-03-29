@@ -1,29 +1,24 @@
 package net.ink.core.reply.service;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.*;
+import static org.mockito.Mockito.*;
 
-import net.ink.core.common.EntityCreator;
-import net.ink.core.member.entity.Member;
-import net.ink.core.member.entity.ReplyReport;
-import net.ink.core.member.repository.MemberReportRepository;
-import net.ink.core.reply.entity.Reply;
-import net.ink.core.reply.repository.ReplyReportRepository;
-import org.junit.jupiter.api.BeforeEach;
+import java.util.Collections;
+
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import java.util.Arrays;
-import java.util.Collections;
-
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.when;
+import net.ink.core.common.EntityCreator;
+import net.ink.core.member.entity.Member;
+import net.ink.core.member.repository.MemberReportRepository;
+import net.ink.core.reply.entity.Reply;
+import net.ink.core.reply.entity.ReplyReport;
+import net.ink.core.reply.repository.ReplyReportRepository;
 
 @ExtendWith(MockitoExtension.class)
 class ReplyReportFilterServiceTest {

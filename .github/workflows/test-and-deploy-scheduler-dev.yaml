@@ -28,9 +28,9 @@ jobs:
     name: Gradle 테스트 후 배포
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v4
       - name: Set up JDK 11
-        uses: actions/setup-java@v2
+        uses: actions/setup-java@v4
         with:
           java-version: '11'
           distribution: 'adopt'
@@ -38,7 +38,7 @@ jobs:
         run: chmod +x gradlew
       - name: Gradle 빌드 캐싱
         id: gradle-cache
-        uses: actions/cache@v2
+        uses: actions/cache@v4
         with:
           path: |
             ~/.gradle/caches
@@ -69,10 +69,10 @@ jobs:
           echo "::set-output name=tag::$tag"
 
       - name: 도커 캐싱 준비
-        uses: docker/setup-buildx-action@v1
+        uses: docker/setup-buildx-action@v3
 
       - name: 도커 레이어 캐싱
-        uses: actions/cache@v2
+        uses: actions/cache@v4
         with:
           path: /tmp/.buildx-cache
           key: ${{ runner.os }}-buildx-${{ github.sha }}
@@ -86,7 +86,7 @@ jobs:
         run: docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD
 
       - name: 컨테이너 이미지 빌드 및 이미지 푸쉬
-        uses: docker/build-push-action@v2
+        uses: docker/build-push-action@v5
         with:
           context: ./ink-scheduler/
           push: true
@@ -112,7 +112,7 @@ jobs:
           output: docker-compose-scheduler-dev.yml
 
       - name: SSH키 설정
-        uses: webfactory/ssh-agent@v0.5.0
+        uses: webfactory/ssh-agent@v0.9.0
         with:
           ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
 
@@ -147,7 +147,7 @@ jobs:
           ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -p ${{ secrets.SSH_PORT }} ${{ secrets.SSH_USERNAME }}@${{ secrets.SSH_HOST }} "cd ${{ vars.PATH_TO_REMOTE }} && docker-compose -f $DOCKER_COMPOSE_FILE --project-name $PROJECT_NAME up -d --force-recreate"
 
       - name: 실패시 디스코드에 알림
-        uses: sarisia/actions-status-discord@v1
+        uses: sarisia/actions-status-discord@v1.13.0
         if: failure()
         with:
           webhook: ${{ secrets.DISCORD_WEBHOOK_URL }}
