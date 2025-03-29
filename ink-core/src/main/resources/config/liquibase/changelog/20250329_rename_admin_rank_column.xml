@@ -8,6 +8,7 @@
                         http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd">
 
     <changeSet id="20250329" author="hkpark">
-        <renameColumn tableName="admin_member" oldColumnName="rank" newColumnName="admin_rank" />
+        <renameColumn tableName="admin_member" oldColumnName="rank" newColumnName="admin_rank"
+            columnDataType="VARCHAR(255)" />
     </changeSet>
 </databaseChangeLog> 
