@@ -1,16 +1,17 @@
 package net.ink.admin.repository;
 
-import com.github.springtestdbunit.annotation.DatabaseSetup;
-import net.ink.admin.entity.AdminMember;
-import net.ink.core.annotation.InkDataTest;
-import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
+import static net.ink.admin.entity.AdminMember.RANK.*;
+import static org.junit.jupiter.api.Assertions.*;
 
 import java.util.Optional;
 
-import static net.ink.admin.entity.AdminMember.RANK.PENDING;
-import static net.ink.admin.entity.AdminMember.RANK.SUPERVISOR;
-import static org.junit.jupiter.api.Assertions.*;
+import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+
+import com.github.springtestdbunit.annotation.DatabaseSetup;
+
+import net.ink.admin.entity.AdminMember;
+import net.ink.core.annotation.InkDataTest;
 
 @InkDataTest
 class AdminMemberRepositoryTest {
@@ -25,7 +26,7 @@ class AdminMemberRepositoryTest {
         Optional<AdminMember> result = adminMemberRepository.findByEmail("admin1@exmaple.com");
         assertTrue(result.isPresent());
         assertEquals("Admin One", result.get().getNickname());
-        assertEquals(SUPERVISOR, result.get().getRank());
+        assertEquals(SUPERVISOR, result.get().getAdminRank());
     }
 
     @Test
@@ -33,12 +34,13 @@ class AdminMemberRepositoryTest {
             "classpath:dbunit/entity/admin_member.xml",
     })
     void findByEmailAndRankNot() {
-        Optional<AdminMember> result = adminMemberRepository.findByEmailAndRankNot("admin1@exmaple.com", SUPERVISOR);
+        Optional<AdminMember> result = adminMemberRepository.findByEmailAndAdminRankNot("admin1@exmaple.com",
+                SUPERVISOR);
         assertFalse(result.isPresent());
-        result = adminMemberRepository.findByEmailAndRankNot("admin1@exmaple.com", PENDING);
+        result = adminMemberRepository.findByEmailAndAdminRankNot("admin1@exmaple.com", PENDING);
         assertTrue(result.isPresent());
         assertEquals("Admin One", result.get().getNickname());
-        assertEquals(SUPERVISOR, result.get().getRank());
+        assertEquals(SUPERVISOR, result.get().getAdminRank());
     }
 
     @Test

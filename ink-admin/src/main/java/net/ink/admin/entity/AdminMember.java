@@ -48,9 +48,9 @@ public class AdminMember {
     private String nickname;
 
     @Builder.Default
-    @Column(nullable = false, name = "`rank`")
+    @Column(nullable = false, name = "admin_rank")
     @Enumerated(EnumType.STRING)
-    private RANK rank = RANK.PENDING;
+    private RANK adminRank = RANK.PENDING;
 
     @Builder.Default
     @Column(name = "is_active", nullable = false)

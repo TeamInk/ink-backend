@@ -43,11 +43,13 @@ public class AdminMemberService {
     public boolean isEmailDuplicated(String email) {
         return adminMemberRepository.existsByEmailAndIsActive(email, true);
     }
+
     @Transactional
     public void deleteAdminMemberById(Long adminId) {
-        AdminMember adminMember = adminMemberRepository.findById(adminId).orElseThrow(() -> new EntityNotFoundException(NOT_EXIST_MEMBER));
+        AdminMember adminMember = adminMemberRepository.findById(adminId)
+                .orElseThrow(() -> new EntityNotFoundException(NOT_EXIST_MEMBER));
 
-        if (adminMember.getRank() == AdminMember.RANK.SUPERVISOR) {
+        if (adminMember.getAdminRank() == AdminMember.RANK.SUPERVISOR) {
             throw new BadRequestException("슈퍼바이저는 삭제할 수 없습니다.");
         }
 
@@ -63,21 +65,22 @@ public class AdminMemberService {
         String emailSubject = "";
         String emailContent = "";
 
-        if (adminMember.getRank() == AdminMember.RANK.PENDING) {
-            adminMember.setRank(AdminMember.RANK.MANAGER);
+        if (adminMember.getAdminRank() == AdminMember.RANK.PENDING) {
+            adminMember.setAdminRank(AdminMember.RANK.MANAGER);
             sendEmail = true;
             emailSubject = "승급 안내";
             emailContent = "축하합니다! 매니저로 승급되셨습니다.";
-        } else if (adminMember.getRank() == AdminMember.RANK.MANAGER) {
-            adminMember.setRank(AdminMember.RANK.SUPERVISOR);
+        } else if (adminMember.getAdminRank() == AdminMember.RANK.MANAGER) {
+            adminMember.setAdminRank(AdminMember.RANK.SUPERVISOR);
             sendEmail = true;
             emailSubject = "승급 안내";
             emailContent = "축하합니다! 슈퍼바이저로 승급되셨습니다.";
 
-            AdminMember currentMember = ((AdminUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getAdminMember();
+            AdminMember currentMember = ((AdminUser) SecurityContextHolder.getContext().getAuthentication()
+                    .getPrincipal()).getAdminMember();
             currentMember = adminMemberRepository.findById(currentMember.getAdminId())
                     .orElseThrow(() -> new EntityNotFoundException(NOT_EXIST_MEMBER));
-            currentMember.setRank(AdminMember.RANK.MANAGER);
+            currentMember.setAdminRank(AdminMember.RANK.MANAGER);
 
             SecurityContextHolder.clearContext();
         }

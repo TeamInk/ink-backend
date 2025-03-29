@@ -1,8 +1,11 @@
 package net.ink.admin.service;
 
-import net.ink.admin.entity.AdminMember;
-import net.ink.admin.repository.AdminMemberRepository;
-import net.ink.core.core.exception.BadRequestException;
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.*;
+import static org.mockito.Mockito.*;
+
+import java.util.Optional;
+
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,13 +14,9 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 
-import javax.mail.internet.MimeMessage;
-import java.util.Optional;
-
-import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.eq;
-import static org.mockito.Mockito.*;
+import net.ink.admin.entity.AdminMember;
+import net.ink.admin.repository.AdminMemberRepository;
+import net.ink.core.core.exception.BadRequestException;
 
 @SpringBootTest
 class AdminMemberServiceTest {
@@ -68,9 +67,8 @@ class AdminMemberServiceTest {
                 AdminMember.builder()
                         .nickname("test")
                         .email("test@email.com")
-                        .rank(AdminMember.RANK.PENDING)
-                        .build())
-        );
+                        .adminRank(AdminMember.RANK.PENDING)
+                        .build()));
 
         adminMemberService.deleteAdminMemberById(1L);
     }
@@ -82,9 +80,8 @@ class AdminMemberServiceTest {
                 AdminMember.builder()
                         .nickname("test")
                         .email("test@email.com")
-                        .rank(AdminMember.RANK.SUPERVISOR)
-                        .build())
-        );
+                        .adminRank(AdminMember.RANK.SUPERVISOR)
+                        .build()));
 
         assertThrows(BadRequestException.class, () -> adminMemberService.deleteAdminMemberById(1L));
     }
@@ -94,7 +91,7 @@ class AdminMemberServiceTest {
     void promoteAdminMemberByIdInputEmailSend() {
         AdminMember adminMember = new AdminMember();
         adminMember.getAdminId();
-        adminMember.setRank(AdminMember.RANK.PENDING);
+        adminMember.setAdminRank(AdminMember.RANK.PENDING);
         adminMember.setEmail("test3@email.com");
         when(adminMemberRepository.findById(1L)).thenReturn(Optional.of(adminMember));
 
