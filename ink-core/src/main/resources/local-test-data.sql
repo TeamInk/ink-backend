@@ -73,6 +73,7 @@ INSERT INTO admin_log (admin_id, action, action_query, reg_date, mod_date)
 VALUES
     (1, 'LOGIN', 'User logged in successfully', '2023-04-14 10:00:00', '2023-04-14 10:00:00'),
     (2, 'UPDATE_PROFILE', 'Updated profile information', '2023-04-14 10:10:00', '2023-04-14 10:10:00');
+
 -- Add dummy data for member_report table
 INSERT INTO member_report (report_id, reporter_id, target_id, reason, hide_to_reporter, reg_date, status, process_date, process_by) 
 VALUES (1, 1, 2, 'Inappropriate content', true, '2023-10-01 10:00:00', 'PENDING', NULL, NULL);
@@ -97,4 +98,6 @@ INSERT INTO reply_report (report_id, reply_id, reporter_id, reason, hide_to_repo
 VALUES (3, 3, 3, 'Harassment', false, '2023-10-03 12:00:00', 'DELETED', '2023-10-03 14:45:00', 'admin@email.com');
 
 INSERT INTO reply_report (report_id, reply_id, reporter_id, reason, hide_to_reporter, reg_date, status, process_date, process_by) 
+
+VALUES (4, 1, 2, 'Harassment 2', false, '2023-10-03 13:00:00', 'PENDING', NULL, NULL);
 VALUES (4, 1, 2, 'Harassment 2', false, '2023-10-03 13:00:00', 'PENDING', NULL, NULL);

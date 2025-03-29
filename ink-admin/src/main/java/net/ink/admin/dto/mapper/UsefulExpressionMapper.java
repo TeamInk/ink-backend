@@ -6,6 +6,9 @@ import org.mapstruct.Mapping;
 import net.ink.admin.dto.UsefulExpressionDto;
 import net.ink.core.todayexpression.entity.UsefulExpression;
 
+import net.ink.admin.dto.UsefulExpressionDto;
+import net.ink.core.todayexpression.entity.UsefulExpression;
+
 @Mapper(componentModel = "spring")
 public interface UsefulExpressionMapper {
     UsefulExpressionDto toDto(UsefulExpression usefulExpression);
