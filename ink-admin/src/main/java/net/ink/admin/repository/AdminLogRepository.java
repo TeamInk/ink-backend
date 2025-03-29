@@ -7,13 +7,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.time.LocalDateTime;
 import java.util.List;
-import org.springframework.data.jpa.repository.JpaRepository;
 
-import org.springframework.data.jpa.repository.JpaRepository;
-
-import net.ink.admin.entity.AdminLog;
-
-import net.ink.admin.entity.AdminLog;
 public interface AdminLogRepository extends JpaRepository<AdminLog, Long> {
 
     // 특정 관리자 이메일로 로그 조회

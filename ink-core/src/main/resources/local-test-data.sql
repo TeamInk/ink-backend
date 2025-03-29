@@ -100,4 +100,3 @@ VALUES (3, 3, 3, 'Harassment', false, '2023-10-03 12:00:00', 'DELETED', '2023-10
 INSERT INTO reply_report (report_id, reply_id, reporter_id, reason, hide_to_reporter, reg_date, status, process_date, process_by) 
 
 VALUES (4, 1, 2, 'Harassment 2', false, '2023-10-03 13:00:00', 'PENDING', NULL, NULL);
-VALUES (4, 1, 2, 'Harassment 2', false, '2023-10-03 13:00:00', 'PENDING', NULL, NULL);

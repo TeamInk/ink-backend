@@ -1,7 +1,7 @@
 package net.ink.admin.service;
 
 import lombok.RequiredArgsConstructor;
-import net.ink.admin.dto.AdminLogDto;
+import net.ink.admin.dto.mapper.AdminLogMapper;
 import net.ink.admin.entity.AdminLog;
 import net.ink.admin.repository.AdminLogRepository;
 import org.springframework.data.domain.PageImpl;
@@ -17,6 +17,8 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class AdminLogService {
     private final AdminLogRepository adminLogRepository;
+    private final AdminLogMapper adminLogMapper;
+
     private static final int PAGE_THRESHOLD = 50;
 
     @Transactional
@@ -44,7 +46,6 @@ public class AdminLogService {
         return handlePaging(logs, pageable);
     }
 
-
     /**
      * 페이징 처리 여부를 결정
      */
@@ -54,28 +55,14 @@ public class AdminLogService {
             int end = Math.min((start + pageable.getPageSize()), logs.size());
             return new PageImpl<>(
                     logs.subList(start, end).stream()
-                            .map(this::convertToDto) // DTO 변환
+                            .map(adminLogMapper::toDto)
                             .collect(Collectors.toList()),
                     pageable,
                     logs.size()
             );
         }
         return logs.stream()
-                .map(this::convertToDto) // DTO 변환
+                .map(adminLogMapper::toDto)
                 .collect(Collectors.toList());
     }
-
-    /**
-     * 엔티티를 DTO로 변환
-     */
-    private AdminLogDto convertToDto(AdminLog adminLog) {
-        return AdminLogDto.builder()
-                .adminId(adminLog.getAdminId())
-                .adminEmail(adminLog.getActionedAdminMember().getEmail())
-                .action(adminLog.getAction())
-                .actionQuery(adminLog.getActionQuery())
-                .regDate(adminLog.getRegDate())
-                .build();
-    }
-
 }
