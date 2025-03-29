@@ -1,9 +1,8 @@
 package net.ink.admin.service;
 
-import lombok.RequiredArgsConstructor;
-import net.ink.admin.dto.AdminUser;
-import net.ink.admin.entity.AdminMember;
-import net.ink.admin.repository.AdminMemberRepository;
+import java.util.ArrayList;
+import java.util.List;
+
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -11,8 +10,10 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.List;
+import lombok.RequiredArgsConstructor;
+import net.ink.admin.dto.AdminUser;
+import net.ink.admin.entity.AdminMember;
+import net.ink.admin.repository.AdminMemberRepository;
 
 @Service
 @RequiredArgsConstructor
@@ -28,11 +29,10 @@ public class AdminUserDetailsService implements UserDetailsService {
         List<GrantedAuthority> authorities = new ArrayList<>();
         // Add roles/authorities if necessary
         authorities.add(new SimpleGrantedAuthority("ROLE_ADMIN"));
-        if (adminMember.getRank() == AdminMember.RANK.SUPERVISOR) {
+        if (adminMember.getAdminRank() == AdminMember.RANK.SUPERVISOR) {
             authorities.add(new SimpleGrantedAuthority("ROLE_SUPERVISOR"));
         }
 
         return new AdminUser(adminMember, authorities);
     }
 }
-

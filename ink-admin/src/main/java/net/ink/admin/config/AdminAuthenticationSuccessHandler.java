@@ -19,12 +19,12 @@ public class AdminAuthenticationSuccessHandler extends SimpleUrlAuthenticationSu
 
     @Override
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response,
-                                        Authentication authentication) throws IOException, ServletException {
+            Authentication authentication) throws IOException, ServletException {
         // Get the authenticated user
         AdminUser user = (AdminUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 
         // Check if the user's rank is PENDING
-        if (user.getRank() == AdminMember.RANK.PENDING) {
+        if (user.getAdminRank() == AdminMember.RANK.PENDING) {
             // Redirect to a specific page for PENDING users
             getRedirectStrategy().sendRedirect(request, response, "/login?pending");
             return;
