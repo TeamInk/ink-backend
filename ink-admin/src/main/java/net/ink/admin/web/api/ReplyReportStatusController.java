@@ -36,7 +36,7 @@ public class ReplyReportStatusController {
         ReplyReport report = replyReportRepository.findById(reportId)
                 .orElseThrow(() -> new IllegalArgumentException("Invalid report Id:" + reportId));
 
-        // 문자열 상태를 ProcessStatus 열거형으로 변환
+        // 상태 변경 처리
         ReplyReport.ProcessStatus processStatus;
         switch (request.getStatus()) {
             case "신고 접수":
@@ -58,6 +58,8 @@ public class ReplyReportStatusController {
 
         replyReportRepository.save(report);
 
-        return ResponseEntity.ok().build();
+        return ResponseEntity.ok()
+                .header("Location", "/reply-report-management")
+                .build();
     }
 }
