@@ -56,6 +56,10 @@ public class Member {
     @Column(name = "is_active", nullable = false)
     private Boolean isActive = true;
 
+    @Builder.Default
+    @Column(name = "is_suspended", nullable = false)
+    private Boolean isSuspended = false;
+
     @NotNull
     @Column(nullable = false, unique = true)
     private String nickname;
