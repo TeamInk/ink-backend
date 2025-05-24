@@ -22,7 +22,7 @@
                         <th>신고 일시</th>
                         <th>신고 횟수</th>
                         <th>처리상태</th>
-                        <th>삭제</th>
+                        <th>신고 취소</th>
                     </tr>
                     </thead>
                     <tfoot>
@@ -35,7 +35,7 @@
                         <th>신고 일시</th>
                         <th>신고 횟수</th>
                         <th>처리상태</th>
-                        <th>삭제</th>
+                        <th>신고 취소</th>
                     </tr>
                     </tfoot>
                     <tbody>
@@ -51,10 +51,10 @@
                             <span th:if="${report.status.name() == 'PENDING'}" class="badge badge-warning">신고 접수</span>
                             <span th:if="${report.status.name() == 'HIDED'}" class="badge badge-info">게시물 숨김</span>
                             <span th:if="${report.status.name() == 'DELETED'}" class="badge badge-success">처리 완료</span>
-                            <span th:if="${report.status.name() == 'CANCELED'}" class="badge badge-secondary">취소됨</span>
+                            <span th:if="${report.status.name() == 'CANCELED'}" class="badge badge-secondary">신고 취소</span>
                         </td>
                         <td>
-                            <button class="btn btn-danger delete-btn" th:data-report-id="${report.reportId}">삭제</button>
+                            <button class="btn btn-danger cancel-btn" th:data-report-id="${report.reportId}">신고 취소</button>
                         </td>
                     </tr>
                     </tbody>
@@ -66,20 +66,20 @@
     <script th:src="@{/vendor/jquery/jquery.min.js}"></script>
     <script>
         $(document).ready(function () {
-            $('.delete-btn').on('click', function (e) {
+            $('.cancel-btn').on('click', function (e) {
                 e.stopPropagation(); // 이벤트 전파 중단
                 const reportId = $(this).data('report-id');
-                if (confirm('이 신고내역을 삭제할까요?')) {
+                if (confirm('이 신고를 취소하시겠습니까? 이 답변에 대한 모든 신고 기록이 삭제됩니다.')) {
                     $.ajax({
                         url: '/api/reply-report/' + reportId,
                         type: 'DELETE',
                         success: function () {
-                            alert("삭제되었습니다.")
+                            alert("신고가 취소되었습니다.");
                             location.reload();
                         },
                         error: function (error) {
-                            alert("삭제에 실패했습니다.")
-                            console.error('Error deleting member:', error);
+                            alert("신고 취소에 실패했습니다: " + (error.responseText || error.statusText));
+                            console.error('Error canceling report:', error);
                         }
                     });
                 }
