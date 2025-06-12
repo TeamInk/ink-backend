@@ -13,42 +13,51 @@
             <div class="table-responsive">
                 <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
                     <thead>
-                    <tr>
-                        <th>idx</th>
-                        <th>Email</th>
-                        <th>별명</th>
-                        <th>잉크수</th>
-                        <th>출석 횟수</th>
-                        <th>마지막 출석 날짜</th>
-                        <th>식별 ID</th>
-                        <th>삭제</th>
-                    </tr>
+                        <tr>
+                            <th>idx</th>
+                            <th>Email</th>
+                            <th>별명</th>
+                            <th>잉크수</th>
+                            <th>출석 횟수</th>
+                            <th>마지막 출석 날짜</th>
+                            <th>식별 ID</th>
+                            <th>상태</th>
+                            <th>관리</th>
+                        </tr>
                     </thead>
                     <tfoot>
-                    <tr>
-                        <th>idx</th>
-                        <th>Email</th>
-                        <th>별명</th>
-                        <th>잉크수</th>
-                        <th>출석 횟수</th>
-                        <th>마지막 출석 날짜</th>
-                        <th>식별 ID</th>
-                        <th>삭제</th>
-                    </tr>
+                        <tr>
+                            <th>idx</th>
+                            <th>Email</th>
+                            <th>별명</th>
+                            <th>잉크수</th>
+                            <th>출석 횟수</th>
+                            <th>마지막 출석 날짜</th>
+                            <th>식별 ID</th>
+                            <th>상태</th>
+                            <th>관리</th>
+                        </tr>
                     </tfoot>
                     <tbody>
-                    <tr th:each="member : ${members}">
-                        <td th:text="${member.memberId}"></td>
-                        <td th:text="${member.email}"></td>
-                        <td th:text="${member.nickname}"></td>
-                        <td th:text="${member.inkCount}"></td>
-                        <td th:text="${member.attendanceCount}"></td>
-                        <td th:text="${member.lastAttendanceDate}"></td>
-                        <td th:text="${member.identifier}"></td>
-                        <td>
-                            <button class="btn btn-danger delete-btn" th:data-member-id="${member.memberId}">삭제</button>
-                        </td>
-                    </tr>
+                        <tr th:each="member : ${members}">
+                            <td th:text="${member.memberId}"></td>
+                            <td th:text="${member.email}"></td>
+                            <td th:text="${member.nickname}"></td>
+                            <td th:text="${member.inkCount}"></td>
+                            <td th:text="${member.attendanceCount}"></td>
+                            <td th:text="${member.lastAttendanceDate}"></td>
+                            <td th:text="${member.identifier}"></td>
+                            <td>
+                                <span th:if="${member.isSuspended}" class="badge badge-danger">정지</span>
+                                <span th:unless="${member.isSuspended}" class="badge badge-success">정상</span>
+                            </td>
+                            <td>
+                                <button th:if="${member.isSuspended}" class="btn btn-success suspend-btn"
+                                    th:data-member-id="${member.memberId}" th:data-suspended="false">정지해제</button>
+                                <button th:unless="${member.isSuspended}" class="btn btn-danger suspend-btn"
+                                    th:data-member-id="${member.memberId}" th:data-suspended="true">영구정지</button>
+                            </td>
+                        </tr>
                     </tbody>
                 </table>
             </div>
@@ -58,26 +67,33 @@
     <script th:src="@{/vendor/jquery/jquery.min.js}"></script>
     <script>
         $(document).ready(function () {
-            $('.delete-btn').on('click', function () {
+            $('.suspend-btn').on('click', function () {
                 const memberId = $(this).data('member-id');
-                if (confirm('이 회원을 삭제할까요?')) {
+                const isSuspended = $(this).data('suspended');
+                const confirmMessage = isSuspended ? '이 회원을 영구정지할까요?' : '이 회원의 정지를 해제할까요?';
+                const successMessage = isSuspended ? '영구정지 되었습니다.' : '정지해제 되었습니다.';
+                const errorMessage = isSuspended ? '영구정지에 실패했습니다.' : '정지해제에 실패했습니다.';
+
+                if (confirm(confirmMessage)) {
                     $.ajax({
-                        url: '/api/member/' + memberId,
-                        type: 'DELETE',
+                        url: '/api/member/' + memberId + '/suspend',
+                        type: 'PUT',
+                        contentType: 'application/json',
+                        data: JSON.stringify({ isSuspended: isSuspended }),
                         success: function () {
-                            alert("삭제되었습니다.")
+                            alert(successMessage);
                             location.reload();
                         },
                         error: function (error) {
-                            alert("삭제에 실패했습니다.")
-                            console.error('Error deleting member:', error);
+                            alert(errorMessage);
+                            console.error('Error updating member:', error);
                         }
                     });
                 }
             });
 
             $("#dataTable").DataTable({
-                "order": [ 0, "desc" ]
+                "order": [0, "desc"]
             });
         });
     </script>

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <dataset>
         <member member_id="1" identifier="123" email="test@gmail.com" is_active="true"
-                is_suspended="false" nickname="Test"
+                is_suspended="true" nickname="Test"
                 attendance_count="10" last_attendance_date="2020-10-14" is_daily_push_active="true"
                 is_like_push_active="true"
                 mod_date="2020-10-14 17:11:10" reg_date="2020-10-14 17:11:09" />
@@ -15,4 +15,4 @@
                 attendance_count="12" last_attendance_date="2020-10-16" is_daily_push_active="false"
                 is_like_push_active="true"
                 mod_date="2020-10-14 17:11:10" reg_date="2020-10-14 17:11:09" />
-</dataset>
+</dataset> 

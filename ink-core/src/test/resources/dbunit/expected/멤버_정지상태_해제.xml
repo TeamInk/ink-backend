@@ -11,8 +11,8 @@
                 is_like_push_active="false"
                 mod_date="2020-10-14 17:11:10" reg_date="2020-10-14 17:11:09" />
         <member member_id="3" identifier="125" email="test3@gmail.com" is_active="false"
-                is_suspended="true" nickname="Test3"
+                is_suspended="false" nickname="Test3"
                 attendance_count="12" last_attendance_date="2020-10-16" is_daily_push_active="false"
                 is_like_push_active="true"
                 mod_date="2020-10-14 17:11:10" reg_date="2020-10-14 17:11:09" />
-</dataset>
+</dataset> 

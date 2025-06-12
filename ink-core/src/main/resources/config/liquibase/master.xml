@@ -25,4 +25,5 @@
     <include file="config/liquibase/changelog/20250310_add_member_report_status.xml" />
     <include file="config/liquibase/changelog/20250310_add_reply_report_process_fields.xml" />
     <include file="config/liquibase/changelog/20250329_rename_admin_rank_column.xml" />
+    <include file="config/liquibase/changelog/20250401_add_member_is_suspended.xml" />
 </databaseChangeLog>
