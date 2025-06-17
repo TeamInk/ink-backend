@@ -29,6 +29,8 @@ class ReplyReportMapperTest {
         assertEquals(replyReport.getReporter().getMemberId(), mappedDto.getReporterId());
         assertEquals(replyReport.getReason(), mappedDto.getReason());
         assertEquals(replyReport.getHideToReporter(), mappedDto.getHideToReporter());
+        assertEquals(replyReport.getStatus(), mappedDto.getStatus());
+        assertEquals(replyReport.getMethod(), mappedDto.getMethod());
     }
 
     @Test
@@ -39,6 +41,8 @@ class ReplyReportMapperTest {
         assertEquals(replyReportDto.getReplyId(), mappedEntity.getReply().getReplyId());
         assertEquals(replyReportDto.getReason(), mappedEntity.getReason());
         assertEquals(replyReportDto.getHideToReporter(), mappedEntity.getHideToReporter());
+        assertEquals(replyReportDto.getStatus(), mappedEntity.getStatus());
+        assertEquals(replyReportDto.getMethod(), mappedEntity.getMethod());
     }
 
 }

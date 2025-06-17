@@ -14,49 +14,42 @@ import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import net.ink.admin.annotation.AdminLogging;
 import net.ink.core.reply.entity.ReplyReport;
-import net.ink.core.reply.repository.ReplyReportRepository;
+import net.ink.core.reply.service.ReplyReportService;
 
 @RestController
 @RequiredArgsConstructor
 public class ReplyReportStatusController {
-    private final ReplyReportRepository replyReportRepository;
+    private final ReplyReportService replyReportService;
 
     @Data
-    public static class StatusUpdateRequest {
-        private String status;
+    public static class MethodUpdateRequest {
+        private String method;
     }
 
     @AdminLogging
-    @PutMapping("/api/reply-report/{reportId}/status")
-    public ResponseEntity<?> updateReplyReportStatus(
+    @PutMapping("/api/reply-report/{reportId}/method")
+    public ResponseEntity<?> updateReplyReportMethod(
             @PathVariable Long reportId,
-            @RequestBody StatusUpdateRequest request,
+            @RequestBody MethodUpdateRequest request,
             @AuthenticationPrincipal UserDetails userDetails) {
 
-        ReplyReport report = replyReportRepository.findById(reportId)
-                .orElseThrow(() -> new IllegalArgumentException("Invalid report Id:" + reportId));
-
-        // 문자열 상태를 ProcessStatus 열거형으로 변환
-        ReplyReport.ProcessStatus processStatus;
-        switch (request.getStatus()) {
-            case "신고 접수":
-                processStatus = ReplyReport.ProcessStatus.PENDING;
+        // 문자열 처리 방법을 ProcessMethod 열거형으로 변환
+        ReplyReport.ProcessMethod processMethod;
+        switch (request.getMethod()) {
+            case "신고취소":
+                processMethod = ReplyReport.ProcessMethod.CANCELED;
                 break;
-            case "게시물 숨김":
-                processStatus = ReplyReport.ProcessStatus.HIDED;
+            case "게시글 숨김":
+                processMethod = ReplyReport.ProcessMethod.HIDED;
                 break;
-            case "처리 완료":
-                processStatus = ReplyReport.ProcessStatus.DELETED;
+            case "게시글 삭제":
+                processMethod = ReplyReport.ProcessMethod.DELETED;
                 break;
             default:
-                processStatus = ReplyReport.ProcessStatus.PENDING;
+                processMethod = ReplyReport.ProcessMethod.PENDING;
         }
 
-        report.setStatus(processStatus);
-        report.setProcessDate(LocalDateTime.now());
-        report.setProcessBy(userDetails.getUsername());
-
-        replyReportRepository.save(report);
+        replyReportService.processReplyReport(reportId, processMethod, userDetails.getUsername());
 
         return ResponseEntity.ok().build();
     }

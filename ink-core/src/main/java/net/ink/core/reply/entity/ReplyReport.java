@@ -54,7 +54,12 @@ public class ReplyReport {
     @Builder.Default
     @Column(name = "status")
     @Enumerated(EnumType.STRING)
-    private ProcessStatus status = ProcessStatus.PENDING;
+    private ProcessStatus status = ProcessStatus.OPEN;
+
+    @Builder.Default
+    @Column(name = "method")
+    @Enumerated(EnumType.STRING)
+    private ProcessMethod method = ProcessMethod.PENDING;
 
     @Builder.Default
     @CreationTimestamp
@@ -68,6 +73,11 @@ public class ReplyReport {
     private String processBy;
 
     public enum ProcessStatus {
+        OPEN,
+        DONE
+    }
+
+    public enum ProcessMethod {
         PENDING,
         CANCELED,
         HIDED,

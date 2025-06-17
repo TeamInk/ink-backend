@@ -1,8 +1,8 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <dataset>
-    <reply_report report_id="1" reply_id="1" reporter_id="1" reason="Reason 1" hide_to_reporter="true" status="PENDING" reg_date="2022-10-01 10:00:00"/>
-    <reply_report report_id="2" reply_id="2" reporter_id="2" reason="Reason 2" hide_to_reporter="true" status="PENDING" reg_date="2022-10-02 10:00:00"/>
-    <reply_report report_id="3" reply_id="1" reporter_id="1" reason="Reason 3" hide_to_reporter="true" status="DELETED" reg_date="2022-10-03 10:00:00"/>
-    <reply_report report_id="4" reply_id="4" reporter_id="3" reason="Reason 4" hide_to_reporter="true" status="CANCELED" reg_date="2022-10-04 10:00:00"/>
-    <reply_report report_id="5" reply_id="5" reporter_id="2" reason="Reason 5" hide_to_reporter="true" status="HIDED" reg_date="2022-10-05 10:00:00"/>
+    <reply_report report_id="1" reply_id="1" reporter_id="1" reason="Reason 1" hide_to_reporter="true" status="OPEN" method="PENDING" reg_date="2022-10-01 10:00:00"/>
+    <reply_report report_id="2" reply_id="2" reporter_id="2" reason="Reason 2" hide_to_reporter="true" status="OPEN" method="PENDING" reg_date="2022-10-02 10:00:00"/>
+    <reply_report report_id="3" reply_id="1" reporter_id="1" reason="Reason 3" hide_to_reporter="true" status="DONE" method="DELETED" reg_date="2022-10-03 10:00:00"/>
+    <reply_report report_id="4" reply_id="4" reporter_id="3" reason="Reason 4" hide_to_reporter="true" status="DONE" method="CANCELED" reg_date="2022-10-04 10:00:00"/>
+    <reply_report report_id="5" reply_id="5" reporter_id="2" reason="Reason 5" hide_to_reporter="true" status="DONE" method="HIDED" reg_date="2022-10-05 10:00:00"/>
 </dataset>

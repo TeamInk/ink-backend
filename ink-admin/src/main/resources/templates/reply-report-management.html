@@ -13,50 +13,50 @@
             <div class="table-responsive">
                 <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
                     <thead>
-                    <tr>
-                        <th>idx</th>
-                        <th>작성자</th>
-                        <th>질문</th>
-                        <th>답변 내용</th>
-                        <th>신고 사유</th>
-                        <th>신고 일시</th>
-                        <th>신고 횟수</th>
-                        <th>처리상태</th>
-                        <th>삭제</th>
-                    </tr>
+                        <tr>
+                            <th>idx</th>
+                            <th>작성자</th>
+                            <th>질문</th>
+                            <th>답변 내용</th>
+                            <th>신고 사유</th>
+                            <th>신고 일시</th>
+                            <th>신고 횟수</th>
+                            <th>처리상태</th>
+                            <th>삭제</th>
+                        </tr>
                     </thead>
                     <tfoot>
-                    <tr>
-                        <th>idx</th>
-                        <th>작성자</th>
-                        <th>질문</th>
-                        <th>답변 내용</th>
-                        <th>신고 사유</th>
-                        <th>신고 일시</th>
-                        <th>신고 횟수</th>
-                        <th>처리상태</th>
-                        <th>삭제</th>
-                    </tr>
+                        <tr>
+                            <th>idx</th>
+                            <th>작성자</th>
+                            <th>질문</th>
+                            <th>답변 내용</th>
+                            <th>신고 사유</th>
+                            <th>신고 일시</th>
+                            <th>신고 횟수</th>
+                            <th>처리상태</th>
+                            <th>삭제</th>
+                        </tr>
                     </tfoot>
                     <tbody>
-                    <tr th:each="report : ${replyReports}" class="report-row" th:data-report-id="${report.reportId}" style="cursor: pointer;">
-                        <td th:text="${report.reportId}"></td>
-                        <td th:text="${report.reply.author.nickname}"></td>
-                        <td th:text="${report.reply.question.content}"></td>
-                        <td th:text="${report.reply.content}"></td>
-                        <td th:text="${report.reason}"></td>
-                        <td th:text="${#temporals.format(report.regDate, 'yyyy-MM-dd HH:mm:ss')}"></td>
-                        <td th:text="${report.reply.replyReports.size()}"></td>
-                        <td>
-                            <span th:if="${report.status.name() == 'PENDING'}" class="badge badge-warning">신고 접수</span>
-                            <span th:if="${report.status.name() == 'HIDED'}" class="badge badge-info">게시물 숨김</span>
-                            <span th:if="${report.status.name() == 'DELETED'}" class="badge badge-success">처리 완료</span>
-                            <span th:if="${report.status.name() == 'CANCELED'}" class="badge badge-secondary">취소됨</span>
-                        </td>
-                        <td>
-                            <button class="btn btn-danger delete-btn" th:data-report-id="${report.reportId}">삭제</button>
-                        </td>
-                    </tr>
+                        <tr th:each="report : ${replyReports}" class="report-row" th:data-report-id="${report.reportId}"
+                            style="cursor: pointer;">
+                            <td th:text="${report.reportId}"></td>
+                            <td th:text="${report.reply.author.nickname}"></td>
+                            <td th:text="${report.reply.question.content}"></td>
+                            <td th:text="${report.reply.content}"></td>
+                            <td th:text="${report.reason}"></td>
+                            <td th:text="${#temporals.format(report.regDate, 'yyyy-MM-dd HH:mm:ss')}"></td>
+                            <td th:text="${report.reply.replyReports.size()}"></td>
+                            <td>
+                                <span th:if="${report.status.name() == 'OPEN'}" class="badge badge-warning">처리 전</span>
+                                <span th:if="${report.status.name() == 'DONE'}" class="badge badge-success">처리 완료</span>
+                            </td>
+                            <td>
+                                <button class="btn btn-danger delete-btn"
+                                    th:data-report-id="${report.reportId}">삭제</button>
+                            </td>
+                        </tr>
                     </tbody>
                 </table>
             </div>
@@ -86,13 +86,13 @@
             });
 
             // 행 클릭 시 상세 페이지로 이동
-            $('.report-row').on('click', function() {
+            $('.report-row').on('click', function () {
                 const reportId = $(this).data('report-id');
                 window.location.href = '/reply-report-management-detail?reportId=' + reportId;
             });
 
             $("#dataTable").DataTable({
-                "order": [ 0, "desc" ]
+                "order": [0, "desc"]
             });
         });
     </script>

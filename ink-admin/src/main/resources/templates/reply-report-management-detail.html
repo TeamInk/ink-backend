@@ -13,51 +13,61 @@
                 <div class="col-md-6">
                     <div class="form-group">
                         <label for="nickname">닉네임</label>
-                        <input type="text" class="form-control" id="nickname" th:value="${report.reply.author.nickname}" readonly>
+                        <input type="text" class="form-control" id="nickname" th:value="${report.reply.author.nickname}"
+                            readonly>
                     </div>
                     <div class="form-group">
                         <label for="question">질문</label>
-                        <input type="text" class="form-control" id="question" th:value="${report.reply.question.content}" readonly>
+                        <input type="text" class="form-control" id="question"
+                            th:value="${report.reply.question.content}" readonly>
                     </div>
                     <div class="form-group">
                         <label for="replyContent">답변 내용</label>
-                        <textarea class="form-control" id="replyContent" rows="3" readonly th:text="${report.reply.content}"></textarea>
+                        <textarea class="form-control" id="replyContent" rows="3" readonly
+                            th:text="${report.reply.content}"></textarea>
                     </div>
                     <div class="form-group">
                         <label for="reason">신고 사유</label>
-                        <textarea class="form-control" id="reason" rows="3" readonly th:text="${report.reason}"></textarea>
+                        <textarea class="form-control" id="reason" rows="3" readonly
+                            th:text="${report.reason}"></textarea>
                     </div>
                 </div>
                 <div class="col-md-6">
                     <div class="form-group">
                         <label for="regDate">신고 일시</label>
-                        <input type="text" class="form-control" id="regDate" th:value="${#temporals.format(report.regDate, 'yyyy-MM-dd HH:mm:ss')}" readonly>
+                        <input type="text" class="form-control" id="regDate"
+                            th:value="${#temporals.format(report.regDate, 'yyyy-MM-dd HH:mm:ss')}" readonly>
                     </div>
                     <div class="form-group">
                         <label for="reportCount">신고 횟수</label>
-                        <input type="text" class="form-control" id="reportCount" th:value="${report.reply.replyReports.size()}" readonly>
+                        <input type="text" class="form-control" id="reportCount"
+                            th:value="${report.reply.replyReports.size()}" readonly>
                     </div>
                     <div class="form-group">
-                        <label for="status">처리 상태</label>
-                        <select class="form-control" id="status">
-                            <option value="신고 접수" th:selected="${report.status.name() == 'PENDING'}">신고 접수</option>
-                            <option value="게시물 숨김" th:selected="${report.status.name() == 'HIDED'}">게시물 숨김</option>
-                            <option value="처리 완료" th:selected="${report.status.name() == 'DELETED'}">처리 완료</option>
+                        <label for="method">처리 내용</label>
+                        <select class="form-control" id="method" th:disabled="${report.status.name() == 'DONE'}">
+                            <option value="신고취소" th:selected="${report.method.name() == 'CANCELED'}">신고취소</option>
+                            <option value="게시글 숨김" th:selected="${report.method.name() == 'HIDED'}">게시글 숨김</option>
+                            <option value="게시글 삭제" th:selected="${report.method.name() == 'DELETED'}">게시글 삭제</option>
                         </select>
                     </div>
                     <div class="form-group">
                         <label for="processDate">처리 일시</label>
-                        <input type="text" class="form-control" id="processDate" th:value="${report.processDate != null ? #temporals.format(report.processDate, 'yyyy-MM-dd HH:mm:ss') : '-'}" readonly>
+                        <input type="text" class="form-control" id="processDate"
+                            th:value="${report.processDate != null ? #temporals.format(report.processDate, 'yyyy-MM-dd HH:mm:ss') : '-'}"
+                            readonly>
                     </div>
                     <div class="form-group">
                         <label for="processBy">처리자</label>
-                        <input type="text" class="form-control" id="processBy" th:value="${report.processBy != null ? report.processBy : '-'}" readonly>
+                        <input type="text" class="form-control" id="processBy"
+                            th:value="${report.processBy != null ? report.processBy : '-'}" readonly>
                     </div>
                 </div>
             </div>
             <div class="row mt-3">
                 <div class="col-md-12">
-                    <button type="button" class="btn btn-primary" id="saveButton">저장</button>
+                    <button type="button" class="btn btn-primary" id="saveButton"
+                        th:disabled="${report.status.name() == 'DONE'}">저장</button>
                     <button type="button" class="btn btn-danger" id="deleteButton">삭제</button>
                     <a href="/reply-report-management" class="btn btn-secondary">목록으로</a>
                 </div>
@@ -71,20 +81,20 @@
         $(document).ready(function () {
             $('#saveButton').on('click', function () {
                 const reportId = $('#reportIdHolder').data('report-id');
-                const status = $('#status').val();
+                const method = $('#method').val();
 
                 $.ajax({
-                    url: '/api/reply-report/' + reportId + '/status',
+                    url: '/api/reply-report/' + reportId + '/method',
                     type: 'PUT',
-                    data: JSON.stringify({status: status}),
+                    data: JSON.stringify({ method: method }),
                     contentType: 'application/json; charset=utf-8',
                     success: function () {
-                        alert("상태가 변경되었습니다.");
+                        alert("처리 내용이 변경되었습니다.");
                         location.reload();
                     },
                     error: function (error) {
-                        alert("상태 변경에 실패했습니다.");
-                        console.error('Error updating report status:', error);
+                        alert("처리 내용 변경에 실패했습니다.");
+                        console.error('Error updating report method:', error);
                     }
                 });
             });
@@ -108,4 +118,4 @@
             });
         });
     </script>
-</div> 
+</div>

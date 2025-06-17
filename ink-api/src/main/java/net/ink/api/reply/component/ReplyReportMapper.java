@@ -9,14 +9,17 @@ import net.ink.core.member.entity.Member;
 import net.ink.core.reply.entity.Reply;
 import net.ink.core.reply.entity.ReplyReport;
 
-@Mapper(componentModel = "spring",
-        unmappedTargetPolicy = ReportingPolicy.IGNORE,
-        imports = {Member.class, Reply.class})
+@Mapper(componentModel = "spring", unmappedTargetPolicy = ReportingPolicy.IGNORE, imports = { Member.class,
+        Reply.class })
 public interface ReplyReportMapper {
     @Mapping(target = "reply", expression = "java(Reply.builder().replyId(replyReportDto.getReplyId()).build())")
+    @Mapping(target = "status", source = "status")
+    @Mapping(target = "method", source = "method")
     ReplyReport toEntity(ReplyReportDto replyReportDto);
 
     @Mapping(target = "replyId", expression = "java(replyReport.getReply().getReplyId())")
     @Mapping(target = "reporterId", expression = "java(replyReport.getReporter().getMemberId())")
+    @Mapping(target = "status", source = "status")
+    @Mapping(target = "method", source = "method")
     ReplyReportDto.ReadOnly toDto(ReplyReport replyReport);
 }

@@ -88,15 +88,14 @@ INSERT INTO member_report (report_id, reporter_id, target_id, reason, hide_to_re
 VALUES (4, 3, 1, 'Harassment 2', true, '2023-10-03 13:00:00', 'PENDING', NULL, NULL);
 
 -- Add dummy data for reply_report table
-INSERT INTO reply_report (report_id, reply_id, reporter_id, reason, hide_to_reporter, reg_date, status, process_date, process_by) 
-VALUES (1, 1, 1, 'Offensive language', false, '2023-10-01 10:00:00', 'PENDING', NULL, NULL);
+INSERT INTO reply_report (report_id, reply_id, reporter_id, reason, hide_to_reporter, reg_date, status, method, process_date, process_by) 
+VALUES (1, 1, 1, 'Offensive language', false, '2023-10-01 10:00:00', 'OPEN', 'PENDING', NULL, NULL);
 
-INSERT INTO reply_report (report_id, reply_id, reporter_id, reason, hide_to_reporter, reg_date, status, process_date, process_by) 
-VALUES (2, 2, 2, 'Spam', false, '2023-10-02 11:00:00', 'HIDED', '2023-10-02 15:30:00', 'admin@email.com');
+INSERT INTO reply_report (report_id, reply_id, reporter_id, reason, hide_to_reporter, reg_date, status, method, process_date, process_by) 
+VALUES (2, 2, 2, 'Spam', false, '2023-10-02 11:00:00', 'DONE', 'HIDED', '2023-10-02 15:30:00', 'admin@email.com');
 
-INSERT INTO reply_report (report_id, reply_id, reporter_id, reason, hide_to_reporter, reg_date, status, process_date, process_by) 
-VALUES (3, 3, 3, 'Harassment', false, '2023-10-03 12:00:00', 'DELETED', '2023-10-03 14:45:00', 'admin@email.com');
+INSERT INTO reply_report (report_id, reply_id, reporter_id, reason, hide_to_reporter, reg_date, status, method, process_date, process_by) 
+VALUES (3, 3, 3, 'Harassment', false, '2023-10-03 12:00:00', 'DONE', 'DELETED', '2023-10-03 14:45:00', 'admin@email.com');
 
-INSERT INTO reply_report (report_id, reply_id, reporter_id, reason, hide_to_reporter, reg_date, status, process_date, process_by) 
-
-VALUES (4, 1, 2, 'Harassment 2', false, '2023-10-03 13:00:00', 'PENDING', NULL, NULL);
+INSERT INTO reply_report (report_id, reply_id, reporter_id, reason, hide_to_reporter, reg_date, status, method, process_date, process_by) 
+VALUES (4, 1, 2, 'Harassment 2', false, '2023-10-03 13:00:00', 'OPEN', 'PENDING', NULL, NULL);
