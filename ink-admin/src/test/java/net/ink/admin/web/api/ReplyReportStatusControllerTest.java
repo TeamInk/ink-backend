@@ -39,7 +39,8 @@ public class ReplyReportStatusControllerTest extends AbstractControllerTest {
         mockMvc.perform(put("/api/reply-report/{reportId}/status", reportId)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(request)))
-                .andExpect(status().isOk());
+                .andExpect(status().isOk())
+                .andExpect(header().string("Location", "/reply-report-management"));
 
         // then
         ReplyReport report = replyReportRepository.findById(reportId).orElseThrow();
@@ -61,7 +62,8 @@ public class ReplyReportStatusControllerTest extends AbstractControllerTest {
         mockMvc.perform(put("/api/reply-report/{reportId}/status", reportId)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(request)))
-                .andExpect(status().isOk());
+                .andExpect(status().isOk())
+                .andExpect(header().string("Location", "/reply-report-management"));
 
         // then
         ReplyReport report = replyReportRepository.findById(reportId).orElseThrow();
@@ -83,11 +85,35 @@ public class ReplyReportStatusControllerTest extends AbstractControllerTest {
         mockMvc.perform(put("/api/reply-report/{reportId}/status", reportId)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(request)))
-                .andExpect(status().isOk());
+                .andExpect(status().isOk())
+                .andExpect(header().string("Location", "/reply-report-management"));
 
         // then
         ReplyReport report = replyReportRepository.findById(reportId).orElseThrow();
         assertThat(report.getStatus()).isEqualTo(ReplyReport.ProcessStatus.DELETED);
+        assertThat(report.getProcessDate()).isNotNull();
+        assertThat(report.getProcessBy()).isEqualTo("admin@email.com");
+    }
+
+    @Test
+    @WithMockUser(username = "admin@email.com", roles = { "ADMIN" })
+    @DisplayName("답변 신고 상태 변경 테스트 - 신고 취소")
+    public void testUpdateReplyReportStatusToCanceled() throws Exception {
+        // given
+        Long reportId = 1L;
+        ReplyReportStatusController.StatusUpdateRequest request = new ReplyReportStatusController.StatusUpdateRequest();
+        request.setStatus("신고 취소");
+
+        // when
+        mockMvc.perform(put("/api/reply-report/{reportId}/status", reportId)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(request)))
+                .andExpect(status().isOk())
+                .andExpect(header().string("Location", "/reply-report-management"));
+
+        // then
+        ReplyReport report = replyReportRepository.findById(reportId).orElseThrow();
+        assertThat(report.getStatus()).isEqualTo(ReplyReport.ProcessStatus.CANCELED);
         assertThat(report.getProcessDate()).isNotNull();
         assertThat(report.getProcessBy()).isEqualTo("admin@email.com");
     }

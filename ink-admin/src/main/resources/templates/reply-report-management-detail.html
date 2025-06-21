@@ -58,7 +58,7 @@
             <div class="row mt-3">
                 <div class="col-md-12">
                     <button type="button" class="btn btn-primary" id="saveButton">저장</button>
-                    <button type="button" class="btn btn-danger" id="deleteButton">삭제</button>
+                    <button type="button" class="btn btn-danger" id="cancelButton">신고 취소</button>
                     <a href="/reply-report-management" class="btn btn-secondary">목록으로</a>
                 </div>
             </div>
@@ -78,9 +78,14 @@
                     type: 'PUT',
                     data: JSON.stringify({status: status}),
                     contentType: 'application/json; charset=utf-8',
-                    success: function () {
-                        alert("상태가 변경되었습니다.");
-                        location.reload();
+                    success: function (response, textStatus, xhr) {
+                        // 리다이렉트 응답 처리
+                        if (xhr.getResponseHeader('Location')) {
+                            window.location.href = xhr.getResponseHeader('Location');
+                        } else {
+                            alert("상태가 변경되었습니다.");
+                            location.reload();
+                        }
                     },
                     error: function (error) {
                         alert("상태 변경에 실패했습니다.");
@@ -89,19 +94,19 @@
                 });
             });
 
-            $('#deleteButton').on('click', function () {
+            $('#cancelButton').on('click', function () {
                 const reportId = $('#reportIdHolder').data('report-id');
-                if (confirm('이 신고내역을 삭제할까요?')) {
+                if (confirm('이 신고를 취소하시겠습니까? 이 답변에 대한 모든 신고 기록이 삭제됩니다.')) {
                     $.ajax({
                         url: '/api/reply-report/' + reportId,
                         type: 'DELETE',
                         success: function () {
-                            alert("삭제되었습니다.");
+                            alert("신고가 취소되었습니다.");
                             window.location.href = '/reply-report-management';
                         },
                         error: function (error) {
-                            alert("삭제에 실패했습니다.");
-                            console.error('Error deleting report:', error);
+                            alert("신고 취소에 실패했습니다: " + (error.responseText || error.statusText));
+                            console.error('Error canceling report:', error);
                         }
                     });
                 }

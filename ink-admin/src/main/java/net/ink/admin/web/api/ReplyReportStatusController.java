@@ -5,21 +5,21 @@ import java.time.LocalDateTime;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import net.ink.admin.annotation.AdminLogging;
+import net.ink.admin.service.ReplyReportService;
 import net.ink.core.reply.entity.ReplyReport;
 import net.ink.core.reply.repository.ReplyReportRepository;
+import org.springframework.beans.factory.annotation.Qualifier;
 
 @RestController
 @RequiredArgsConstructor
 public class ReplyReportStatusController {
-    private final ReplyReportRepository replyReportRepository;
+    @Qualifier("adminReplyReportService")
+    private final ReplyReportService replyReportService;
 
     @Data
     public static class StatusUpdateRequest {
@@ -33,31 +33,9 @@ public class ReplyReportStatusController {
             @RequestBody StatusUpdateRequest request,
             @AuthenticationPrincipal UserDetails userDetails) {
 
-        ReplyReport report = replyReportRepository.findById(reportId)
-                .orElseThrow(() -> new IllegalArgumentException("Invalid report Id:" + reportId));
-
-        // 문자열 상태를 ProcessStatus 열거형으로 변환
-        ReplyReport.ProcessStatus processStatus;
-        switch (request.getStatus()) {
-            case "신고 접수":
-                processStatus = ReplyReport.ProcessStatus.PENDING;
-                break;
-            case "게시물 숨김":
-                processStatus = ReplyReport.ProcessStatus.HIDED;
-                break;
-            case "처리 완료":
-                processStatus = ReplyReport.ProcessStatus.DELETED;
-                break;
-            default:
-                processStatus = ReplyReport.ProcessStatus.PENDING;
-        }
-
-        report.setStatus(processStatus);
-        report.setProcessDate(LocalDateTime.now());
-        report.setProcessBy(userDetails.getUsername());
-
-        replyReportRepository.save(report);
-
-        return ResponseEntity.ok().build();
+        replyReportService.updateReportStatus(reportId, request.getStatus(), userDetails);
+        return ResponseEntity.ok()
+                .header("Location", "/reply-report-management")
+                .build();
     }
 }
