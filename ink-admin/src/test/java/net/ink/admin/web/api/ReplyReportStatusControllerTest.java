@@ -39,7 +39,8 @@ public class ReplyReportStatusControllerTest extends AbstractControllerTest {
         mockMvc.perform(put("/api/reply-report/{reportId}/method", reportId)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(request)))
-                .andExpect(status().isOk());
+                .andExpect(status().isOk())
+                .andExpect(header().string("Location", "/reply-report-management"));
 
         // then
         ReplyReport report = replyReportRepository.findById(reportId).orElseThrow();
@@ -62,7 +63,8 @@ public class ReplyReportStatusControllerTest extends AbstractControllerTest {
         mockMvc.perform(put("/api/reply-report/{reportId}/method", reportId)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(request)))
-                .andExpect(status().isOk());
+                .andExpect(status().isOk())
+                .andExpect(header().string("Location", "/reply-report-management"));
 
         // then
         ReplyReport report = replyReportRepository.findById(reportId).orElseThrow();
@@ -85,7 +87,8 @@ public class ReplyReportStatusControllerTest extends AbstractControllerTest {
         mockMvc.perform(put("/api/reply-report/{reportId}/method", reportId)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(request)))
-                .andExpect(status().isOk());
+                .andExpect(status().isOk())
+                .andExpect(header().string("Location", "/reply-report-management"));
 
         // then
         ReplyReport report = replyReportRepository.findById(reportId).orElseThrow();
