@@ -68,7 +68,6 @@
                 <div class="col-md-12">
                     <button type="button" class="btn btn-primary" id="saveButton"
                         th:disabled="${report.status.name() == 'DONE'}">저장</button>
-                    <button type="button" class="btn btn-danger" id="deleteButton">삭제</button>
                     <a href="/reply-report-management" class="btn btn-secondary">목록으로</a>
                 </div>
             </div>
@@ -99,23 +98,7 @@
                 });
             });
 
-            $('#cancelButton').on('click', function () {
-                const reportId = $('#reportIdHolder').data('report-id');
-                if (confirm('이 신고를 취소하시겠습니까? 이 답변에 대한 모든 신고 기록이 삭제됩니다.')) {
-                    $.ajax({
-                        url: '/api/reply-report/' + reportId,
-                        type: 'DELETE',
-                        success: function () {
-                            alert("신고가 취소되었습니다.");
-                            window.location.href = '/reply-report-management';
-                        },
-                        error: function (error) {
-                            alert("신고 취소에 실패했습니다: " + (error.responseText || error.statusText));
-                            console.error('Error canceling report:', error);
-                        }
-                    });
-                }
-            });
+
         });
     </script>
 </div>

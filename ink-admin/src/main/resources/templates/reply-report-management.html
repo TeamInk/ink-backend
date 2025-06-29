@@ -22,7 +22,6 @@
                             <th>신고 일시</th>
                             <th>신고 횟수</th>
                             <th>처리상태</th>
-                            <th>삭제</th>
                         </tr>
                     </thead>
                     <tfoot>
@@ -35,7 +34,6 @@
                             <th>신고 일시</th>
                             <th>신고 횟수</th>
                             <th>처리상태</th>
-                            <th>삭제</th>
                         </tr>
                     </tfoot>
                     <tbody>
@@ -52,10 +50,6 @@
                                 <span th:if="${report.status.name() == 'OPEN'}" class="badge badge-warning">처리 전</span>
                                 <span th:if="${report.status.name() == 'DONE'}" class="badge badge-success">처리 완료</span>
                             </td>
-                            <td>
-                                <button class="btn btn-danger delete-btn"
-                                    th:data-report-id="${report.reportId}">삭제</button>
-                            </td>
                         </tr>
                     </tbody>
                 </table>
@@ -66,25 +60,6 @@
     <script th:src="@{/vendor/jquery/jquery.min.js}"></script>
     <script>
         $(document).ready(function () {
-            $('.cancel-btn').on('click', function (e) {
-                e.stopPropagation(); // 이벤트 전파 중단
-                const reportId = $(this).data('report-id');
-                if (confirm('이 신고를 취소하시겠습니까? 이 답변에 대한 모든 신고 기록이 삭제됩니다.')) {
-                    $.ajax({
-                        url: '/api/reply-report/' + reportId,
-                        type: 'DELETE',
-                        success: function () {
-                            alert("신고가 취소되었습니다.");
-                            location.reload();
-                        },
-                        error: function (error) {
-                            alert("신고 취소에 실패했습니다: " + (error.responseText || error.statusText));
-                            console.error('Error canceling report:', error);
-                        }
-                    });
-                }
-            });
-
             // 행 클릭 시 상세 페이지로 이동
             $('.report-row').on('click', function () {
                 const reportId = $(this).data('report-id');
