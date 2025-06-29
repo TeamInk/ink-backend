@@ -60,7 +60,7 @@ public class DtoCreator {
                 .build();
     }
 
-    public static ReplyLikesDto createReplyLikesDto(){
+    public static ReplyLikesDto createReplyLikesDto() {
         return ReplyLikesDto.builder()
                 .replyId(1L)
                 .memberId(1L)
@@ -100,6 +100,8 @@ public class DtoCreator {
                 .reporterId(1L)
                 .reason("Test Reason")
                 .hideToReporter(true)
+                .status(net.ink.core.reply.entity.ReplyReport.ProcessStatus.OPEN)
+                .method(net.ink.core.reply.entity.ReplyReport.ProcessMethod.PENDING)
                 .build();
     }
 

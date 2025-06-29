@@ -10,32 +10,44 @@ import org.springframework.web.bind.annotation.*;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import net.ink.admin.annotation.AdminLogging;
-import net.ink.admin.service.ReplyReportService;
 import net.ink.core.reply.entity.ReplyReport;
-import net.ink.core.reply.repository.ReplyReportRepository;
-import org.springframework.beans.factory.annotation.Qualifier;
+import net.ink.core.reply.service.ReplyReportService;
 
 @RestController
 @RequiredArgsConstructor
 public class ReplyReportStatusController {
-    @Qualifier("adminReplyReportService")
     private final ReplyReportService replyReportService;
 
     @Data
-    public static class StatusUpdateRequest {
-        private String status;
+    public static class MethodUpdateRequest {
+        private String method;
     }
 
     @AdminLogging
-    @PutMapping("/api/reply-report/{reportId}/status")
-    public ResponseEntity<?> updateReplyReportStatus(
+    @PutMapping("/api/reply-report/{reportId}/method")
+    public ResponseEntity<?> updateReplyReportMethod(
             @PathVariable Long reportId,
-            @RequestBody StatusUpdateRequest request,
+            @RequestBody MethodUpdateRequest request,
             @AuthenticationPrincipal UserDetails userDetails) {
 
-        replyReportService.updateReportStatus(reportId, request.getStatus(), userDetails);
-        return ResponseEntity.ok()
-                .header("Location", "/reply-report-management")
-                .build();
+        // 문자열 처리 방법을 ProcessMethod 열거형으로 변환
+        ReplyReport.ProcessMethod processMethod;
+        switch (request.getMethod()) {
+            case "신고취소":
+                processMethod = ReplyReport.ProcessMethod.CANCELED;
+                break;
+            case "게시글 숨김":
+                processMethod = ReplyReport.ProcessMethod.HIDED;
+                break;
+            case "게시글 삭제":
+                processMethod = ReplyReport.ProcessMethod.DELETED;
+                break;
+            default:
+                processMethod = ReplyReport.ProcessMethod.PENDING;
+        }
+
+        replyReportService.processReplyReport(reportId, processMethod, userDetails.getUsername());
+
+        return ResponseEntity.ok().build();
     }
 }

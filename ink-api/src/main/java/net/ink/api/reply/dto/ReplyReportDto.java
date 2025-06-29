@@ -40,7 +40,12 @@ public class ReplyReportDto {
     @Builder.Default
     @ApiModelProperty(value = "처리 상태", required = false, position = PropertyDisplayOrder.STATUS)
     @JsonProperty(index = PropertyDisplayOrder.STATUS)
-    private ReplyReport.ProcessStatus status = ReplyReport.ProcessStatus.PENDING;
+    private ReplyReport.ProcessStatus status = ReplyReport.ProcessStatus.OPEN;
+
+    @Builder.Default
+    @ApiModelProperty(value = "처리 방법", required = false, position = PropertyDisplayOrder.METHOD)
+    @JsonProperty(index = PropertyDisplayOrder.METHOD)
+    private ReplyReport.ProcessMethod method = ReplyReport.ProcessMethod.PENDING;
 
     @SuperBuilder
     @Getter
@@ -66,5 +71,6 @@ public class ReplyReportDto {
         private static final int REASON = 3;
         private static final int HIDE_TO_REPORTER = 4;
         private static final int STATUS = 5;
+        private static final int METHOD = 6;
     }
 }

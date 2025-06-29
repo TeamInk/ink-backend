@@ -28,15 +28,15 @@ public class ReplyReportStatusControllerTest extends AbstractControllerTest {
 
     @Test
     @WithMockUser(username = "admin@email.com", roles = { "ADMIN" })
-    @DisplayName("답변 신고 상태 변경 테스트 - 신고 접수")
-    public void testUpdateReplyReportStatusToPending() throws Exception {
+    @DisplayName("답변 신고 처리 테스트 - 신고 취소")
+    public void testUpdateReplyReportMethodToCanceled() throws Exception {
         // given
         Long reportId = 1L;
-        ReplyReportStatusController.StatusUpdateRequest request = new ReplyReportStatusController.StatusUpdateRequest();
-        request.setStatus("신고 접수");
+        ReplyReportStatusController.MethodUpdateRequest request = new ReplyReportStatusController.MethodUpdateRequest();
+        request.setMethod("신고취소");
 
         // when
-        mockMvc.perform(put("/api/reply-report/{reportId}/status", reportId)
+        mockMvc.perform(put("/api/reply-report/{reportId}/method", reportId)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(request)))
                 .andExpect(status().isOk())
@@ -44,22 +44,23 @@ public class ReplyReportStatusControllerTest extends AbstractControllerTest {
 
         // then
         ReplyReport report = replyReportRepository.findById(reportId).orElseThrow();
-        assertThat(report.getStatus()).isEqualTo(ReplyReport.ProcessStatus.PENDING);
+        assertThat(report.getStatus()).isEqualTo(ReplyReport.ProcessStatus.DONE);
+        assertThat(report.getMethod()).isEqualTo(ReplyReport.ProcessMethod.CANCELED);
         assertThat(report.getProcessDate()).isNotNull();
         assertThat(report.getProcessBy()).isEqualTo("admin@email.com");
     }
 
     @Test
     @WithMockUser(username = "admin@email.com", roles = { "ADMIN" })
-    @DisplayName("답변 신고 상태 변경 테스트 - 게시물 숨김")
-    public void testUpdateReplyReportStatusToHided() throws Exception {
+    @DisplayName("답변 신고 처리 테스트 - 게시물 숨김")
+    public void testUpdateReplyReportMethodToHided() throws Exception {
         // given
         Long reportId = 1L;
-        ReplyReportStatusController.StatusUpdateRequest request = new ReplyReportStatusController.StatusUpdateRequest();
-        request.setStatus("게시물 숨김");
+        ReplyReportStatusController.MethodUpdateRequest request = new ReplyReportStatusController.MethodUpdateRequest();
+        request.setMethod("게시글 숨김");
 
         // when
-        mockMvc.perform(put("/api/reply-report/{reportId}/status", reportId)
+        mockMvc.perform(put("/api/reply-report/{reportId}/method", reportId)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(request)))
                 .andExpect(status().isOk())
@@ -67,22 +68,23 @@ public class ReplyReportStatusControllerTest extends AbstractControllerTest {
 
         // then
         ReplyReport report = replyReportRepository.findById(reportId).orElseThrow();
-        assertThat(report.getStatus()).isEqualTo(ReplyReport.ProcessStatus.HIDED);
+        assertThat(report.getStatus()).isEqualTo(ReplyReport.ProcessStatus.DONE);
+        assertThat(report.getMethod()).isEqualTo(ReplyReport.ProcessMethod.HIDED);
         assertThat(report.getProcessDate()).isNotNull();
         assertThat(report.getProcessBy()).isEqualTo("admin@email.com");
     }
 
     @Test
     @WithMockUser(username = "admin@email.com", roles = { "ADMIN" })
-    @DisplayName("답변 신고 상태 변경 테스트 - 처리 완료")
-    public void testUpdateReplyReportStatusToDeleted() throws Exception {
+    @DisplayName("답변 신고 처리 테스트 - 게시물 삭제")
+    public void testUpdateReplyReportMethodToDeleted() throws Exception {
         // given
         Long reportId = 1L;
-        ReplyReportStatusController.StatusUpdateRequest request = new ReplyReportStatusController.StatusUpdateRequest();
-        request.setStatus("처리 완료");
+        ReplyReportStatusController.MethodUpdateRequest request = new ReplyReportStatusController.MethodUpdateRequest();
+        request.setMethod("게시글 삭제");
 
         // when
-        mockMvc.perform(put("/api/reply-report/{reportId}/status", reportId)
+        mockMvc.perform(put("/api/reply-report/{reportId}/method", reportId)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(request)))
                 .andExpect(status().isOk())
@@ -90,45 +92,23 @@ public class ReplyReportStatusControllerTest extends AbstractControllerTest {
 
         // then
         ReplyReport report = replyReportRepository.findById(reportId).orElseThrow();
-        assertThat(report.getStatus()).isEqualTo(ReplyReport.ProcessStatus.DELETED);
+        assertThat(report.getStatus()).isEqualTo(ReplyReport.ProcessStatus.DONE);
+        assertThat(report.getMethod()).isEqualTo(ReplyReport.ProcessMethod.DELETED);
         assertThat(report.getProcessDate()).isNotNull();
         assertThat(report.getProcessBy()).isEqualTo("admin@email.com");
     }
 
     @Test
     @WithMockUser(username = "admin@email.com", roles = { "ADMIN" })
-    @DisplayName("답변 신고 상태 변경 테스트 - 신고 취소")
-    public void testUpdateReplyReportStatusToCanceled() throws Exception {
-        // given
-        Long reportId = 1L;
-        ReplyReportStatusController.StatusUpdateRequest request = new ReplyReportStatusController.StatusUpdateRequest();
-        request.setStatus("신고 취소");
-
-        // when
-        mockMvc.perform(put("/api/reply-report/{reportId}/status", reportId)
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(request)))
-                .andExpect(status().isOk())
-                .andExpect(header().string("Location", "/reply-report-management"));
-
-        // then
-        ReplyReport report = replyReportRepository.findById(reportId).orElseThrow();
-        assertThat(report.getStatus()).isEqualTo(ReplyReport.ProcessStatus.CANCELED);
-        assertThat(report.getProcessDate()).isNotNull();
-        assertThat(report.getProcessBy()).isEqualTo("admin@email.com");
-    }
-
-    @Test
-    @WithMockUser(username = "admin@email.com", roles = { "ADMIN" })
-    @DisplayName("존재하지 않는 답변 신고 ID로 상태 변경 시 예외 발생 테스트")
-    public void testUpdateReplyReportStatusWithNonExistingReportId() throws Exception {
+    @DisplayName("존재하지 않는 답변 신고 ID로 처리 시 예외 발생 테스트")
+    public void testUpdateReplyReportMethodWithNonExistingReportId() throws Exception {
         // given
         Long nonExistingReportId = 999L;
-        ReplyReportStatusController.StatusUpdateRequest request = new ReplyReportStatusController.StatusUpdateRequest();
-        request.setStatus("신고 접수");
+        ReplyReportStatusController.MethodUpdateRequest request = new ReplyReportStatusController.MethodUpdateRequest();
+        request.setMethod("신고취소");
 
         // when & then
-        mockMvc.perform(put("/api/reply-report/{reportId}/status", nonExistingReportId)
+        mockMvc.perform(put("/api/reply-report/{reportId}/method", nonExistingReportId)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(request)))
                 .andExpect(status().isInternalServerError());

@@ -12,42 +12,47 @@
             <div class="table-responsive">
                 <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
                     <thead>
-                    <tr>
-                        <th>idx</th>
-                        <th>작성자</th>
-                        <th>질문</th>
-                        <th>내용</th>
-                        <th>이미지</th>
-                        <th>좋아요 수</th>
-                        <th>삭제</th>
-                        <th>등록날짜</th>
-                    </tr>
+                        <tr>
+                            <th>idx</th>
+                            <th>작성자</th>
+                            <th>질문</th>
+                            <th>내용</th>
+                            <th>이미지</th>
+                            <th>좋아요 수</th>
+                            <th>액션</th>
+                            <th>등록날짜</th>
+                        </tr>
                     </thead>
                     <tfoot>
-                    <tr>
-                        <th>idx</th>
-                        <th>작성자</th>
-                        <th>질문</th>
-                        <th>내용</th>
-                        <th>이미지</th>
-                        <th>좋아요 수</th>
-                        <th>삭제</th>
-                        <th>등록날짜</th>
-                    </tr>
+                        <tr>
+                            <th>idx</th>
+                            <th>작성자</th>
+                            <th>질문</th>
+                            <th>내용</th>
+                            <th>이미지</th>
+                            <th>좋아요 수</th>
+                            <th>액션</th>
+                            <th>등록날짜</th>
+                        </tr>
                     </tfoot>
                     <tbody>
-                    <tr th:each="reply : ${replies}">
-                        <td th:text="${reply.replyId}"></td>
-                        <td th:text="${reply.author.nickname}"></td>
-                        <td th:text="${reply.question.content}"></td>
-                        <td th:text="${reply.content}"></td>
-                        <td th:text="${reply.image}"></td>
-                        <td th:text="${reply.replyLikes.size()}"></td>
-                        <td> <!-- Add the delete button to each row -->
-                            <button class="btn btn-danger delete-btn" th:data-reply-id="${reply.replyId}">삭제</button>
-                        </td>
-                        <td th:text="${reply.regDate}"></td>
-                    </tr>
+                        <tr th:each="reply : ${replies}">
+                            <td th:text="${reply.replyId}"></td>
+                            <td th:text="${reply.author.nickname}"></td>
+                            <td th:text="${reply.question.content}"></td>
+                            <td th:text="${reply.content}"></td>
+                            <td th:text="${reply.image}"></td>
+                            <td th:text="${reply.replyLikes.size()}"></td>
+                            <td>
+                                <button class="btn btn-warning btn-sm hide-btn" th:data-reply-id="${reply.replyId}"
+                                    th:if="${reply.visible}">숨김처리</button>
+                                <button class="btn btn-success btn-sm unhide-btn" th:data-reply-id="${reply.replyId}"
+                                    th:unless="${reply.visible}">숨김해제</button>
+                                <button class="btn btn-danger btn-sm delete-btn"
+                                    th:data-reply-id="${reply.replyId}">삭제</button>
+                            </td>
+                            <td th:text="${reply.regDate}"></td>
+                        </tr>
                     </tbody>
                 </table>
             </div>
@@ -64,6 +69,42 @@
                     $(this).removeClass('hover-bg');
                 }
             );
+
+            $('.hide-btn').on('click', function () {
+                const replyId = $(this).data('reply-id');
+                if (confirm('이 답변을 숨김처리할까요?')) {
+                    $.ajax({
+                        url: '/api/reply/' + replyId + '/hide',
+                        type: 'PUT',
+                        success: function () {
+                            alert("숨김처리되었습니다.")
+                            location.reload();
+                        },
+                        error: function (error) {
+                            alert("숨김처리에 실패했습니다.")
+                            console.error('Error hiding reply:', error);
+                        }
+                    });
+                }
+            });
+
+            $('.unhide-btn').on('click', function () {
+                const replyId = $(this).data('reply-id');
+                if (confirm('이 답변의 숨김을 해제할까요?')) {
+                    $.ajax({
+                        url: '/api/reply/' + replyId + '/unhide',
+                        type: 'PUT',
+                        success: function () {
+                            alert("숨김해제되었습니다.")
+                            location.reload();
+                        },
+                        error: function (error) {
+                            alert("숨김해제에 실패했습니다.")
+                            console.error('Error unhiding reply:', error);
+                        }
+                    });
+                }
+            });
 
             $('.delete-btn').on('click', function () {
                 const replyId = $(this).data('reply-id');
