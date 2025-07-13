@@ -12,4 +12,4 @@
 ## 관련 이슈
 - resolved #
 
-@NaLDo627 @jincastle
+@NaRDo627 @jincastle
