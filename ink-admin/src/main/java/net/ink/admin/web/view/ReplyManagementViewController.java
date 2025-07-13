@@ -19,7 +19,9 @@ public class ReplyManagementViewController {
     @GetMapping("/reply-management")
     public String getReplyManagement(Model model) {
         model.addAttribute("inner", "reply-management");
-        model.addAttribute("replies", replyRepository.findAll(Sort.by(Sort.Direction.DESC, "replyId")));
+        model.addAttribute("replies", replyRepository.findAll(Sort.by(Sort.Direction.DESC, "replyId")).stream()
+                .filter(reply -> !reply.getDeleted())
+                .collect(java.util.stream.Collectors.toList()));
         return "base";
     }
 
