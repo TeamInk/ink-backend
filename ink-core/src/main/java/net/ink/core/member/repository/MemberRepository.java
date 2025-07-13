@@ -19,6 +19,8 @@ public interface MemberRepository extends JpaRepository<Member, Long> {
 
     boolean existsByIdentifierAndIsActive(String identifier, Boolean active);
 
+    boolean existsByEmailAndIsActive(String email, Boolean active);
+
     List<Member> findAllByIsActive(Boolean active);
 
     List<Member> findAll();

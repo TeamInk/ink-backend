@@ -28,6 +28,14 @@ public class MemberService {
             throw new BadRequestException(DUPLICATED_NICKNAME);
         }
 
+        if (isEmailDuplicated(newMember.getEmail())) {
+            throw new BadRequestException(DUPLICATED_EMAIL);
+        }
+
+        if (!isIdentifierValid(newMember.getIdentifier())) {
+            throw new BadRequestException(INVALID_IDENTIFIER);
+        }
+
         return memberRepository.saveAndFlush(newMember);
     }
 
@@ -51,6 +59,15 @@ public class MemberService {
     @Transactional(readOnly = true)
     public boolean isNicknameDuplicated(String nickname) {
         return memberRepository.existsByNicknameAndIsActive(nickname, true);
+    }
+
+    @Transactional(readOnly = true)
+    public boolean isEmailDuplicated(String email) {
+        return memberRepository.existsByEmailAndIsActive(email, true);
+    }
+
+    private boolean isIdentifierValid(String identifier) {
+        return identifier != null && identifier.matches("^kakao_\\d{10}$");
     }
 
     @Transactional(readOnly = true)
