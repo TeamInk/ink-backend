@@ -10,6 +10,8 @@ public class ErrorMessage {
     // Member
     public static String NOT_EXIST_MEMBER = "존재하지 않는 사용자입니다.";
     public static String DUPLICATED_NICKNAME = "이미 사용 중인 닉네임입니다.";
+    public static String DUPLICATED_EMAIL = "이미 사용 중인 이메일입니다.";
+    public static String INVALID_IDENTIFIER = "올바르지 않은 식별자입니다.";
     public static String ALREADY_ANSWERED_MEMBER = "이미 오늘 답변한 사용자입니다.";
 
     // Question

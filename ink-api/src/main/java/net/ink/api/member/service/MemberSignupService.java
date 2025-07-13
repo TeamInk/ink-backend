@@ -32,7 +32,7 @@ public class MemberSignupService {
         afterSignUp(savedMember);
         return savedMember;
     }
-    
+
     private boolean isDroppedOutMember(Member member) {
         return memberService.isMemberExistIncludingDropped(member.getIdentifier());
     }
