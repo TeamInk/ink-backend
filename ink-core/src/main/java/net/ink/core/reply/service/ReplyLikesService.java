@@ -24,12 +24,12 @@ public class ReplyLikesService {
     private final FcmLikePushService fcmLikePushService;
 
     @Transactional
-    public ReplyLikes postReplyLikes(Member member, Long replyId){
+    public ReplyLikes postReplyLikes(Member member, Long replyId) {
         Reply reply = replyService.findById(replyId);
 
         ReplyLikesPK replyLikesPK = new ReplyLikesPK(member.getMemberId(), reply.getReplyId());
 
-        if(replyLikesRepository.existsById(replyLikesPK))
+        if (replyLikesRepository.existsById(replyLikesPK))
             throw new InkException(ALREADY_PUSHED_REPLY_LIKE);
 
         ReplyLikes replyLikes = ReplyLikes.builder().id(replyLikesPK).member(member).reply(reply).build();
@@ -37,18 +37,18 @@ public class ReplyLikesService {
         replyLikesRepository.saveAndFlush(replyLikes);
 
         badgeAccomplishedService.createCelebrityInk(replyId);
-        fcmLikePushService.pushToAuthor(reply, member);
+        // fcmLikePushService.pushToAuthor(reply, member);
 
         return replyLikes;
     }
 
     @Transactional
-    public void deleteReplyLikes(Member member, Long replyId){
+    public void deleteReplyLikes(Member member, Long replyId) {
         Reply reply = replyService.findById(replyId);
 
         ReplyLikesPK replyLikesPK = new ReplyLikesPK(member.getMemberId(), reply.getReplyId());
 
-        if(! replyLikesRepository.existsById(replyLikesPK))
+        if (!replyLikesRepository.existsById(replyLikesPK))
             throw new InkException(ALREADY_CANCELED_REPLY_LIKE);
 
         replyLikesRepository.deleteById(replyLikesPK);
