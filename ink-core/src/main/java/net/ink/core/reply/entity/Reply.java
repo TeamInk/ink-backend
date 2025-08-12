@@ -24,7 +24,8 @@ import net.ink.core.member.entity.Member;
 import net.ink.core.question.entity.Question;
 
 @Builder
-@Getter @Setter
+@Getter
+@Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
@@ -76,17 +77,21 @@ public class Reply {
 
     public void modifyReply(Reply newReply) {
         this.content = newReply.getContent();
-        this.image= newReply.getImage();
+        this.image = newReply.getImage();
         this.modDate = LocalDateTime.now();
     }
 
-    public boolean isAuthor(Member member){
+    public boolean isAuthor(Member member) {
         return this.author.getMemberId() == member.getMemberId();
     }
 
-    public boolean likedByRequester(Member member){
-        for(ReplyLikes replyLikes : this.replyLikes){
-            if(replyLikes.getId().getMemberId() == member.getMemberId())
+    public boolean likedByRequester(Member member) {
+        if (member == null || member.getMemberId() == null) {
+            return false;
+        }
+
+        for (ReplyLikes replyLikes : this.replyLikes) {
+            if (replyLikes.getId().getMemberId().equals(member.getMemberId()))
                 return true;
         }
         return false;
