@@ -26,16 +26,6 @@ public class JwtService {
     private final MemberService memberService;
     private final DateFactory dateFactory;
 
-    @Deprecated
-    @Transactional
-    public TokenDto.Ink issue(String identifier){
-        Member member = memberService.findByIdentifier(identifier);
-
-        TokenDto.Ink token = new TokenDto.Ink();
-        token.setInkAccessToken(jwtCreator.createAccessToken(member));
-        token.setInkRefreshToken(jwtCreator.createRefreshToken(member));
-        return token;
-    }
 
     @Transactional
     public TokenDto.Ink issue(TokenDto.Provider providerToken){
