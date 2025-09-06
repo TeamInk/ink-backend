@@ -60,6 +60,7 @@ subprojects {
 		implementation 'org.liquibase:liquibase-core:4.3.5'
 		implementation 'com.google.firebase:firebase-admin:6.8.1'
 		implementation 'ca.pjer:logback-awslogs-appender:1.4.0'
+		implementation 'org.springframework.boot:spring-boot-starter-cache'
 	}
 
 	jacocoTestReport {

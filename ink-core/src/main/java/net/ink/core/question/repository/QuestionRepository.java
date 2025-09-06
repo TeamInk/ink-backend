@@ -12,6 +12,6 @@ public interface QuestionRepository extends JpaRepository<Question, Long> {
     List<Question> findAllByAuthorMemberIdOrderByRegDateDesc(Long memberId);
     boolean existsByQuestionIdAndAuthorMemberId(Long questionId, Long memberId);
 
-    @Query("Select q from Question q order by q.replies.size desc")
+    @Query("Select q from Question q order by q.replyCount desc")
     Page<Question> findAllOrderByRepliesSizeDesc(Pageable page);
 }

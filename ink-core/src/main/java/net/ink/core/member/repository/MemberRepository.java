@@ -24,4 +24,6 @@ public interface MemberRepository extends JpaRepository<Member, Long> {
     List<Member> findAllByIsActive(Boolean active);
 
     List<Member> findAll();
+    
+    long countByIsActive(Boolean active);
 }

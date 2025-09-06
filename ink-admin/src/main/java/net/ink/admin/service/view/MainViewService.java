@@ -26,7 +26,7 @@ public class MainViewService {
         return MainViewDto.builder()
                 .questionCount((int) questionRepository.count())
                 .registeredReplyCount((int) replyRepository.count())
-                .totalMemberCount((int) memberRepository.findAll().stream().filter(Member::getIsActive).count())
+                .totalMemberCount((int) memberRepository.countByIsActive(true))
                 .todayUsefulExpressions(todayUsefulExpressionRepository.findAll()
                         .stream().map(x -> usefulExpressionMapper.toDto(x.getUsefulExpression())).collect(Collectors.toList()))
                 .build();

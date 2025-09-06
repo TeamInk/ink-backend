@@ -6,6 +6,8 @@ import java.util.List;
 
 import javax.validation.Valid;
 
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.annotation.Validated;
@@ -36,24 +38,25 @@ public class MemberService {
             throw new BadRequestException(INVALID_IDENTIFIER);
         }
 
-        return memberRepository.saveAndFlush(newMember);
+        return memberRepository.save(newMember);
     }
 
     @Transactional
+    @CacheEvict(value = "members", key = "#member.memberId")
     public Member updateMember(@Valid Member member) {
-        return memberRepository.saveAndFlush(member);
+        return memberRepository.save(member);
     }
 
     @Transactional
     public void dropOutMember(@Valid Member member) {
         member.setIsActive(false);
-        memberRepository.saveAndFlush(member);
+        memberRepository.save(member);
     }
 
     @Transactional
     public Member suspendMember(@Valid Member member, boolean isSuspended) {
         member.setIsSuspended(isSuspended);
-        return memberRepository.saveAndFlush(member);
+        return memberRepository.save(member);
     }
 
     @Transactional(readOnly = true)
@@ -103,6 +106,7 @@ public class MemberService {
     }
 
     @Transactional(readOnly = true)
+    @Cacheable(value = "members", key = "#memberId")
     public Member findById(Long memberId) {
         return memberRepository.findById(memberId)
                 .orElseThrow(() -> new ResourceNotFoundException(NOT_EXIST_MEMBER));

@@ -42,6 +42,9 @@ public class Question {
     @Builder.Default
     @OneToMany(mappedBy = "question", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Reply> replies = new ArrayList<>();
+    
+    @Column(name = "reply_count")
+    private Integer replyCount = 0;
 
     @Builder.Default
     @Column(name = "reg_date", nullable = false)
@@ -50,5 +53,21 @@ public class Question {
     public void removeReply(Reply reply) {
         this.replies = this.replies.stream()
                 .filter(x -> !Objects.equals(x.getReplyId(), reply.getReplyId())).collect(Collectors.toList());
+        decrementReplyCount();
+    }
+    
+    public void incrementReplyCount() {
+        if (this.replyCount == null) {
+            this.replyCount = 0;
+        }
+        this.replyCount++;
+    }
+    
+    public void decrementReplyCount() {
+        if (this.replyCount == null || this.replyCount <= 0) {
+            this.replyCount = 0;
+        } else {
+            this.replyCount--;
+        }
     }
 }

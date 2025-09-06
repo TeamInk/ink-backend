@@ -70,6 +70,9 @@ public class Reply {
     @Builder.Default
     @OneToMany(mappedBy = "reply", cascade = CascadeType.ALL)
     private Set<ReplyLikes> replyLikes = new HashSet<>();
+    
+    @Column(name = "like_count")
+    private Integer likeCount = 0;
 
     @Builder.Default
     @OneToMany(mappedBy = "reply", cascade = CascadeType.ALL)
@@ -90,11 +93,23 @@ public class Reply {
             return false;
         }
 
-        for (ReplyLikes replyLikes : this.replyLikes) {
-            if (replyLikes.getId().getMemberId().equals(member.getMemberId()))
-                return true;
+        return this.replyLikes.stream()
+                .anyMatch(like -> like.getId().getMemberId().equals(member.getMemberId()));
+    }
+    
+    public void incrementLikeCount() {
+        if (this.likeCount == null) {
+            this.likeCount = 0;
         }
-        return false;
+        this.likeCount++;
+    }
+    
+    public void decrementLikeCount() {
+        if (this.likeCount == null || this.likeCount <= 0) {
+            this.likeCount = 0;
+        } else {
+            this.likeCount--;
+        }
     }
 
 }

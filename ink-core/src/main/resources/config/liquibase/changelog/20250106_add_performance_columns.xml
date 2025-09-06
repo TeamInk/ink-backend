@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+    xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                        http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
+
+    <changeSet id="20250106-01" author="system">
+        <comment>Add like_count column to reply table for performance optimization</comment>
+        <addColumn tableName="reply">
+            <column name="like_count" type="int" defaultValue="0">
+                <constraints nullable="true"/>
+            </column>
+        </addColumn>
+    </changeSet>
+
+    <changeSet id="20250106-02" author="system">
+        <comment>Add reply_count column to question table for performance optimization</comment>
+        <addColumn tableName="question">
+            <column name="reply_count" type="int" defaultValue="0">
+                <constraints nullable="true"/>
+            </column>
+        </addColumn>
+    </changeSet>
+
+    <changeSet id="20250106-03" author="system">
+        <comment>Initialize like_count from existing data</comment>
+        <sql>
+            UPDATE reply r
+            SET r.like_count = (
+                SELECT COUNT(*)
+                FROM reply_likes rl
+                WHERE rl.reply_id = r.reply_id
+            )
+        </sql>
+    </changeSet>
+
+    <changeSet id="20250106-04" author="system">
+        <comment>Initialize reply_count from existing data</comment>
+        <sql>
+            UPDATE question q
+            SET q.reply_count = (
+                SELECT COUNT(*)
+                FROM reply r
+                WHERE r.question_id = q.question_id
+                AND r.deleted = false
+                AND r.visible = true
+            )
+        </sql>
+    </changeSet>
+
+    <changeSet id="20250106-05" author="system">
+        <comment>Add index on like_count for sorting optimization</comment>
+        <createIndex tableName="reply" indexName="idx_reply_like_count">
+            <column name="like_count"/>
+        </createIndex>
+    </changeSet>
+
+    <changeSet id="20250106-06" author="system">
+        <comment>Add index on reply_count for sorting optimization</comment>
+        <createIndex tableName="question" indexName="idx_question_reply_count">
+            <column name="reply_count"/>
+        </createIndex>
+    </changeSet>
+
+</databaseChangeLog>

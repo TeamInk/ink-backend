@@ -34,7 +34,10 @@ public class ReplyLikesService {
 
         ReplyLikes replyLikes = ReplyLikes.builder().id(replyLikesPK).member(member).reply(reply).build();
 
-        replyLikesRepository.saveAndFlush(replyLikes);
+        replyLikesRepository.save(replyLikes);
+        
+        // Update the like count
+        reply.incrementLikeCount();
 
         badgeAccomplishedService.createCelebrityInk(replyId);
         // fcmLikePushService.pushToAuthor(reply, member);
@@ -52,6 +55,9 @@ public class ReplyLikesService {
             throw new InkException(ALREADY_CANCELED_REPLY_LIKE);
 
         replyLikesRepository.deleteById(replyLikesPK);
+        
+        // Update the like count
+        reply.decrementLikeCount();
     }
 
 }

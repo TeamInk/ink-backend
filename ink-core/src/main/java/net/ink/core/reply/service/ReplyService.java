@@ -18,6 +18,7 @@ import net.ink.core.core.exception.AccessNotAllowedException;
 import net.ink.core.core.exception.BadRequestException;
 import net.ink.core.core.exception.EntityNotFoundException;
 import net.ink.core.member.entity.Member;
+import net.ink.core.question.entity.Question;
 import net.ink.core.question.service.QuestionService;
 import net.ink.core.reply.entity.Reply;
 import net.ink.core.reply.repository.ReplyRepository;
@@ -56,9 +57,14 @@ public class ReplyService {
             throw new BadRequestException(ALREADY_ANSWERED_REPLY);
 
         newReply.setAuthor(newReply.getAuthor());
-        newReply.setQuestion(questionService.getQuestionById(questionId));
+        Question question = questionService.getQuestionById(questionId);
+        newReply.setQuestion(question);
 
-        Reply savedReply = replyRepository.saveAndFlush(newReply);
+        Reply savedReply = replyRepository.save(newReply);
+        
+        // Update the reply count on question
+        question.incrementReplyCount();
+        
         replyPostProcessService.postProcess(savedReply); // TODO 이벤트 기반으로 변경
 
         return savedReply;
@@ -93,7 +99,7 @@ public class ReplyService {
 
         oldReply.modifyReply(newReply);
 
-        return replyRepository.saveAndFlush(oldReply);
+        return replyRepository.save(oldReply);
     }
 
     @Transactional

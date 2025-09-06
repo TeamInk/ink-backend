@@ -21,10 +21,10 @@ public interface ReplyRepository extends JpaRepository<Reply, Long> {
     Page<Reply> findAllByQuestionQuestionIdAndVisibleAndDeleted(Long questionId, Boolean visible, Boolean deleted,
             Pageable pageable);
 
-    @Query("Select r from Reply r where r.visible = true and r.deleted = false and r.question.questionId = :questionId order by r.replyLikes.size desc")
+    @Query("Select r from Reply r where r.visible = true and r.deleted = false and r.question.questionId = :questionId order by r.likeCount desc")
     Page<Reply> findAllByQuestionQuestionIdOrderByReplyLikesSize(Long questionId, Pageable pageable);
 
-    @Query("Select r from Reply r where r.visible = true and r.deleted = false order by r.replyLikes.size desc")
+    @Query("Select r from Reply r where r.visible = true and r.deleted = false order by r.likeCount desc")
     Page<Reply> findAllByOrderByReplyLikesSize(Pageable pageable);
 
     boolean existsByRegDateBetweenAndAuthorMemberIdAndVisibleAndDeleted(LocalDateTime startDateTime,
