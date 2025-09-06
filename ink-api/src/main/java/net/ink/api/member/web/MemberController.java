@@ -10,6 +10,7 @@ import net.ink.api.core.dto.ApiResult;
 import net.ink.api.core.util.NicknameNormalizer;
 import net.ink.api.member.component.MemberMapper;
 import net.ink.api.member.dto.MemberDto;
+import net.ink.api.member.service.MemberDtoService;
 import net.ink.api.member.service.MemberSignupService;
 import net.ink.core.member.entity.Member;
 import net.ink.core.member.service.MemberService;
@@ -27,6 +28,7 @@ public class MemberController {
     private final MemberService memberService;
     private final MemberSignupService memberSignupService;
     private final MemberMapper memberMapper;
+    private final MemberDtoService memberDtoService;
 
     @ApiOperation(value = "신규 회원 가입", notes = "신규 회원가입입니다.")
     @PostMapping("/signup")
@@ -34,7 +36,7 @@ public class MemberController {
             @ApiParam(value = "신규 회원 정보", required = true) @RequestBody @Valid MemberDto memberDto) {
 
         Member newMember = memberMapper.toEntity(memberDto);
-        return ResponseEntity.ok(ApiResult.ok(memberMapper.toDto(
+        return ResponseEntity.ok(ApiResult.ok(memberDtoService.toDto(
                 memberSignupService.signup(newMember))));
     }
 
@@ -49,7 +51,7 @@ public class MemberController {
                         .nickname(memberModifyDto.getNickname())
                         .image(memberModifyDto.getImage())
                         .build());
-        return ResponseEntity.ok(ApiResult.ok(memberMapper.toDto(
+        return ResponseEntity.ok(ApiResult.ok(memberDtoService.toDto(
                 memberService.updateMember(member))));
     }
 
@@ -65,7 +67,7 @@ public class MemberController {
     @ApiOperation(value = "로그인한 사용자 가져오기", notes = "현재 로그인한 사용자를 가져옵니다.")
     @GetMapping("/me")
     public ResponseEntity<ApiResult<MemberDto.ReadOnly>> me(@CurrentUser Member member) {
-        return ResponseEntity.ok(ApiResult.ok(memberMapper.toDto(member)));
+        return ResponseEntity.ok(ApiResult.ok(memberDtoService.toDto(member)));
     }
 
     @ApiOperation(value = "특정 사용자의 프로필 가져오기", notes = "특정 사용자의 프로필 정보를 가져옵니다.")
@@ -73,7 +75,7 @@ public class MemberController {
     public ResponseEntity<ApiResult<MemberDto.ReadOnly>> getMemberProfile(@CurrentUser Member member,
             @ApiParam(value = "사용자 id", required = true) @PathVariable Long memberId) {
         return ResponseEntity.ok(ApiResult.ok(
-                memberMapper.toDto(memberService.findById(memberId))));
+                memberDtoService.toDto(memberService.findById(memberId))));
     }
 
     @ApiOperation(value = "로그인한 사용자 탈퇴", notes = "현재 로그인한 사용자를 탈퇴시킵니다. " +

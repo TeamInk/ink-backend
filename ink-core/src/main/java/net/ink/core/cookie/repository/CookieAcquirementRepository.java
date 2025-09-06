@@ -7,4 +7,6 @@ import java.time.LocalDate;
 
 public interface CookieAcquirementRepository extends JpaRepository<CookieAcquirement, Long> {
     boolean existsByRegDateAndMemberMemberId(LocalDate date, Long memberId);
+    
+    long countByMemberMemberId(Long memberId);
 }

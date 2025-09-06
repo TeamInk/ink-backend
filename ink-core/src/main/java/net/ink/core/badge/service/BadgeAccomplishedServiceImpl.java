@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import net.ink.core.badge.entity.BadgeAccomplished;
 import net.ink.core.badge.entity.BadgeAccomplishedPK;
 import net.ink.core.badge.repository.BadgeAccomplishedRepository;
+import net.ink.core.cookie.repository.CookieAcquirementRepository;
 import net.ink.core.core.exception.BadRequestException;
 import net.ink.core.member.repository.MemberRepository;
 import net.ink.core.member.repository.MemberScrapRepository;
@@ -26,11 +27,13 @@ public class BadgeAccomplishedServiceImpl implements BadgeAccomplishedService {
     private final BadgeAccomplishedRepository badgeAccomplishedRepository;
     private final MemberScrapRepository memberScrapRepository;
     private final MemberRepository memberRepository;
+    private final CookieAcquirementRepository cookieAcquirementRepository;
 
 
     @Transactional
     public boolean createInk3Days(Long memberId) {
-        if ( memberRepository.findById(memberId).get().getInkCookies().size() == Ink3Days.conditionOfCount &&
+        long inkCount = cookieAcquirementRepository.countByMemberMemberId(memberId);
+        if ( inkCount == Ink3Days.conditionOfCount &&
                 !badgeAccomplishedRepository.existsBadgeAccomplishedByMemberMemberIdAndBadgeBadgeId(memberId, Ink3Days.id) ){
 
             badgeAccomplishedRepository.saveAndFlush(makeBadgeAccomplished(memberId, Ink3Days.id));
@@ -69,7 +72,8 @@ public class BadgeAccomplishedServiceImpl implements BadgeAccomplishedService {
 
     @Transactional
     public boolean createInkSet(Long memberId){
-        if ( memberRepository.findById(memberId).get().getInkCookies().size() == InkSet.conditionOfCount &&
+        long inkCount = cookieAcquirementRepository.countByMemberMemberId(memberId);
+        if ( inkCount == InkSet.conditionOfCount &&
                 !badgeAccomplishedRepository.existsBadgeAccomplishedByMemberMemberIdAndBadgeBadgeId(memberId, InkSet.id) ){
 
             badgeAccomplishedRepository.saveAndFlush(makeBadgeAccomplished(memberId, InkSet.id));

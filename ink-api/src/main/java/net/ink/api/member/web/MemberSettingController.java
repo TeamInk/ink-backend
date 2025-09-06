@@ -9,6 +9,7 @@ import net.ink.api.core.annotation.CurrentUser;
 import net.ink.api.core.dto.ApiResult;
 import net.ink.api.member.component.MemberMapper;
 import net.ink.api.member.dto.MemberDto;
+import net.ink.api.member.service.MemberDtoService;
 import net.ink.core.member.entity.Member;
 import net.ink.core.member.service.MemberService;
 import org.springframework.http.ResponseEntity;
@@ -21,6 +22,7 @@ import org.springframework.web.bind.annotation.*;
 public class MemberSettingController {
     private final MemberService memberService;
     private final MemberMapper memberMapper;
+    private final MemberDtoService memberDtoService;
 
     @ApiOperation(value = "좋아요 Push 알림 ON", notes = "좋아요 Push 알림을 켭니다.")
     @PutMapping("/me/setting/push/like")
@@ -28,7 +30,7 @@ public class MemberSettingController {
                                                                     @ApiParam(value = "Push 설정 여부", required = true)
                                                                     @RequestBody PushActive pushActive) {
         member.getMemberSetting().setLikePushActive(pushActive.isPushActive());
-        return ResponseEntity.ok(ApiResult.ok(memberMapper.toDto(
+        return ResponseEntity.ok(ApiResult.ok(memberDtoService.toDto(
                 memberService.updateMember(member)
         )));
     }
@@ -39,7 +41,7 @@ public class MemberSettingController {
                                                                      @ApiParam(value = "Push 설정 여부", required = true)
                                                                      @RequestBody PushActive pushActive) {
         member.getMemberSetting().setDailyPushActive(pushActive.isPushActive());
-        return ResponseEntity.ok(ApiResult.ok(memberMapper.toDto(
+        return ResponseEntity.ok(ApiResult.ok(memberDtoService.toDto(
                 memberService.updateMember(member)
         )));
     }
