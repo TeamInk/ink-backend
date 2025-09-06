@@ -76,15 +76,6 @@ public class MemberRepositoryTest {
         assertFalse(memberRepository.existsByNicknameAndIsActive("Test3", true));
     }
 
-    // @Test
-    // @DatabaseSetup({
-    // "classpath:dbunit/entity/member.xml"
-    // })
-    // public void 이메일_존재_조회(){
-    // assertTrue(memberRepository.existsByEmail("test@gmail.com"));
-    // assertFalse(memberRepository.existsByEmail("bleum@gmail.com"));
-    // }
-
     @Test
     @DatabaseSetup({
             "classpath:dbunit/entity/member.xml"

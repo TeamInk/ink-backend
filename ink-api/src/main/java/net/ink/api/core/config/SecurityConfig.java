@@ -29,7 +29,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
             "/api/member/user-exists",
             "/api/test",
             "/api/test-failure",
-            "/api/jwt",
             "/api/member/signin",
             "/api/member/refresh",
             "/",

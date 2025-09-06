@@ -23,15 +23,6 @@ public class MemberAuthController {
     private final OAuth2Service oAuth2Service;
     private final JwtService jwtService;
 
-    @Deprecated
-    @ApiOperation(value = "사용자 존재 체크(Deprecated)", notes = "기존에 있던 사용자인지 체크합니다.(Deprecated)")
-    @PostMapping("/user-exists/{provider}")
-    public ResponseEntity<ApiResult<UserCheckDto>> userExists(
-            @ApiParam(value = "서비스 제공자 provider", required = true, defaultValue = "kakao") @PathVariable String provider,
-            @ApiParam(value = "액세스 토큰", required = true) @RequestBody @Valid TokenDto.Provider providerToken) {
-        providerToken.setProviderName(provider);
-        return userExists(providerToken);
-    }
 
     @ApiOperation(value = "사용자 존재 체크", notes = "기존에 있던 사용자인지 체크합니다.")
     @PostMapping("/user-exists")

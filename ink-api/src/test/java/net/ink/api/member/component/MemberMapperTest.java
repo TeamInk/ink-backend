@@ -74,15 +74,9 @@ class MemberMapperTest {
     @Test
     void DTO에서_엔티티변환_테스트() {
         Member mappedMember = memberMapper.toEntity(memberDto);
-//        assertEquals(mappedMember.getMemberId(), member.getMemberId());
         assertEquals(mappedMember.getIdentifier(), member.getIdentifier());
         assertEquals(mappedMember.getEmail(), member.getEmail());
-//        assertEquals(mappedMember.isActive(), member.isActive());
         assertEquals(mappedMember.getImage(), member.getImage());
         assertEquals(mappedMember.getNickname(), member.getNickname());
-//        assertEquals(mappedMember.getInkCount(), member.getInkCount());
-//        assertEquals(mappedMember.getMemberAttendance().getAttendanceCount(), member.getMemberAttendance().getAttendanceCount());
-//        assertEquals(mappedMember.getMemberAttendance().getLastAttendanceDate(), member.getMemberAttendance().getLastAttendanceDate());
-//        assertEquals(mappedMember.getMemberSetting().isPushActive(), member.getMemberSetting().isPushActive());
     }
 }
