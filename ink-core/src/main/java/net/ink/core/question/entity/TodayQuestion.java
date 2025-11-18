@@ -34,10 +34,6 @@ public class TodayQuestion {
     @Column(name = "mod_date", nullable = false)
     private LocalDateTime modDate = LocalDateTime.now();
 
-    @Version
-    @Column(name = "version")
-    private Long version;
-
     public void setQuestion(Question question) {
         this.question = question;
         this.modDate = LocalDateTime.now();
