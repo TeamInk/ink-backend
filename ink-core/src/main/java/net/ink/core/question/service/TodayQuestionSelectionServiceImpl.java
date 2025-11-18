@@ -2,7 +2,8 @@ package net.ink.core.question.service;
 
 import lombok.RequiredArgsConstructor;
 import net.ink.core.core.component.NumberRandomizer;
-import net.ink.core.core.exception.InkException;
+import net.ink.core.core.exception.BadRequestException;
+import net.ink.core.core.exception.ResourceNotFoundException;
 import net.ink.core.member.entity.Member;
 import net.ink.core.question.entity.Question;
 import net.ink.core.question.repository.QuestionRepository;
@@ -13,6 +14,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import static net.ink.core.core.message.ErrorMessage.QUESTION_REFRESH_FAIL;
@@ -40,7 +42,7 @@ public class TodayQuestionSelectionServiceImpl implements TodayQuestionSelection
         while (checked.size() < highestId) {
             retry++;
             if (retry > highestId * MAX_TOLERATE) {
-                throw new InkException(QUESTION_REFRESH_FAIL);
+                throw new BadRequestException(QUESTION_REFRESH_FAIL);
             }
 
             long randomId = numberRandomizer.getRandomInt(highestId);
@@ -54,8 +56,14 @@ public class TodayQuestionSelectionServiceImpl implements TodayQuestionSelection
                 continue;
             }
 
-            question = questionService.getQuestionById(randomId);
-            break;
+            try {
+                question = questionService.getQuestionById(randomId);
+                break;
+            } catch (ResourceNotFoundException e) {
+                // 질문이 존재 확인 후 삭제된 경우, 다음 질문 선택
+                checked.add(randomId);
+                continue;
+            }
         }
 
         todayQuestionService.saveTodayQuestion(member.getMemberId(), question);
@@ -63,8 +71,14 @@ public class TodayQuestionSelectionServiceImpl implements TodayQuestionSelection
     }
 
     private int getHighestId() {
-        return (int)(long)questionRepository.findAll(PageRequest.of(0, 1,
+        List<Question> questions = questionRepository.findAll(PageRequest.of(0, 1,
                 Sort.by(Sort.Direction.DESC, "regDate")))
-                .getContent().get(0).getQuestionId();
+                .getContent();
+
+        if (questions.isEmpty()) {
+            throw new BadRequestException(QUESTION_REFRESH_FAIL);
+        }
+
+        return (int)(long)questions.get(0).getQuestionId();
     }
 }
