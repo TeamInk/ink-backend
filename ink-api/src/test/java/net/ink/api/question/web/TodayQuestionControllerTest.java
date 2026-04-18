@@ -43,7 +43,7 @@ class TodayQuestionControllerTest extends AbstractControllerTest {
                 .andExpect(MockMvcResultMatchers.jsonPath("$.data.category").value("테스트"))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.data.content").value("This is test question."))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.data.koContent").value("이것은 테스트 질문입니다."))
-                .andExpect(MockMvcResultMatchers.jsonPath("$.data.isAlreadyAnswered").value(false))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.data.alreadyAnswered").value(false))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.data.wordHints[0].hintId").value(1))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.data.wordHints[0].word").value("meaning 1"))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.data.wordHints[0].meaning").value("의미 1"));
@@ -61,7 +61,7 @@ class TodayQuestionControllerTest extends AbstractControllerTest {
         ).andExpect(status().isOk())
                 .andExpect(MockMvcResultMatchers.jsonPath("$.message").value("ok"))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.data.questionId").value(1))
-                .andExpect(MockMvcResultMatchers.jsonPath("$.data.isAlreadyAnswered").value(true));
+                .andExpect(MockMvcResultMatchers.jsonPath("$.data.alreadyAnswered").value(true));
     }
 
     @Test

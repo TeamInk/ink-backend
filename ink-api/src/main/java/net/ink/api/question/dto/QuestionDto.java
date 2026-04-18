@@ -65,7 +65,7 @@ public class QuestionDto {
         @ApiModelProperty(value = "현재 사용자가 이미 답변한 질문 여부", accessMode = ApiModelProperty.AccessMode.READ_ONLY,
                 position = PropertyDisplayOrder.IS_ALREADY_ANSWERED)
         @JsonProperty(index = PropertyDisplayOrder.IS_ALREADY_ANSWERED)
-        private boolean isAlreadyAnswered;
+        private boolean alreadyAnswered;
     }
 
     private static class PropertyDisplayOrder {
