@@ -61,21 +61,15 @@ public class QuestionDto {
                 position = PropertyDisplayOrder.REPLIES_COUNT)
         @JsonProperty(index = PropertyDisplayOrder.REPLIES_COUNT)
         private int repliesCount;
-
-        @ApiModelProperty(value = "현재 사용자가 이미 답변한 질문 여부", accessMode = ApiModelProperty.AccessMode.READ_ONLY,
-                position = PropertyDisplayOrder.IS_ALREADY_ANSWERED)
-        @JsonProperty(value = "alreadyAnswered", index = PropertyDisplayOrder.IS_ALREADY_ANSWERED)
-        private boolean alreadyAnswered;
     }
 
     private static class PropertyDisplayOrder {
-        private static final int QUESTION_ID        = 0;
-        private static final int CATEGORY           = 1;
-        private static final int CONTENT            = 2;
-        private static final int KO_CONTENT         = 3;
-        private static final int WORD_HINTS         = 4;
-        private static final int AUTHOR             = 5;
-        private static final int REPLIES_COUNT      = 6;
-        private static final int IS_ALREADY_ANSWERED = 7;
+        private static final int QUESTION_ID    = 0;
+        private static final int CATEGORY       = 1;
+        private static final int CONTENT        = 2;
+        private static final int KO_CONTENT     = 3;
+        private static final int WORD_HINTS     = 4;
+        private static final int AUTHOR         = 5;
+        private static final int REPLIES_COUNT  = 6;
     }
 }

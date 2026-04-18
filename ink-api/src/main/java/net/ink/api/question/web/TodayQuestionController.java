@@ -8,6 +8,7 @@ import net.ink.api.core.dto.ApiResult;
 import net.ink.core.member.entity.Member;
 import net.ink.api.question.component.QuestionMapper;
 import net.ink.api.question.dto.QuestionDto;
+import net.ink.api.question.dto.TodayQuestionDto;
 import net.ink.core.question.entity.Question;
 import net.ink.core.question.service.TodayQuestionSelectionService;
 import net.ink.core.question.service.TodayQuestionService;
@@ -27,13 +28,12 @@ public class TodayQuestionController {
     private final ReplyService replyService;
     private final QuestionMapper questionMapper;
 
-    @ApiOperation(value = "오늘의 질문 가져오기", notes = "현재 로그인한 사용자의 오늘의 질문을 가져옵니다. isAlreadyAnswered=true 인 경우 /refresh를 호출하세요.")
+    @ApiOperation(value = "오늘의 질문 가져오기", notes = "현재 로그인한 사용자의 오늘의 질문을 가져옵니다. alreadyAnswered=true 인 경우 /refresh를 호출하세요.")
     @GetMapping("")
-    public ResponseEntity<ApiResult<QuestionDto.ReadOnly>> get(@CurrentUser Member member) {
+    public ResponseEntity<ApiResult<TodayQuestionDto>> get(@CurrentUser Member member) {
         Question todayQuestion = todayQuestionService.getTodayQuestionByMemberId(member.getMemberId());
-        QuestionDto.ReadOnly dto = questionMapper.toDto(todayQuestion);
-        dto.setAlreadyAnswered(replyService.isQuestionAlreadyReplied(todayQuestion.getQuestionId(), member.getMemberId()));
-        return ResponseEntity.ok(ApiResult.ok(dto));
+        boolean alreadyAnswered = replyService.isQuestionAlreadyReplied(todayQuestion.getQuestionId(), member.getMemberId());
+        return ResponseEntity.ok(ApiResult.ok(questionMapper.toTodayDto(todayQuestion, alreadyAnswered)));
     }
 
     @ApiOperation(value = "오늘의 질문 새로고침해서 가져오기", notes = "오늘의 질문을 새로고침 해서 가져옵니다.")
