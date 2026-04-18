@@ -3,6 +3,7 @@ package net.ink.api.question.web;
 import net.ink.api.annotation.WithMockInkUser;
 import net.ink.core.question.service.TodayQuestionSelectionService;
 import net.ink.core.member.entity.Member;
+import net.ink.core.reply.service.ReplyService;
 import net.ink.core.question.entity.Question;
 import net.ink.core.question.entity.WordHint;
 import net.ink.api.web.AbstractControllerTest;
@@ -25,6 +26,9 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 class TodayQuestionControllerTest extends AbstractControllerTest {
     @MockBean
     private TodayQuestionSelectionService todayQuestionSelectionService;
+
+    @MockBean
+    private ReplyService replyService;
 
     @Test
     @WithMockInkUser

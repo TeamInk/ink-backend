@@ -30,8 +30,8 @@ public class QuestionControllerTest extends AbstractControllerTest {
             ).andExpect(status().isOk())
                     .andExpect(MockMvcResultMatchers.jsonPath("$.message").value("ok"))
                     .andExpect(MockMvcResultMatchers.jsonPath("$.data", hasSize(2)))
-                    .andExpect(MockMvcResultMatchers.jsonPath("$.data[0].questionId").value(1))
-                    .andExpect(MockMvcResultMatchers.jsonPath("$.data[1].questionId").value(2))
+                    .andExpect(MockMvcResultMatchers.jsonPath("$.data[0].questionId").value(3))
+                    .andExpect(MockMvcResultMatchers.jsonPath("$.data[1].questionId").value(4))
                     .andDo(print());
         }
 
