@@ -14,10 +14,10 @@ public class QuestionPaginationService {
     private final QuestionRepository questionRepository;
 
     @Transactional(readOnly = true)
-    public Page<Question> getQuestionList(ApiPageRequest pageRequest) {
+    public Page<Question> getQuestionList(ApiPageRequest pageRequest, Long memberId) {
         if(pageRequest.getSort() == ApiPageRequest.PageSort.POPULAR)
-            return questionRepository.findAllOrderByRepliesSizeDesc(pageRequest.convert());
+            return questionRepository.findAllNotRepliedByMemberOrderByRepliesSizeDesc(memberId, pageRequest.convert());
 
-        return questionRepository.findAll(pageRequest.convertWithNewestSort());
+        return questionRepository.findAllNotRepliedByMember(memberId, pageRequest.convertWithNewestSort());
     }
 }

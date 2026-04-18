@@ -8,8 +8,10 @@ import net.ink.api.core.dto.ApiResult;
 import net.ink.core.member.entity.Member;
 import net.ink.api.question.component.QuestionMapper;
 import net.ink.api.question.dto.QuestionDto;
+import net.ink.core.question.entity.Question;
 import net.ink.core.question.service.TodayQuestionSelectionService;
 import net.ink.core.question.service.TodayQuestionService;
+import net.ink.core.reply.service.ReplyService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -22,14 +24,19 @@ import org.springframework.web.bind.annotation.RestController;
 public class TodayQuestionController {
     private final TodayQuestionService todayQuestionService;
     private final TodayQuestionSelectionService todayQuestionSelectionService;
+    private final ReplyService replyService;
     private final QuestionMapper questionMapper;
 
     @ApiOperation(value = "오늘의 질문 가져오기", notes = "현재 로그인한 사용자의 오늘의 질문을 가져옵니다.")
     @GetMapping("")
     public ResponseEntity<ApiResult<QuestionDto.ReadOnly>> get(@CurrentUser Member member) {
-        return ResponseEntity.ok(ApiResult.ok(questionMapper.toDto(
-                todayQuestionService.getTodayQuestionByMemberId(member.getMemberId())
-        )));
+        Question todayQuestion = todayQuestionService.getTodayQuestionByMemberId(member.getMemberId());
+
+        if (replyService.isQuestionAlreadyReplied(todayQuestion.getQuestionId(), member.getMemberId())) {
+            todayQuestion = todayQuestionSelectionService.reselectTodayQuestion(member);
+        }
+
+        return ResponseEntity.ok(ApiResult.ok(questionMapper.toDto(todayQuestion)));
     }
 
     @ApiOperation(value = "오늘의 질문 새로고침해서 가져오기", notes = "오늘의 질문을 새로고침 해서 가져옵니다.")
