@@ -25,6 +25,7 @@ public class QuestionControllerTest extends AbstractControllerTest {
         @Test
         @WithMockInkUser
         public void 질문_목록_인기순_페이징_조회_테스트() throws Exception {
+            // mock 유저(member_id=1)는 question 1,2에 이미 답변 → 필터 후 question 3(답변 1개), 4(0개) 순으로 반환
             mockMvc.perform(
                     get("/api/questions?page=0&size=2&sort=popular")
             ).andExpect(status().isOk())

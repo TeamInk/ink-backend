@@ -35,7 +35,7 @@ public class ApiPageRequest {
     }
 
     public Pageable convertWithNewestSort() {
-        return PageRequest.of(page, size, Sort.by(Sort.Direction.DESC, "regDate"));
+        return PageRequest.of(page, size, Sort.by(Sort.Direction.DESC, "regDate").and(Sort.by(Sort.Direction.DESC, "questionId")));
     }
 
     @Getter

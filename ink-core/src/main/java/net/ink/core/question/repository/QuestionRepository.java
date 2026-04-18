@@ -16,9 +16,9 @@ public interface QuestionRepository extends JpaRepository<Question, Long> {
     @Query("Select q from Question q order by q.replies.size desc")
     Page<Question> findAllOrderByRepliesSizeDesc(Pageable page);
 
-    @Query("Select q from Question q where q.questionId not in (Select r.question.questionId from Reply r where r.author.memberId = :memberId) order by q.replies.size desc, q.questionId asc")
+    @Query("Select q from Question q where not exists (select 1 from Reply r where r.question = q and r.author.memberId = :memberId) order by q.replies.size desc, q.questionId asc")
     Page<Question> findAllNotRepliedByMemberOrderByRepliesSizeDesc(@Param("memberId") Long memberId, Pageable page);
 
-    @Query("Select q from Question q where q.questionId not in (Select r.question.questionId from Reply r where r.author.memberId = :memberId)")
+    @Query("Select q from Question q where not exists (select 1 from Reply r where r.question = q and r.author.memberId = :memberId)")
     Page<Question> findAllNotRepliedByMember(@Param("memberId") Long memberId, Pageable page);
 }

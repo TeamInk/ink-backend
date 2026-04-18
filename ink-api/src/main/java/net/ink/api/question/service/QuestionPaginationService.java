@@ -8,6 +8,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Objects;
+
 @Service
 @RequiredArgsConstructor
 public class QuestionPaginationService {
@@ -15,6 +17,7 @@ public class QuestionPaginationService {
 
     @Transactional(readOnly = true)
     public Page<Question> getQuestionList(ApiPageRequest pageRequest, Long memberId) {
+        Objects.requireNonNull(memberId, "memberId must not be null");
         if(pageRequest.getSort() == ApiPageRequest.PageSort.POPULAR)
             return questionRepository.findAllNotRepliedByMemberOrderByRepliesSizeDesc(memberId, pageRequest.convert());
 
