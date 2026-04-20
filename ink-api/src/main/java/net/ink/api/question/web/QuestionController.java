@@ -32,10 +32,10 @@ public class QuestionController {
 
     @ApiOperation(value = "질문 목록 정렬 페이징 조회", notes = "질문 목록을 정렬 페이징해서 가져옵니다.")
     @GetMapping
-    public ResponseEntity<ApiPageResult<QuestionDto.ReadOnly>> getQuestionList(ApiPageRequest pageRequest) {
+    public ResponseEntity<ApiPageResult<QuestionDto.ReadOnly>> getQuestionList(@CurrentUser Member member, ApiPageRequest pageRequest) {
 
         return ResponseEntity.ok(ApiPageResult.ok(
-                questionPaginationService.getQuestionList(pageRequest)
+                questionPaginationService.getQuestionList(pageRequest, member.getMemberId())
                         .map(questionMapper::toDto)
         ));
     }
