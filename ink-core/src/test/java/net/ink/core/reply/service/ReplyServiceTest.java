@@ -183,6 +183,63 @@ public class ReplyServiceTest {
         }
     }
 
+    @Nested
+    @DisplayName("답변 삭제 테스트")
+    class Delete {
+        @Test
+        @DisplayName("정상적인 답변 삭제")
+        public void 답변_삭제_테스트() {
+            // given
+            Member author = EntityCreator.createMemberEntity();
+            Reply reply = EntityCreator.createReplyEntity();
+            reply.setAuthor(author);
+
+            // mocking
+            given(replyRepository.findById(eq(REPLY_ID))).willReturn(java.util.Optional.of(reply));
+            doNothing().when(replyRepository).deleteById(eq(REPLY_ID));
+
+            // when & then (예외가 발생하지 않아야 함)
+            replyService.delete(author, REPLY_ID);
+        }
+
+        @Test
+        @DisplayName("존재하지 않는 답변 삭제 시 EntityNotFoundException 발생")
+        public void 답변_삭제_예외_존재하지않는_답변_테스트() {
+            // given
+            Member member = EntityCreator.createMemberEntity();
+
+            // mocking
+            given(replyRepository.findById(eq(REPLY_ID))).willReturn(java.util.Optional.empty());
+
+            // when & then
+            EntityNotFoundException exception = assertThrows(EntityNotFoundException.class, 
+                () -> replyService.delete(member, REPLY_ID));
+
+            assertEquals(NOT_EXIST_REPLY, exception.getMessage());
+        }
+
+        @Test
+        @DisplayName("다른 사용자의 답변 삭제 시 AccessNotAllowedException 발생")
+        public void 답변_삭제_예외_권한없음_테스트() {
+            // given
+            Member author = Member.builder().memberId(1L).build();
+            Member otherMember = Member.builder().memberId(2L).build();
+            
+            Reply reply = EntityCreator.createReplyEntity();
+            reply.setAuthor(author);
+
+            // mocking
+            given(replyRepository.findById(eq(REPLY_ID))).willReturn(java.util.Optional.of(reply));
+
+            // when & then
+            net.ink.core.core.exception.AccessNotAllowedException exception = 
+                assertThrows(net.ink.core.core.exception.AccessNotAllowedException.class, 
+                    () -> replyService.delete(otherMember, REPLY_ID));
+
+            assertEquals(UNAUTHORIZED, exception.getMessage());
+        }
+    }
+
 
 }
 

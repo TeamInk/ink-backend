@@ -116,4 +116,27 @@ public class ReplyControllerTest extends AbstractControllerTest {
                                 .andExpect(MockMvcResultMatchers.jsonPath("$.data.deleted").value(true))
                                 .andDo(print());
         }
+
+        @Test
+        @WithMockInkUser
+        public void 답변_삭제_권한없음_테스트() throws Exception {
+                // 다른 사용자의 답변에 접근하는 경우를 시뮬레이션
+                mockMvc.perform(
+                                delete("/api/reply/999") // 다른 사용자의 답변 ID
+                                                .contentType(MediaType.APPLICATION_JSON))
+                                .andExpect(status().isForbidden())
+                                .andExpect(MockMvcResultMatchers.jsonPath("$.message").value("접근 권한이 없습니다."))
+                                .andDo(print());
+        }
+
+        @Test
+        @WithMockInkUser
+        public void 답변_삭제_존재하지않는_답변_테스트() throws Exception {
+                mockMvc.perform(
+                                delete("/api/reply/9999") // 존재하지 않는 답변 ID
+                                                .contentType(MediaType.APPLICATION_JSON))
+                                .andExpect(status().isNotFound())
+                                .andExpect(MockMvcResultMatchers.jsonPath("$.message").value("존재하지 않는 답변입니다."))
+                                .andDo(print());
+        }
 }
