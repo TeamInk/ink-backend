@@ -38,8 +38,12 @@ public class MemberAuthController {
     public ResponseEntity<ApiResult<UserCheckDto>> userExists(
             @ApiParam(value = "액세스 토큰", required = true) @RequestBody @Valid TokenDto.Provider providerToken) {
         OAuth2Profile profile = oAuth2Service.getProfile(providerToken);
+        boolean exist = memberService.isMemberExist(profile.getIdentifier());
+        boolean emailConflict = !exist
+                && profile.getEmail() != null
+                && memberService.isEmailDuplicated(profile.getEmail());
         return ResponseEntity.ok(ApiResult.ok(
-                new UserCheckDto(memberService.isMemberExist(profile.getIdentifier()), profile.getIdentifier())
+                new UserCheckDto(exist || emailConflict, profile.getIdentifier(), emailConflict)
         ));
     }
 
@@ -65,5 +69,6 @@ public class MemberAuthController {
     public static class UserCheckDto {
         private final boolean exist;
         private final String identifier;
+        private final boolean emailConflict;
     }
 }

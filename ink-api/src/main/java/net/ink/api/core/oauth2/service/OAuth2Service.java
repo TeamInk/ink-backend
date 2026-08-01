@@ -68,20 +68,26 @@ public class OAuth2Service {
 
     public OAuth2Profile setKakaoProfile(JsonNode jsonNode) {
         long identifier = jsonNode.get("id").asLong();
+        String email = null;
+        JsonNode kakaoAccount = jsonNode.get("kakao_account");
+        if (kakaoAccount != null && kakaoAccount.has("email")) {
+            email = kakaoAccount.get("email").asText(null);
+        }
 
-        return new OAuth2Profile("kakao_" + identifier);
+        return new OAuth2Profile("kakao_" + identifier, email);
     }
 
     public OAuth2Profile setGoogleProfile(JsonNode jsonNode){
         long identifier = jsonNode.get("localId").asLong();
+        String email = jsonNode.has("email") ? jsonNode.get("email").asText(null) : null;
 
-        return new OAuth2Profile("google_" + identifier);
+        return new OAuth2Profile("google_" + identifier, email);
     }
 
     public OAuth2Profile setAppleProfile(TokenDto.Provider token){
         // Apple의 경우 JWT의 sub가 identifier
         String identifier = jwtResolver.getUserIdentifier(token.getProviderAccessToken());
 
-        return new OAuth2Profile("apple_" + identifier);
+        return new OAuth2Profile("apple_" + identifier, null);
     }
 }

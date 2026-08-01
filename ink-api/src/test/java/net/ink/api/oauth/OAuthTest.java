@@ -34,7 +34,7 @@ public class OAuthTest extends AbstractControllerTest {
     @Test
     public void 액세스토큰과_일치하는_사용자체크() throws Exception {
         TokenDto.Provider providerToken = new TokenDto.Provider(TokenProvider.GOOGLE, "testToken");
-        given(oAuth2Service.getProfile(eq(providerToken))).willReturn(new OAuth2Profile("test"));
+        given(oAuth2Service.getProfile(eq(providerToken))).willReturn(new OAuth2Profile("test", null));
         given(memberService.isMemberExist(eq("test"))).willReturn(true);
 
         mockMvc.perform(
