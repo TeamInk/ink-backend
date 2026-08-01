@@ -82,7 +82,7 @@ public class Reply {
     }
 
     public boolean isAuthor(Member member) {
-        return this.author.getMemberId() == member.getMemberId();
+        return this.author.getMemberId().equals(member.getMemberId());
     }
 
     public boolean likedByRequester(Member member) {

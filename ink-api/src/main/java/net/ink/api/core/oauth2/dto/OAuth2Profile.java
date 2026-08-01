@@ -12,4 +12,7 @@ import lombok.*;
 public class OAuth2Profile {
     @ApiModelProperty(value = "사용자 id")
     private String identifier;
+
+    @ApiModelProperty(value = "사용자 이메일")
+    private String email;
 }

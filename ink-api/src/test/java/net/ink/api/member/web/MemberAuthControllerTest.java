@@ -36,7 +36,7 @@ class MemberAuthControllerTest extends AbstractControllerTest {
     @Test
     void 사용자_존재체크_테스트() throws Exception {
         TokenDto.Provider provider = new TokenDto.Provider(TokenProvider.KAKAO, TEST_PROVIDER_ACCESS_TOKEN);
-        when(oAuth2Service.getProfile(eq(provider))).thenReturn(new OAuth2Profile(TEST_IDENTIFIER));
+        when(oAuth2Service.getProfile(eq(provider))).thenReturn(new OAuth2Profile(TEST_IDENTIFIER, null));
 
         mockMvc.perform(
                 post("/api/member/user-exists")
