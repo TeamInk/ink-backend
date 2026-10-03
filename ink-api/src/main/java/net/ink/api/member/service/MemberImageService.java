@@ -2,25 +2,15 @@ package net.ink.api.member.service;
 
 import lombok.RequiredArgsConstructor;
 import net.ink.api.core.component.FileUploader;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
-
-import javax.annotation.PostConstruct;
 
 @Service
 @RequiredArgsConstructor
 public class MemberImageService {
+    private static final String MEMBER_IMAGE_DIR_NAME = "/member";
+
     private final FileUploader fileUploader;
-
-    @Value("${media.base.dir.name}")
-    private String mediaBaseDirName;
-    private String memberImageDirName = "/member";
-
-    @PostConstruct
-    protected void init() {
-        memberImageDirName = mediaBaseDirName + memberImageDirName;
-    }
 
     /**
      * Multipart File 을 저장하고, 저장 경로를 리턴한다.
@@ -29,7 +19,6 @@ public class MemberImageService {
      * @return 웹상에서 저장된 경로
      */
     public String uploadMemberImageFile(MultipartFile imageFile) {
-        return fileUploader.uploadMultiPartFile(imageFile, memberImageDirName)
-                .replace(mediaBaseDirName, "");
+        return fileUploader.uploadMultiPartFile(imageFile, MEMBER_IMAGE_DIR_NAME);
     }
 }

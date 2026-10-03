@@ -25,22 +25,31 @@ public class S3FileUploader implements FileUploader {
     @Value("${cloud.aws.s3.bucket}")
     private String bucket;
 
+    /**
+     * Multipart 요청 파일을 S3 에 업로드하고 웹상의 경로를 반환한다.
+     *
+     * @param mFile Controller 에서 Http Multipart 요청으로 들어온 File
+     * @param filePath 버킷 루트 기준 디렉터리 경로 (예: /reply)
+     * @return "/" 로 시작하는 웹 경로. S3 object key 는 여기서 맨 앞 "/" 를 뺀 값이다.
+     */
     @Override
     public String uploadMultiPartFile(MultipartFile mFile, String filePath) {
         String fullFilePath = PathUtil.replaceWindowPathToLinuxPath(filePath) + "/" + generateFileName(mFile);
+        String objectKey = fullFilePath.replaceFirst("^/+", "");
         S3ObjectUploadDto s3ObjectUploadDto = buildObjectUploadDto(mFile);
 
         s3Client.putObject(new PutObjectRequest(
-                bucket, fullFilePath, s3ObjectUploadDto.getByteArrayInputStream(), s3ObjectUploadDto.getObjectMetadata()
+                bucket, objectKey, s3ObjectUploadDto.getByteArrayInputStream(), s3ObjectUploadDto.getObjectMetadata()
         ).withCannedAcl(CannedAccessControlList.PublicRead));
 
-        return fullFilePath;
+        return "/" + objectKey;
     }
 
     private S3ObjectUploadDto buildObjectUploadDto(MultipartFile file) {
         try {
             ObjectMetadata objMeta = new ObjectMetadata();
-            objMeta.setContentType(Mimetypes.getInstance().getMimetype(file.getName()));
+            String originalFileName = file.getOriginalFilename() == null ? "" : file.getOriginalFilename();
+            objMeta.setContentType(Mimetypes.getInstance().getMimetype(originalFileName));
             byte[] bytes = IOUtils.toByteArray(file.getInputStream());
             objMeta.setContentLength(bytes.length);
             return new S3ObjectUploadDto(
