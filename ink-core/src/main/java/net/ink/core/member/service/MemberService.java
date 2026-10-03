@@ -63,11 +63,12 @@ public class MemberService {
 
     @Transactional(readOnly = true)
     public boolean isEmailDuplicated(String email) {
-        return memberRepository.existsByEmailAndIsActive(email, true);
+        // 이메일은 선택값이므로, 이메일이 없는 회원끼리는 중복으로 보지 않는다
+        return email != null && memberRepository.existsByEmailAndIsActive(email, true);
     }
 
     private boolean isIdentifierValid(String identifier) {
-        return identifier != null && identifier.matches("^kakao_\\d{10}$");
+        return identifier != null && identifier.matches("^(kakao_\\d{10}|apple_[0-9A-Za-z.]+)$");
     }
 
     @Transactional(readOnly = true)

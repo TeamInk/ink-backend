@@ -3,10 +3,11 @@ package net.ink.api.core.oauth2.service;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import io.jsonwebtoken.Claims;
 import lombok.RequiredArgsConstructor;
-import net.ink.api.core.jwt.component.JwtResolver;
 import net.ink.api.core.jwt.dto.TokenDto;
 import net.ink.api.core.jwt.dto.TokenProvider;
+import net.ink.api.core.oauth2.component.AppleIdentityTokenVerifier;
 import net.ink.api.core.oauth2.dto.OAuth2Profile;
 import net.ink.core.core.exception.BadRequestException;
 import net.ink.core.core.exception.InkException;
@@ -27,7 +28,7 @@ public class OAuth2Service {
     private final RestTemplate restTemplate;
     private final Environment env;
     private final ObjectMapper objectMapper;
-    private final JwtResolver jwtResolver;
+    private final AppleIdentityTokenVerifier appleIdentityTokenVerifier;
 
     public OAuth2Profile getProfile(TokenDto.Provider token) {
         if(TokenProvider.APPLE == token.getProviderName())
@@ -85,9 +86,9 @@ public class OAuth2Service {
     }
 
     public OAuth2Profile setAppleProfile(TokenDto.Provider token){
-        // Apple의 경우 JWT의 sub가 identifier
-        String identifier = jwtResolver.getUserIdentifier(token.getProviderAccessToken());
+        // Apple의 경우 identity token(JWT)의 sub가 identifier
+        Claims claims = appleIdentityTokenVerifier.verify(token.getProviderAccessToken());
 
-        return new OAuth2Profile("apple_" + identifier, null);
+        return new OAuth2Profile("apple_" + claims.getSubject(), claims.get("email", String.class));
     }
 }

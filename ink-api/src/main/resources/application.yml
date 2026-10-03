@@ -37,6 +37,11 @@ spring:
       GOOGLE:
         url:
           profile: https://www.googleapis.com/oauth2/v3/userinfo
+      APPLE:
+        url:
+          keys: https://appleid.apple.com/auth/keys
+        issuer: https://appleid.apple.com
+        audience: com.with.ink.ink-ios
 
     servlet:
       multipart:

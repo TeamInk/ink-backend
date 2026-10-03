@@ -58,6 +58,49 @@ class MemberServiceTest {
     }
 
     @Test
+    @DisplayName("멤버 저장 성공 테스트 - 애플 식별자")
+    void saveMember_Success_AppleIdentifier() {
+        // Arrange
+        Member newMember = Member.builder()
+                .identifier("apple_001234.0123456789abcdef0123456789abcdef.1234")
+                .email("test@privaterelay.appleid.com")
+                .nickname("testUser")
+                .build();
+
+        given(memberRepository.existsByNicknameAndIsActive("testUser", true)).willReturn(false);
+        given(memberRepository.existsByEmailAndIsActive("test@privaterelay.appleid.com", true)).willReturn(false);
+        given(memberRepository.saveAndFlush(newMember)).willReturn(newMember);
+
+        // Act
+        Member savedMember = memberService.saveMember(newMember);
+
+        // Assert
+        assertEquals("apple_001234.0123456789abcdef0123456789abcdef.1234", savedMember.getIdentifier());
+        verify(memberRepository).saveAndFlush(newMember);
+    }
+
+    @Test
+    @DisplayName("멤버 저장 성공 테스트 - 이메일 없음")
+    void saveMember_Success_NullEmail() {
+        // Arrange
+        Member newMember = Member.builder()
+                .identifier("kakao_1234567890")
+                .nickname("testUser")
+                .build();
+
+        given(memberRepository.existsByNicknameAndIsActive("testUser", true)).willReturn(false);
+        given(memberRepository.saveAndFlush(newMember)).willReturn(newMember);
+
+        // Act
+        Member savedMember = memberService.saveMember(newMember);
+
+        // Assert
+        assertNull(savedMember.getEmail());
+        verify(memberRepository, never()).existsByEmailAndIsActive(any(), any());
+        verify(memberRepository).saveAndFlush(newMember);
+    }
+
+    @Test
     @DisplayName("멤버 저장 실패 - 닉네임 중복")
     void saveMember_DuplicatedNickname() {
         // Arrange

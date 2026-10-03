@@ -22,7 +22,7 @@ import javax.validation.constraints.NotBlank;
 @ApiModel(value="회원 모델", description="회원을 나타내는 모델")
 public class MemberDto {
     @NotBlank
-    @ApiModelProperty(value = "회원 식별값, kakao 로그인일 경우 kakao_, google인 경우 google_ prefix 붙여주세요.",
+    @ApiModelProperty(value = "회원 식별값, kakao 로그인일 경우 kakao_, google인 경우 google_, apple인 경우 apple_ prefix 붙여주세요.",
             required = true, position = PropertyDisplayOrder.IDENTIFIER)
     @JsonProperty(index = PropertyDisplayOrder.IDENTIFIER)
     private String identifier;
