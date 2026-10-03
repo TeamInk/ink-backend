@@ -40,8 +40,14 @@ spring:
       APPLE:
         url:
           keys: https://appleid.apple.com/auth/keys
+          token: https://appleid.apple.com/auth/token
+          revoke: https://appleid.apple.com/auth/revoke
         issuer: https://appleid.apple.com
         audience: com.with.ink.ink-ios
+        # 탈퇴 시 토큰 revoke 용 (Apple Developer 에서 발급, .p8 파일 내용)
+        team-id:
+        key-id:
+        private-key:
 
     servlet:
       multipart:

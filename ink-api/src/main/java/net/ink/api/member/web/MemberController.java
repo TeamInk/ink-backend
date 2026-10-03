@@ -10,6 +10,7 @@ import net.ink.api.core.dto.ApiResult;
 import net.ink.api.core.util.NicknameNormalizer;
 import net.ink.api.member.component.MemberMapper;
 import net.ink.api.member.dto.MemberDto;
+import net.ink.api.member.service.MemberDropOutService;
 import net.ink.api.member.service.MemberSignupService;
 import net.ink.core.member.entity.Member;
 import net.ink.core.member.service.MemberService;
@@ -26,6 +27,7 @@ import javax.validation.Valid;
 public class MemberController {
     private final MemberService memberService;
     private final MemberSignupService memberSignupService;
+    private final MemberDropOutService memberDropOutService;
     private final MemberMapper memberMapper;
 
     @ApiOperation(value = "신규 회원 가입", notes = "신규 회원가입입니다.")
@@ -77,10 +79,14 @@ public class MemberController {
     }
 
     @ApiOperation(value = "로그인한 사용자 탈퇴", notes = "현재 로그인한 사용자를 탈퇴시킵니다. " +
-            "DB 상에서 실제 삭제는 되지 않습니다.")
+            "DB 상에서 실제 삭제는 되지 않습니다. " +
+            "Apple 회원은 탈퇴 직전 재인증으로 받은 authorizationCode를 body에 담아 보내야 합니다.")
     @DeleteMapping("/me")
-    public ResponseEntity<ApiResult<MemberDto.ReadOnly>> delete(@CurrentUser Member member) {
-        memberService.dropOutMember(member);
+    public ResponseEntity<ApiResult<MemberDto.ReadOnly>> delete(
+            @CurrentUser Member member,
+            @ApiParam(value = "탈퇴 정보 (Apple 회원만 필요)") @RequestBody(required = false) MemberDropOutDto memberDropOutDto) {
+        memberDropOutService.dropOut(member,
+                memberDropOutDto == null ? null : memberDropOutDto.getAuthorizationCode());
         return ResponseEntity.ok(ApiResult.ok(null));
     }
 
@@ -89,6 +95,14 @@ public class MemberController {
     @Getter
     public static class DuplicatedCheckDto {
         private final boolean duplicated;
+    }
+
+    @NoArgsConstructor
+    @Getter
+    @Setter
+    public static class MemberDropOutDto {
+        @ApiModelProperty(value = "Apple authorizationCode (Apple 회원만 필요)")
+        private String authorizationCode;
     }
 
     @NoArgsConstructor
