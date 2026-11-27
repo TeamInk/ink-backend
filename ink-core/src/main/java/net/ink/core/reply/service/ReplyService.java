@@ -6,6 +6,8 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.List;
+import java.util.Objects;
+import java.util.Optional;
 
 import javax.annotation.PostConstruct;
 
@@ -46,6 +48,11 @@ public class ReplyService {
         Long memberId = newReply.getAuthor().getMemberId();
         Long questionId = newReply.getQuestion().getQuestionId();
 
+        // 같은 내용의 등록 요청이 연달아 들어온 경우(더블탭, 재시도) 에러 대신 이미 저장된 답변을 그대로 반환한다.
+        Optional<Reply> duplicatedReply = findDuplicatedReply(newReply);
+        if (duplicatedReply.isPresent())
+            return duplicatedReply.get();
+
         if (! isTest() && isAlreadyRepliedToday(memberId))
             throw new BadRequestException(ALREADY_ANSWERED_MEMBER);
 
@@ -64,8 +71,15 @@ public class ReplyService {
         return savedReply;
     }
 
+    private Optional<Reply> findDuplicatedReply(Reply newReply) {
+        return replyRepository.findByAuthorMemberIdAndQuestionQuestionIdAndVisibleAndDeleted(
+                        newReply.getAuthor().getMemberId(), newReply.getQuestion().getQuestionId(), true, false)
+                .filter(saved -> Objects.equals(saved.getContent(), newReply.getContent())
+                        && Objects.equals(saved.getImage(), newReply.getImage()));
+    }
+
     private boolean isTest() {
-        return "dev".equals(profile);
+        return "dev".equals(profile) || "dummy".equals(profile);
     }
 
     @Transactional(readOnly = true)

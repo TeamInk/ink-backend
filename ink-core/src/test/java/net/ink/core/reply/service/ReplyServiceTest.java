@@ -16,9 +16,13 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.time.LocalDateTime;
+import java.util.Optional;
 
 import static net.ink.core.core.message.ErrorMessage.*;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertSame;
+import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.verify;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
@@ -123,6 +127,49 @@ public class ReplyServiceTest {
 
             // then
             assertEquals(ALREADY_ANSWERED_REPLY, exception.getMessage());
+        }
+
+        @Test
+        public void 답변_등록_같은_내용_중복_요청은_기존_답변_반환_테스트() {
+            // given
+            Reply savedReply = EntityCreator.createReplyEntity();
+            Reply newReply = EntityCreator.createReplyEntity();
+            newReply.setReplyId(null);
+
+            // mocking
+            given(replyRepository.findByAuthorMemberIdAndQuestionQuestionIdAndVisibleAndDeleted(eq(MEMBER_ID), eq(QUESTION_ID), eq(true), eq(false)))
+                    .willReturn(Optional.of(savedReply));
+
+            // when
+            Reply createdReply = replyService.create(newReply);
+
+            // then
+            assertSame(savedReply, createdReply);
+            verify(replyRepository, never()).saveAndFlush(any());
+            verify(replyPostProcessService, never()).postProcess(any());
+        }
+
+        @Test
+        public void 답변_등록_예외_이미_답변한_질문에_다른_내용_테스트() {
+            // given
+            Reply savedReply = EntityCreator.createReplyEntity();
+            Reply newReply = EntityCreator.createReplyEntity();
+            newReply.setReplyId(null);
+            newReply.setContent(savedReply.getContent() + " (다른 내용)");
+
+            // mocking
+            given(replyRepository.findByAuthorMemberIdAndQuestionQuestionIdAndVisibleAndDeleted(eq(MEMBER_ID), eq(QUESTION_ID), eq(true), eq(false)))
+                    .willReturn(Optional.of(savedReply));
+            given(replyRepository.existsByRegDateBetweenAndAuthorMemberIdAndVisibleAndDeleted(any(), any(), eq(MEMBER_ID), any(), any())).willReturn(false);
+            given(questionService.existsById(eq(QUESTION_ID))).willReturn(true);
+            given(replyService.isQuestionAlreadyReplied(eq(QUESTION_ID), eq(MEMBER_ID))).willReturn(true);
+
+            // when
+            BadRequestException exception = assertThrows(BadRequestException.class, () -> replyService.create(newReply));
+
+            // then
+            assertEquals(ALREADY_ANSWERED_REPLY, exception.getMessage());
+            verify(replyRepository, never()).saveAndFlush(any());
         }
     }
 
