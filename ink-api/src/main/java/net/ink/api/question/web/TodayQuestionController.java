@@ -28,10 +28,15 @@ public class TodayQuestionController {
     private final ReplyService replyService;
     private final QuestionMapper questionMapper;
 
-    @ApiOperation(value = "오늘의 질문 가져오기", notes = "현재 로그인한 사용자의 오늘의 질문을 가져옵니다. alreadyAnswered=true 인 경우 /refresh를 호출하세요.")
+    @ApiOperation(value = "오늘의 질문 가져오기", notes = "현재 로그인한 사용자의 오늘의 질문을 가져옵니다. 이미 답변한 질문이면 서버가 답변하지 않은 질문으로 재선택해서 반환합니다. "
+            + "alreadyAnswered=true 는 더 이상 답변할 질문이 남아 있지 않은 경우에만 내려갑니다.")
     @GetMapping("")
     public ResponseEntity<ApiResult<TodayQuestionDto>> get(@CurrentUser Member member) {
         Question todayQuestion = todayQuestionService.getTodayQuestionByMemberId(member.getMemberId());
+        if (replyService.isQuestionAlreadyReplied(todayQuestion.getQuestionId(), member.getMemberId())) {
+            // 클라이언트의 /refresh 호출이나 스케줄러 배치에 의존하지 않도록 조회 시점에 재선택한다.
+            todayQuestion = todayQuestionSelectionService.reselectTodayQuestion(member);
+        }
         boolean alreadyAnswered = replyService.isQuestionAlreadyReplied(todayQuestion.getQuestionId(), member.getMemberId());
         return ResponseEntity.ok(ApiResult.ok(questionMapper.toTodayDto(todayQuestion, alreadyAnswered)));
     }

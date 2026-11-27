@@ -19,7 +19,9 @@ import java.util.Set;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.BDDMockito.given;
+import static org.mockito.Mockito.verify;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -52,14 +54,34 @@ class TodayQuestionControllerTest extends AbstractControllerTest {
     @Test
     @WithMockInkUser
     public void 오늘의_질문_이미_답변한_경우_조회_테스트() throws Exception {
-        // 이미 답변한 경우 isAlreadyAnswered=true 반환, 상태 변경 없음 (reselect 미호출)
-        given(replyService.isQuestionAlreadyReplied(anyLong(), anyLong())).willReturn(true);
+        // 이미 답변한 질문이면 답변하지 않은 질문으로 재선택해서 반환
+        given(replyService.isQuestionAlreadyReplied(eq(1L), anyLong())).willReturn(true);
+        given(replyService.isQuestionAlreadyReplied(eq(2L), anyLong())).willReturn(false);
+        given(todayQuestionSelectionService.reselectTodayQuestion(any()))
+                .willReturn(Question.builder().questionId(2L).category("카테고리").content("content").koContent("내용").build());
 
         mockMvc.perform(
                 get("/api/today-question")
                         .contentType(MediaType.APPLICATION_JSON)
         ).andExpect(status().isOk())
                 .andExpect(MockMvcResultMatchers.jsonPath("$.message").value("ok"))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.data.questionId").value(2))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.data.alreadyAnswered").value(false));
+        verify(todayQuestionSelectionService).reselectTodayQuestion(any());
+    }
+
+    @Test
+    @WithMockInkUser
+    public void 오늘의_질문_답변할_질문이_남지_않은_경우_조회_테스트() throws Exception {
+        // 모든 질문에 답변해 재선택으로도 바뀌지 않으면 alreadyAnswered=true 로 알린다
+        given(replyService.isQuestionAlreadyReplied(anyLong(), anyLong())).willReturn(true);
+        given(todayQuestionSelectionService.reselectTodayQuestion(any()))
+                .willReturn(Question.builder().questionId(1L).category("테스트").content("content").koContent("내용").build());
+
+        mockMvc.perform(
+                get("/api/today-question")
+                        .contentType(MediaType.APPLICATION_JSON)
+        ).andExpect(status().isOk())
                 .andExpect(MockMvcResultMatchers.jsonPath("$.data.questionId").value(1))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.data.alreadyAnswered").value(true));
     }
